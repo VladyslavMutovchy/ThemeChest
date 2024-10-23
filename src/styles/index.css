@@ -1,0 +1,39 @@
+:root {
+  --black: #202020;
+  --black-2: #1C171E;
+  --brown: #C38F2A;
+  --gray: #8D8D8D;
+  --gray-2: #DCDCDC;
+  --purple: #3E0075;
+  --purple-2: #3F0275;
+  --white: #FFF;
+  --content-width: 1410px;
+  --content-padding: 16px;
+  --content-padding-mobile: 28px;
+  --header-height: 98px;
+  --header-height-mobile: 178px;
+}
+
+body {
+  margin: 0;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+}
+
+p, h1, h2 {
+  margin: 0;
+}
+
+button {
+  border: none;
+  padding: 0;
+}
+
+
+.bold {
+  font-weight: bold;
+}
+
+.hidden {
+  display: none;
+}

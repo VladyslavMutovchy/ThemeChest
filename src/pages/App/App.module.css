@@ -1,0 +1,13 @@
+.wrapper {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  height: auto;
+  margin: 0 auto;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+.authContent {
+  padding: 0 25px;
+}
