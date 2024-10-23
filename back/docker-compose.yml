@@ -1,0 +1,59 @@
+services:
+  node-app:
+    build:
+      context: . 
+      dockerfile: Dockerfile
+    ports:
+      - '3002:3002'
+    volumes:
+      - .:/usr/src/app  # Монтируем текущую директорию в контейнер
+      - /usr/src/app/node_modules  # Не монтируем node_modules, чтобы избежать конфликтов
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=theme_chest
+    depends_on:
+      - mysql
+    command: npm run start:dev  # Запуск с nodemon
+
+  frontend:
+    build:
+      context: ../front  # Убедитесь, что путь правильный
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    volumes:
+      - ../front/src:/app/src  # Монтируем только src
+      - ../front/node_modules:/app/node_modules  # Будьте осторожны с этим
+    stdin_open: true
+    tty: true
+    depends_on:
+      - node-app
+    command: npm run start:dev
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: root
+
+  mysql:
+    image: mysql:8.3.0  
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: theme_chest
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+    command: --default-authentication-plugin=mysql_native_password  # Устанавливаем плагин аутентификации
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d/
+
+volumes:
+  mysql-data:
