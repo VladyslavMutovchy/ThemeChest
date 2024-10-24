@@ -1,4 +1,4 @@
-import mysql from 'mysql';
+import mysql from 'mysql2/promise';
 import _ from 'lodash';
 
 /*
@@ -16,10 +16,9 @@ export default class DbService {
 
     this.pool = null;
     this.connect();
-
   }
 
-  connect() {
+  async connect() {
     this.pool = mysql.createPool({
       host: this.options.host,
       user: this.options.username,
@@ -28,32 +27,32 @@ export default class DbService {
       charset: "utf8mb4"
     });
     //check connection. If OK
-    this.pool.query('SELECT 1 + 1 AS solution', function (error) {
-      error ? console.log("Error connecting to MySQL. Err :" + error.message) :
-        console.log('Db connected');
-    });
+    try {
+      const [rows] = await this.pool.query('SELECT 1 + 1 AS solution');
+      console.log('Db connected');
+    } catch (error) {
+      console.log("Error connecting to MySQL. Err :" + error.message);
+    }
   }
 
-  getConnection() {
-    return new Promise((resolve, reject) => {
-      this.pool.getConnection((error, connection) => {
-        return error ? reject(error) : resolve(connection);
-      })
-    });
+  async getConnection() {
+    try {
+      return await this.pool.getConnection();
+    } catch (error) {
+      throw error;
+    }
   }
 
-  runQuery(query, data) {
-    return new Promise((resolve, reject) => {
-      this.getConnection()
-        .then(connection => {
-          connection.query(query, data, (error, results) => {
-            // We done with connection return to pool
-            connection.release();
-            return error ? reject(error) : resolve(results);
-          });
-        })
-        .catch(err => reject(err));
-    });
+  async runQuery(query, data) {
+    const connection = await this.getConnection();
+    try {
+      const [results] = await connection.query(query, data);
+      return results;
+    } catch (error) {
+      throw error;
+    } finally {
+      connection.release();
+    }
   }
 
   get(table, filter) {
