@@ -25,11 +25,11 @@
   right: 10px;
   display: flex;
   gap: var(--gap-regular);
-  width: 500px;
   .navItem{
     color: black;
     font-size: 18px;
     text-decoration: none;
+    background: none;
     
   }
 }
@@ -37,7 +37,12 @@
     text-shadow: 5px 5px 10px #00000062; 
     cursor: pointer;
   }
- 
+.navItemHello {
+  color: black;
+  font-size: 18px;
+  text-decoration: none;
+  font-weight: 600;
+}
 
 .mobileMenu {
   display: none;

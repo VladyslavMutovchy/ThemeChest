@@ -5,25 +5,21 @@ import _ from 'lodash';
 class AuthAction {
   async registration(authData) {
     let password = null;
-    if (getUserByEmail(authData.email)!== null) {
-      return
-    }
     if (authData.password) {
       password = await bcrypt.hash(authData.password, 5);
     }
-
+  
     const addUserQuery = 'INSERT INTO users SET email = ?, password = ?';
     const insertData = [
       authData.email,
       password,
     ];
     const newUserData = await global.dbConnection.runQuery(addUserQuery, insertData);
-
+  
     const userData = {
       ...authData,
       id: newUserData.insertId,
     };
-
     return this.login(userData);
   }
 
@@ -64,7 +60,6 @@ class AuthAction {
 
   async getUserByEmail(email) {
     const checkQuery = 'SELECT * FROM users WHERE email = ?';
-    console.log('======>',);
     const userData = await global.dbConnection.runQuery(checkQuery, [email]);
     return userData[0];
   }

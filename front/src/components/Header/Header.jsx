@@ -10,8 +10,7 @@ import SignupModal from '../SignupModal/SignupModal';
 const Header = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.auth.userData);
-
-  // Состояния для модальных окон
+ 
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
 
@@ -25,6 +24,13 @@ const Header = () => {
   const openSignupModal = () => setIsSignupOpen(true);
   const closeSignupModal = () => setIsSignupOpen(false);
 
+  function greetingsNameFromEmail(email) {
+    console.log('======>', email);
+    const atIndex = email.indexOf('@');
+    return atIndex !== -1 ? email.slice(0, atIndex) : email; 
+  }
+
+  
   return (
     <header className={styles.header}>
       <Link to="/">
@@ -38,8 +44,8 @@ const Header = () => {
         <Link to="/contact" className={styles.navItem}>Contact</Link>
         {userData ? (
           <>
-            <span className={styles.navItem}>Hello, {userData.name}</span>
-            <button onClick={handleLogout} className={styles.navItem}>Logout</button>
+            <span className={styles.navItemHello}>Hello, {!userData.name ? greetingsNameFromEmail(userData.email) : userData.name }!</span>
+            <span onClick={handleLogout} className={styles.navItem}>Logout</span>
           </>
         ) : (
           <>
@@ -54,5 +60,7 @@ const Header = () => {
     </header>
   );
 };
+
+
 
 export default Header;

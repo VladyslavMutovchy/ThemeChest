@@ -79,7 +79,7 @@ const LoginModal = (props) => {
   const password = useInput('', { isEmpty: true, minLength: 6 });
 
   const submitHandler = async () => {
-    if (!email.isValid || !password.isValid) {
+    if (!email.isValid) {
       return; 
     }
     const formData = {
