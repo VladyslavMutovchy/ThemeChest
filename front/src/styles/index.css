@@ -1,26 +1,30 @@
 :root {
   --black: #202020;
-  --black-2: #1C171E;
-  --brown: #C38F2A;
-  --gray: #8D8D8D;
-  --gray-2: #DCDCDC;
-  --purple: #3E0075;
-  --purple-2: #3F0275;
-  --white: #FFF;
-  --content-width: 1410px;
+  --black-2: #1c171e;
+  --brown: #c38f2a;
+  --gray: #8d8d8d;
+  --gray-2: #dcdcdc;
+  --bg1: #f5e3cb;
+  --bg2: #bbb27f;
+  --white: #fff;
+  --content-width: 1250px;
   --content-padding: 16px;
   --content-padding-mobile: 28px;
   --header-height: 98px;
   --header-height-mobile: 178px;
+  --gap-regular: 24px;
 }
 
 body {
   margin: 0;
   font-size: 14px;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Open Sans', sans-serif;
+  background-color: var(--bg1);
 }
 
-p, h1, h2 {
+p,
+h1,
+h2 {
   margin: 0;
 }
 
@@ -28,7 +32,6 @@ button {
   border: none;
   padding: 0;
 }
-
 
 .bold {
   font-weight: bold;

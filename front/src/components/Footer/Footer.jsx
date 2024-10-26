@@ -14,11 +14,15 @@ const Footer = () => {
       </div>
       <p>Cleat Line Footer</p>
       <div className={styles.line} />
+      
+      <Link to="/" className={styles.privacyLink}>
+       Contacts
+      </Link>
       <Link to="/" className={styles.privacyLink}>
         Privacy policy
       </Link>
       <div className={styles.copyright}>
-        © {currentYear} lorem
+        © {currentYear} V.Mutovchy
       </div>
     </footer>
   );

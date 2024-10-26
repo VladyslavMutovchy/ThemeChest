@@ -19,10 +19,10 @@
       "error",
       "unix"
     ],
-    "quotes": [
-      "error",
-      "single"
-    ],
+    // "quotes": [
+    //   "error",
+    //   "single"
+    // ],
     "jsx-quotes": [
       "error",
       "prefer-double"

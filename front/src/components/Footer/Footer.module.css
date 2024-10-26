@@ -4,6 +4,7 @@
   align-items: center;
   padding: 168px 0 56px;
   box-sizing: border-box;
+  background-color: var(--bg1);
 }
 
 .footer li a {

@@ -1,7 +1,6 @@
 .header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 37px var(--content-padding) 0;
   width: 100%;
   max-width: var(--content-width);
@@ -9,7 +8,36 @@
   margin: 0 auto;
   z-index: 1000;
   box-sizing: border-box;
+  position: relative;
 }
+.h1 {
+  font-family: 'MedievalSharp', cursive;
+  font-weight: 600;
+  margin-left: 10px;
+  color: #31210e;
+  font-style: normal;
+  font-size: 60px;
+  box-shadow: 30px ;
+  text-shadow: 1px 5px 10px #00000062; 
+}
+.nav {
+  position: absolute;
+  right: 10px;
+  display: flex;
+  gap: var(--gap-regular);
+  width: 500px;
+  .navItem{
+    color: black;
+    font-size: 18px;
+    text-decoration: none;
+    
+  }
+}
+.navItem:hover{
+    text-shadow: 5px 5px 10px #00000062; 
+    cursor: pointer;
+  }
+ 
 
 .mobileMenu {
   display: none;
@@ -19,9 +47,8 @@
   order: 1;
   display: block;
   text-decoration: none;
-  width: 222px;
-  min-height: 61px;
-  background: url(../../assets/images/logo.svg) no-repeat;
+  width: 100px;
+  height: 100px;
   background-size: contain;
 }
 
