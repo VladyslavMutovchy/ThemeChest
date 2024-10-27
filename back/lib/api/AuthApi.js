@@ -8,8 +8,8 @@ import authAction from '../actions/auth.js';
 const authApi = Router();
 
 authApi.route('/api/v1/auth/registration').post(apiPublicWrapper(async (req) => {
-  console.log('======>',req.body);
-  await authValidator(req.body);
+  console.log('======>', req.body);
+  await authValidator.registration(req.body);
   const userData = await authAction.registration(req.body);
   return authAction.login(userData);
 }));

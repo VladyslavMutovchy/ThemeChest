@@ -42,16 +42,16 @@ export const registerRules = {
       message: `Password must be at least ${passwordMinLength} characters long`,
     }
   },
-  first_name: {
-    notEmpty: {
-      message: 'First name is required',
-    },
-  },
-  last_name: {
-    notEmpty: {
-      message: 'Last name is required',
-    },
-  },
+  // first_name: {
+  //   notEmpty: {
+  //     message: 'First name is required',
+  //   },
+  // },
+  // last_name: {
+  //   notEmpty: {
+  //     message: 'Last name is required',
+  //   },
+  // },
 };
 
 export const registerFields = Object.keys(registerRules);

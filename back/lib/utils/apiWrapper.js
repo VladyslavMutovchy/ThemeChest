@@ -13,6 +13,7 @@ const apiHandler = async (action, req, res) => {
       global.responses.response(res, response);
     }
   } catch (error) {
+    console.log('===ERROR', error);
     global.responses.catchErrorResponse(res, error);
   }
 };
