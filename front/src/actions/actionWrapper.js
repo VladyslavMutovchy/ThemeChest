@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 
 import { logout } from './auth';
 import { isFetching } from './preloader';
@@ -23,10 +23,9 @@ export const actionWrapper = (action, errorCallback) => async (dispatch, getStat
     const response = _.get(error, 'request.response');
 
     if (!response) {
-
       toast.error('Server error', {
         position: 'bottom-right',
-        duration: 3000,
+        autoClose: 3000,
       });
     }
 
@@ -41,17 +40,16 @@ export const actionWrapper = (action, errorCallback) => async (dispatch, getStat
         errorCallback(responseData.error, dispatch);
       } else {
         const errorMessage = responseData.error || error.message || 'Server error';
-
         toast.error(errorMessage, {
           position: 'bottom-right',
-          duration: 3000,
+          // autoClose: 3000,
         });
       }
     } catch (parseError) {
 
       toast.error(error.message || 'Server error', {
         position: 'bottom-right',
-        duration: 3000,
+        autoClose: 3000,
       });
     }
   }

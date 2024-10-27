@@ -3,9 +3,7 @@ import styles from './SignupModal.module.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { registration } from '../../actions/auth';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import { toast } from 'react-toastify';
 
 const useValidation = (value, validations) => {
   const [isEmpty, setEmpty] = useState(true);
@@ -122,7 +120,6 @@ const SignupModal = (props) => {
             <input className={styles.input} value={repeatPassword.value} onChange={repeatPassword.onChange} onBlur={repeatPassword.onBlur} type="password" />
           </label>
           <button className={styles.btn} onClick={submitHandler} type="button">Register</button>
-          <ToastContainer position="bottom-center" autoClose={2000} hideProgressBar={true} />
         </form>
         
       </div>

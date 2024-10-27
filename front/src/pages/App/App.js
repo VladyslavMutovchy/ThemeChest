@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
+// import { Toaster } from 'react-hot-toast';
 import { connect } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
@@ -16,7 +18,7 @@ function App(props) {
   return (
     <div className={styles.wrapper}>
       {isFetching && <Preloader />}
-      <Toaster />
+      <ToastContainer position="bottom-center" autoClose={2000} hideProgressBar={true} />
       <Header />
       <Routes>
         <Route path="/" element={<Dashboard />} />

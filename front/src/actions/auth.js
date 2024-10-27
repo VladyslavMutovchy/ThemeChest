@@ -21,11 +21,12 @@ export const setFormError = (formName, error) => ({
 });
 
 // Регистрация
-export const registration = (registrationData, callback) => actionWrapper(async (dispatch) => {
+export const registration = (registrationData, callback, errorCallback) => actionWrapper(async (dispatch) => {
   const authData = await authAPI.registration(registrationData);
   callback?.();
   return loginProceed(authData);
 }, (error, dispatch) => {
+  errorCallback?.();
   dispatch(setFormError('registration_form', error));
 });
 
