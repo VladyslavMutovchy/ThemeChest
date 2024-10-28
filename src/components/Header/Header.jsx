@@ -18,14 +18,12 @@ const Header = () => {
     dispatch(logout());
   };
 
-  // Функции для открытия и закрытия модальных окон
   const openLoginModal = () => setIsLoginOpen(true);
   const closeLoginModal = () => setIsLoginOpen(false);
   const openSignupModal = () => setIsSignupOpen(true);
   const closeSignupModal = () => setIsSignupOpen(false);
 
   function greetingsNameFromEmail(email) {
-    console.log('======>', email);
     const atIndex = email.indexOf('@');
     return atIndex !== -1 ? email.slice(0, atIndex) : email; 
   }

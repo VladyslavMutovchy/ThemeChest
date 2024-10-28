@@ -1,8 +1,8 @@
 import React from 'react';
 
-import styles from './Dashboard.module.css';
+import styles from './Main.module.css';
 
-const Dashboard = () => {
+const Main = () => {
   return (
     <div className={styles.wrapper}>
       <div></div>
@@ -10,4 +10,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Main;

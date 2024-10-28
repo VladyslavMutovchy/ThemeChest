@@ -25,17 +25,16 @@ export const registration = (registrationData, callback, errorCallback) => actio
   const authData = await authAPI.registration(registrationData);
   callback?.();
   return loginProceed(authData);
-}, (error, dispatch) => {
-  errorCallback?.();
-  dispatch(setFormError('registration_form', error));
+}, (error) => {
+  errorCallback?.(error);
 });
 
-export const login = (loginData, callback) => actionWrapper(async (dispatch) => {
+export const login = (loginData, callback, errorCallback) => actionWrapper(async (dispatch) => {
   const authData = await authAPI.login(loginData);
   callback?.();
   return loginProceed(authData);
-}, (error, dispatch) => {
-  dispatch(setFormError('login_form', error));
+},  (error) => {
+  errorCallback?.(error);
 });
 
 export const googleAuth = (code, callback, errorCallback) => actionWrapper(async (dispatch) => {

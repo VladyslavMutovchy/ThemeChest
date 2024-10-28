@@ -1,127 +1,81 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import styles from './SignupModal.module.css';
-import { Link, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { registration } from '../../actions/auth';
 import { toast } from 'react-toastify';
 
-const useValidation = (value, validations) => {
-  const [isEmpty, setEmpty] = useState(true);
-  const [minLengthError, setMinLengthError] = useState(true);
-  const [isEmailError, setEmailError] = useState(true);
-  const [isValid, setValidity] = useState(false);
+const SignupModal = ({ registration, onClose }) => {
 
-  useEffect(() => {
-    for (const validation in validations) {
-      switch (validation) {
-        case 'minLength':
-          value.length < validations[validation]
-            ? setMinLengthError(true)
-            : setMinLengthError(false);
-          break;
-        case 'isEmpty':
-          value ? setEmpty(false) : setEmpty(true);
-          break;
-        case 'isEmailError':
-          // eslint-disable-next-line
-          const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          re.test(String(value).toLowerCase())
-            ? setEmailError(false)
-            : setEmailError(true);
-          break;
-
-        default:
-          break;
-      }
-    }
-  }, [value, validations]);
-
-  useEffect(() => {
-    if (isEmpty || isEmailError || minLengthError) {
-      setValidity(false);
-    } else {
-      setValidity(true);
-    }
-  }, [isEmpty, isEmailError, minLengthError]);
-
-  return { isEmpty, minLengthError, isEmailError, isValid };
-};
-
-const useInput = (initialValue, validations) => {
-  const [value, setValue] = useState(initialValue);
-  const [isDirty, setIsDirty] = useState(false);
-  const valid = useValidation(value, validations);
-  const onChange = (e) => {
-    setValue(e.target.value);
-  };
-  const onBlur = () => {
-    setIsDirty(true);
-  };
-  return {
-    value,
-    onChange,
-    onBlur,
-    isDirty,
-    ...valid,
-  };
-};
-
-const SignupModal = (props) => {
-  const { registration, onClose } = props;
-  const navigate = useNavigate();
-
-  const email = useInput('', { isEmpty: true, minLength: 3, isEmailError: true });
-  const password = useInput('', { isEmpty: true, minLength: 6 });
-  const repeatPassword = useInput('', { isEmpty: true, minLength: 6 });
-
-  const submitHandler = async () => {
-   
-    if (!email.isValid) {
-      return; 
-    } 
   
-    if (password.value !== repeatPassword.value) {
-      return <div style={{ color: '#ff0000' }}>Passwords mismatch</div>;
-    }
-  
-    const formData = { email: email.value, password: password.value };
-    await registration(formData, () => {
-      navigate('/');
-      onClose();
-    }, () => {
-      toast.error('Signup failed');
-    });
-  };
-  
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+      repeatPassword: '',
+    },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email('Incorrect email')
+        .required('Area cannot be empty'),
+      password: Yup.string()
+        .min(6, 'Area cannot be lesser than 6')
+        .required('Area cannot be empty'),
+      repeatPassword: Yup.string()
+        .oneOf([Yup.ref('password'), null], 'Passwords mismatch')
+        .required('Area cannot be empty'),
+    }),
+    onSubmit: async (values) => {
+      const formData = { email: values.email, password: values.password };
+      await registration(formData, () => {
+        onClose();
+      }, (error) => {
+        toast.error(error || 'Error');
+      });
+    },
+  });
 
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
         <h2 className={styles.h2}>Signup</h2>
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={formik.handleSubmit}>
           <label>
             <div className={styles.title}>Email</div>
-            {email.isDirty && email.isEmpty && <div style={{ color: '#ff0000' }}>Area cannot be empty</div>}
-            {email.isDirty && email.minLengthError && <div style={{ color: '#ff0000' }}>Area cannot be lesser than 6</div>}
-            {email.isDirty && email.isEmailError && <div style={{ color: '#ff0000' }}>Incorrect email</div>}
-            <input className={styles.input} value={email.value} onChange={email.onChange} onBlur={email.onBlur} type="email" />
+            {formik.touched.email && formik.errors.email && (
+              <div style={{ color: '#ff0000' }}>{formik.errors.email}</div>
+            )}
+            <input
+              className={styles.input}
+              type="email"
+              {...formik.getFieldProps('email')}
+            />
           </label>
           <label>
             <div className={styles.title}>Password</div>
-            {password.isDirty && password.isEmpty && <div style={{ color: '#ff0000' }}>Area cannot be empty</div>}
-            {password.isDirty && password.minLengthError && <div style={{ color: '#ff0000' }}>Area cannot be lesser than 6</div>}
-            <input className={styles.input} value={password.value} onChange={password.onChange} onBlur={password.onBlur} type="password" />
+            {formik.touched.password && formik.errors.password && (
+              <div style={{ color: '#ff0000' }}>{formik.errors.password}</div>
+            )}
+            <input
+              className={styles.input}
+              type="password"
+              {...formik.getFieldProps('password')}
+            />
           </label>
           <label>
             <div className={styles.title}>Repeat Password</div>
-            {repeatPassword.isDirty && repeatPassword.isEmpty && <div style={{ color: '#ff0000' }}>Area cannot be empty</div>}
-            {repeatPassword.isDirty && repeatPassword.minLengthError && <div style={{ color: '#ff0000' }}>Area cannot be lesser than 6</div>}
-            {repeatPassword.isDirty && password.value !== repeatPassword.value && <div style={{ color: '#ff0000' }}>Passwords do not match</div>}
-            <input className={styles.input} value={repeatPassword.value} onChange={repeatPassword.onChange} onBlur={repeatPassword.onBlur} type="password" />
+            {formik.touched.repeatPassword && formik.errors.repeatPassword && (
+              <div style={{ color: '#ff0000' }}>{formik.errors.repeatPassword}</div>
+            )}
+            <input
+              className={styles.input}
+              type="password"
+              {...formik.getFieldProps('repeatPassword')}
+            />
           </label>
-          <button className={styles.btn} onClick={submitHandler} type="button">Register</button>
+          <button className={styles.btn} type="submit">Register</button>
         </form>
-        
       </div>
     </div>
   );
