@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// import { Toaster } from 'react-hot-toast';
 import { connect } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import Preloader from '../../components/Preloader/Preloader';
 import Main from '../Main/Main';
 import PageNotFound from '../PageNotFound/PageNotFound';
+import Profile from '../Profile/Profile';
 import styles from './App.module.css';
+
 
 function App(props) {
   const { isFetching } = props;
+  
+  const userData = useSelector((state) => state.auth.userData);
 
   return (
     <div className={styles.wrapper}>
@@ -22,6 +26,8 @@ function App(props) {
       <Header />
       <Routes>
         <Route path="/" element={<Main />} />
+        
+        <Route path="/profile" element={<Profile />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       <Footer />

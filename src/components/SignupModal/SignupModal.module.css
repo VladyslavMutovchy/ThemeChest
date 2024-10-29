@@ -47,15 +47,7 @@
   margin-left: 40px;
 }
 
-.input {
-  padding: 10px 20px;
-  min-width: 280px;
-  border-radius: 10px;
-  border: 1px solid rgba(120, 120, 120, 0.8);
-  background-color: lightgray;
-  margin: 10px 0;
-  font-size: 20px;
-}
+
 .btn {
   background-color: var(--bg2);
   padding: 10px 30px;
@@ -63,4 +55,8 @@
   border: 1px solid rgb(67, 49, 28);
   color: black;
   cursor: pointer;
+}
+
+.label {
+  
 }

@@ -46,7 +46,7 @@ const LoginModal = ({ login, onClose }) => {
               <div className={styles.error}>{formik.errors.email}</div>
             )}
             <input
-              className={styles.input}
+              className="input"
               type="email"
               {...formik.getFieldProps('email')}
             />
@@ -57,7 +57,7 @@ const LoginModal = ({ login, onClose }) => {
               <div className={styles.error}>{formik.errors.password}</div>
             )}
             <input
-              className={styles.input}
+              className="input"
               type="password"
               {...formik.getFieldProps('password')}
             />

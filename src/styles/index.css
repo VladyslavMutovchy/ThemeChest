@@ -40,3 +40,19 @@ button {
 .hidden {
   display: none;
 }
+.dropdown_menu_strings div {
+  margin: 3px;
+  width: 26px;
+  height: 4px;
+  background-color: #43300cbf;
+  border-radius: 2px;
+}
+.input {
+  padding: 10px 20px;
+  min-width: 280px;
+  border-radius: 10px;
+  border: 1px solid rgba(120, 120, 120, 0.8);
+  background-color: lightgray;
+  margin: 10px 0;
+  font-size: 20px;
+}

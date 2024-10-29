@@ -1,0 +1,90 @@
+.wrapper {
+  margin: 50px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20`px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.title {
+  margin: 20px 0 0;
+  padding: 0 31px 0 0;
+  line-height: 1;
+  font-size: 21px;
+  font-weight: 500;
+  text-align: right;
+}
+
+.errorCode {
+  margin: 0 0 20px;
+  line-height: 0.8;
+  font-size: 200px;
+  font-weight: 500;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn {
+  margin: 8px;
+  font-size: 18px;
+  font-weight: 500;
+  background-color: var(--bg2);
+  padding: 10px 30px;
+  border-radius: 10px;
+  border: 1px solid rgb(67, 49, 28);
+  color: black;
+  cursor: pointer;
+}
+
+.p {
+  margin: 10px 0;
+  color: #333;
+
+}
+
+.profileInfo {
+  display: flex;
+  gap: 50px;
+}
+
+.profilePhoto img:hover {
+  transform: scale(1.05);
+}
+
+.profileDetails {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.profilePhoto {
+  width: 150px;
+  height: 150px;
+  overflow: hidden;
+  border-radius: 50%;
+  background-color: #f0e2c8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profilePhoto img {
+  width: 100%;
+  height: auto;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+.profileInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
