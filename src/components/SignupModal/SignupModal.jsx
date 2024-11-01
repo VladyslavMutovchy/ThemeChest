@@ -47,7 +47,7 @@ const SignupModal = ({ registration, onClose }) => {
               <div style={{ color: '#ff0000' }}>{formik.errors.email}</div>
             )}
             <input
-              className={styles.input}
+              className="input"
               type="email"
               {...formik.getFieldProps('email')}
             />
@@ -58,7 +58,7 @@ const SignupModal = ({ registration, onClose }) => {
               <div style={{ color: '#ff0000' }}>{formik.errors.password}</div>
             )}
             <input
-              className={styles.input}
+              className="input"
               type="password"
               {...formik.getFieldProps('password')}
             />
@@ -69,7 +69,7 @@ const SignupModal = ({ registration, onClose }) => {
               <div style={{ color: '#ff0000' }}>{formik.errors.repeatPassword}</div>
             )}
             <input
-              className={styles.input}
+              className="input"
               type="password"
               {...formik.getFieldProps('repeatPassword')}
             />

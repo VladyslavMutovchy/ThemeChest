@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
@@ -13,10 +13,9 @@ import PageNotFound from '../PageNotFound/PageNotFound';
 import Profile from '../Profile/Profile';
 import styles from './App.module.css';
 
-
 function App(props) {
   const { isFetching } = props;
-  
+
   const userData = useSelector((state) => state.auth.userData);
 
   return (
@@ -25,9 +24,9 @@ function App(props) {
       <ToastContainer position="bottom-center" autoClose={2000} hideProgressBar={true} />
       <Header />
       <Routes>
+        {userData ? <Route path="/profile" element={<Profile />} /> : null}
         <Route path="/" element={<Main />} />
-        
-        <Route path="/profile" element={<Profile />} />
+
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       <Footer />

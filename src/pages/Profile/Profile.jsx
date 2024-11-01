@@ -1,88 +1,91 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import styles from './Profile.module.css';
-import { registration } from '../../actions/auth';
+import { toast } from 'react-toastify';
 import standardImg from '../../assets/images/logo.png';
+import { changePasswordAction, updateUserProfile } from '../../actions/profile';
 
-const Profile = () => {
-  const userData = useSelector((state) => state.auth.userData);
-  const dispatch = useDispatch();
+const Profile = (props) => {
+  const { userData, updateUserProfile, changePasswordAction } = props;
+
   const [changePassword, setChangePassword] = useState(false);
   const [editProfile, setEditProfile] = useState(false);
+  const languages = [
+    'English',
+    'Spanish',
+    'French',
+    'German',
+    'Italian',
+    'Portuguese',
+    'Russian',
+    'Mandarin Chinese',
+    'Japanese',
+    'Korean',
+    'Arabic',
+    'Hindi',
+    'Turkish',
+    'Vietnamese',
+    'Indonesian',
+    'Thai',
+    'Dutch',
+    'Swedish',
+    'Danish',
+    'Finnish',
+  ];
 
   const profileSchema = Yup.object().shape({
-    name: Yup.string(),
+    name: Yup.string()
+      .max(20, 'Name must be at most 20 characters long')
+      .matches(/^[A-Za-zА-Яа-яЁё]+$/, 'Name must contain only letters'),
     phone: Yup.string().matches(/^\+?\d+$/, 'Phone number is not valid'),
     language: Yup.string(),
     country: Yup.string(),
     city: Yup.string(),
     photo: Yup.mixed()
       .nullable()
-      .test(
-        'fileSize',
-        'File size should be under 5 MB',
-        (value) => !value || (value && value.size <= 5 * 1024 * 1024)
-      )
-      .test(
-        'fileType',
-        'Only JPG and PNG files are allowed',
-        (value) =>
-          !value || (value && ['image/jpeg', 'image/png'].includes(value.type))
-      ),
+      .test('fileSize', 'File size should be under 5 MB', (value) => !value || (value && value.size <= 5 * 1024 * 1024))
+      .test('fileType', 'Only JPG and PNG files are allowed', (value) => !value || (value && ['image/jpeg', 'image/png'].includes(value.type))),
   });
 
   const passwordSchema = Yup.object().shape({
     currentPassword: Yup.string().required('Current password is required'),
-    newPassword: Yup.string()
-      .min(6, 'Password must be at least 6 characters')
-      .required('New password is required'),
+    newPassword: Yup.string().min(6, 'Password must be at least 6 characters').required('New password is required'),
     confirmNewPassword: Yup.string()
       .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
       .required('Confirm your new password'),
   });
-
   const handleProfileSubmit = async (values) => {
     const formData = new FormData();
+
     Object.keys(values).forEach((key) => {
       formData.append(key, values[key]);
     });
 
-    await dispatch(registration(formData));
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+    await updateUserProfile(
+      formData,
+      () => toast.success('Profile updated successfully!'),
+      (error) => toast.error('Failed to update profile:', error)
+    );
     setEditProfile(false);
     console.log('Profile Data Submitted:', formData);
   };
 
   const handlePasswordSubmit = async (values) => {
     if (values.newPassword === values.confirmNewPassword) {
-      await dispatch(changePassword(values));
-      console.log('Password Data Submitted:', values);
+      await changePasswordAction(values);
+      toast.success('Password Data Submitted:', values);
     }
   };
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.profileInfo}>
-        <div className={styles.profileDetails}>
-          <p className={styles.p}></p>
-          <strong>Email:</strong> {userData.email}
-          <p className={styles.p}></p>
-          <strong>Name:</strong> {userData.name || 'Not specified'}
-          <p className={styles.p}></p>
-          <strong>Phone:</strong> {userData.phone || 'Not specified'}
-          <p className={styles.p}></p>
-          <strong>Language:</strong> {userData.language || 'Not specified'}
-          <p className={styles.p}></p>
-          <strong>Country:</strong> {userData.country || 'Not specified'}
-          <p className={styles.p}></p>
-          <strong>City:</strong> {userData.city || 'Not specified'}
-        </div>
-        <div className={styles.profilePhoto}>
-          <img src={userData.photoUrl || standardImg} alt="Profile" />
-        </div>
-      </div>
-      {editProfile && (
+      <h2>Profile</h2>
+      {editProfile ? (
         <Formik
           initialValues={{
             name: userData.name || '',
@@ -98,52 +101,48 @@ const Profile = () => {
           {({ setFieldValue }) => (
             <Form className={styles.form}>
               <label className={styles.label}>
-                <p className={styles.p}>Name:</p>
+                <p className={styles.title}>Name:</p>
                 <Field className="input" type="text" name="name" />
-                <ErrorMessage name="name" component="div" className="error" />
+                <ErrorMessage style={{ color: '#ff0000' }} name="name" component="div" className="error" />
               </label>
 
               <label className={styles.label}>
-                <p className={styles.p}>Phone:</p>
+                <p className={styles.title}>Phone:</p>
                 <Field className="input" type="text" name="phone" />
-                <ErrorMessage name="phone" component="div" className="error" />
+                <ErrorMessage style={{ color: '#ff0000' }} name="phone" component="div" className="error" />
               </label>
 
-              <label className={styles.label}>
+              <label className={styles.title}>
                 <p className={styles.p}>Language:</p>
-                <Field className="input" type="text" name="language" />
-                <ErrorMessage
-                  name="language"
-                  component="div"
-                  className="error"
-                />
+                <Field as="select" className={styles.input} name="language">
+                  <option className="input" value="0">
+                    Select a language
+                  </option>
+                  {languages.map((lang) => (
+                    <option key={lang} value={lang}>
+                      {lang}
+                    </option>
+                  ))}
+                </Field>
+                <ErrorMessage style={{ color: '#ff0000' }} name="language" component="div" className="error" />
               </label>
 
-              <label className={styles.label}>
+              <label className={styles.title}>
                 <p className={styles.p}>Country:</p>
                 <Field className="input" type="text" name="country" />
-                <ErrorMessage
-                  name="country"
-                  component="div"
-                  className="error"
-                />
+                <ErrorMessage style={{ color: '#ff0000' }} name="country" component="div" className="error" />
               </label>
 
-              <label className={styles.label}>
+              <label className={styles.title}>
                 <p className={styles.p}>City:</p>
                 <Field className="input" type="text" name="city" />
-                <ErrorMessage name="city" component="div" className="error" />
+                <ErrorMessage style={{ color: '#ff0000' }} name="city" component="div" className="error" />
               </label>
 
-              <label className={styles.label}>
+              <label className={styles.title}>
                 <p className={styles.p}>Profile Photo:</p>
-                <input
-                  type="file"
-                  className="input"
-                  accept=".jpg, .png"
-                  onChange={(e) => setFieldValue('photo', e.target.files[0])}
-                />
-                <ErrorMessage name="photo" component="div" className="error" />
+                <input type="file" className="input" accept=".jpg, .png" onChange={(e) => setFieldValue('photo', e.target.files[0])} />
+                <ErrorMessage style={{ color: '#ff0000' }} name="photo" component="div" className="error" />
               </label>
 
               <button className={styles.btn} type="submit">
@@ -152,6 +151,26 @@ const Profile = () => {
             </Form>
           )}
         </Formik>
+      ) : (
+        <div className={styles.profileInfo}>
+          <div className={styles.profileDetails}>
+            <p className={styles.p}></p>
+            <strong>Email:</strong> {userData.email}
+            <p className={styles.p}></p>
+            <strong>Name:</strong> {userData.name || 'Not specified'}
+            <p className={styles.p}></p>
+            <strong>Phone:</strong> {userData.phone || 'Not specified'}
+            <p className={styles.p}></p>
+            <strong>Language:</strong> {userData.language || 'Not specified'}
+            <p className={styles.p}></p>
+            <strong>Country:</strong> {userData.country || 'Not specified'}
+            <p className={styles.p}></p>
+            <strong>City:</strong> {userData.city || 'Not specified'}
+          </div>
+          <div className={styles.profilePhoto}>
+            <img src={userData.photoUrl || standardImg} alt="Profile" />
+          </div>
+        </div>
       )}
       {changePassword && (
         <Formik
@@ -167,38 +186,19 @@ const Profile = () => {
             <label className={styles.label}>
               <p>Current Password:</p>
               <Field className="input" type="password" name="currentPassword" />
-              <ErrorMessage
-                style={{ color: '#ff0000' }}
-                name="currentPassword"
-                component="div"
-                className="error"
-              />
+              <ErrorMessage style={{ color: '#ff0000' }} name="currentPassword" component="div" className="error" />
             </label>
 
             <label className={styles.label}>
               <p>New Password:</p>
               <Field className="input" type="password" name="newPassword" />
-              <ErrorMessage
-                style={{ color: '#ff0000' }}
-                name="newPassword"
-                component="div"
-                className="error"
-              />
+              <ErrorMessage style={{ color: '#ff0000' }} name="newPassword" component="div" className="error" />
             </label>
 
             <label className={styles.label}>
               <p>Confirm New Password:</p>
-              <Field
-                className="input"
-                type="password"
-                name="confirmNewPassword"
-              />
-              <ErrorMessage
-                style={{ color: '#ff0000' }}
-                name="confirmNewPassword"
-                component="div"
-                className="error"
-              />
+              <Field className="input" type="password" name="confirmNewPassword" />
+              <ErrorMessage style={{ color: '#ff0000' }} name="confirmNewPassword" component="div" className="error" />
             </label>
 
             <button className={styles.btn} type="submit">
@@ -208,16 +208,10 @@ const Profile = () => {
         </Formik>
       )}
       <div className={styles.buttonGroup}>
-        <button
-          className={styles.btn}
-          onClick={() => setEditProfile((prev) => !prev)}
-        >
+        <button className={styles.btn} onClick={() => setEditProfile((prev) => !prev)}>
           {editProfile ? 'Close Edit Profile' : 'Edit Profile'}
         </button>
-        <button
-          className={styles.btn}
-          onClick={() => setChangePassword((prev) => !prev)}
-        >
+        <button className={styles.btn} onClick={() => setChangePassword((prev) => !prev)}>
           Change Password
         </button>
       </div>
@@ -225,4 +219,13 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+const mapDispatchToProps = {
+  updateUserProfile,
+  changePasswordAction,
+};
+
+const mapStateToProps = (state) => ({
+  userData: state.auth.userData,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

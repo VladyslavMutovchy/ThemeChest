@@ -38,10 +38,18 @@ const Header = () => {
       </Link>
       <h1 className={styles.h1}>ThemeChest</h1>
       <nav className={styles.nav}>
-        <Link to="/" className={styles.navItem}>Main</Link>
-        <Link to="/courses" className={styles.navItem}>Courses</Link>
-        <Link to="/about" className={styles.navItem}>About</Link>
-        <Link to="/contact" className={styles.navItem}>Contact</Link>
+        <Link to="/" className={styles.navItem}>
+          Main
+        </Link>
+        <Link to="/courses" className={styles.navItem}>
+          Courses
+        </Link>
+        <Link to="/about" className={styles.navItem}>
+          About
+        </Link>
+        <Link to="/contact" className={styles.navItem}>
+          Contact
+        </Link>
         {userData ? (
           <div className={styles.userMenu}>
             <span onClick={toggleDropdown} className={styles.navItemHello}>
@@ -54,16 +62,33 @@ const Header = () => {
             </div>
             {isDropdownOpen && (
               <div className={`${styles.dropdown} ${isDropdownOpen ? styles.open : ''}`}>
-                <Link to="/profile" className={styles.dropdownItem}>My Profile</Link>
-                <Link to="/my_courses" className={styles.dropdownItem}>My Courses</Link>
-                <span onClick={handleLogout} className={styles.dropdownItem}>Logout</span>
+                <Link to="/profile" className={styles.dropdownItem} onClick={toggleDropdown}>
+                  My Profile
+                </Link>
+                <Link to="/my_courses" className={styles.dropdownItem} onClick={toggleDropdown}>
+                  My Courses
+                </Link>
+                <Link
+                  to="/"
+                  className={styles.dropdownItem}
+                  onClick={() => {
+                    toggleDropdown();
+                    handleLogout();
+                  }}
+                >
+                  Logout
+                </Link>
               </div>
             )}
           </div>
         ) : (
           <>
-            <span onClick={openLoginModal} className={styles.navItem}>Login</span>
-            <span onClick={openSignupModal} className={styles.navItem}>Signup</span>
+            <span onClick={openLoginModal} className={styles.navItem}>
+              Login
+            </span>
+            <span onClick={openSignupModal} className={styles.navItem}>
+              Signup
+            </span>
           </>
         )}
       </nav>
