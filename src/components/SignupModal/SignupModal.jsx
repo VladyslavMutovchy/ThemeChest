@@ -30,8 +30,6 @@ const SignupModal = ({ registration, onClose }) => {
       const formData = { email: values.email, password: values.password };
       await registration(formData, () => {
         onClose();
-      }, (error) => {
-        toast.error(error || 'Error');
       });
     },
   });

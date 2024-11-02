@@ -25,30 +25,30 @@ export const updateUserProfile = (userData, callback, errorCallback) => actionWr
   }
 });
 
-export const saveValue = (userData) => {
-  return async (dispatch) => {
-    try {
-      const formData = new FormData();
-      _.forEach(userData, (value, field) => {
-        if (field === 'awards' && value) {
-          value.forEach((awardData, index) => {
-            formData.append(`award[${index}].name`, awardData.name);
-            formData.append(`award[${index}].logo`, awardData.logo);
-          });
-          return;
-        }
-        formData.append(field, value);
-      });
+// export const saveValue = (userData) => {
+//   return async (dispatch) => {
+//     try {
+//       const formData = new FormData();
+//       formData.forEach(userData, (value, field) => {
+//         if (field === 'awards' && value) {
+//           value.forEach((awardData, index) => {
+//             formData.append(`award[${index}].name`, awardData.name);
+//             formData.append(`award[${index}].logo`, awardData.logo);
+//           });
+//           return;
+//         }
+//         formData.append(field, value);
+//       });
 
-      const newUserData = await editProfileAPI.update(formData);
+//       const newUserData = await editProfileAPI.update(formData);
       
-      console.log('===newUserData', newUserData);
-      dispatch(getData());
-    } catch (e) {
-      console.log('Error saving data', e);
-    }
-  };
-};
+//       console.log('===newUserData', newUserData);
+//       dispatch(getData());
+//     } catch (e) {
+//       console.log('Error saving data', e);
+//     }
+//   };
+// };
 
 export const changePasswordAction = (newPassword, callback, errorCallback) => actionWrapper(async (dispatch) => {
   dispatch(isFetching(true)); 
@@ -92,22 +92,22 @@ export const saveData = (userProfile) => {
 };
 
 
-export const getData = () => {
-  return async (dispatch) => {
-    dispatch(isFetching(true));  
-    try {
-      const userProfiles = await profileAPI.getAll(); 
-      dispatch({
-        type: GET_DATA,
-        payload: [...userProfiles],
-      });
-    } catch (error) {
-      console.log('Ошибка при получении данных', error);
-    } finally {
-      dispatch(isFetching(false)); 
-    }
-  };
-};
+// export const getData = () => {
+//   return async (dispatch) => {
+//     dispatch(isFetching(true));  
+//     try {
+//       const userProfiles = await profileAPI.getAll(); 
+//       dispatch({
+//         type: GET_DATA,
+//         payload: [...userProfiles],
+//       });
+//     } catch (error) {
+//       console.log('Ошибка при получении данных', error);
+//     } finally {
+//       dispatch(isFetching(false)); 
+//     }
+//   };
+// };
 
 export const setUserData = (profile) => {
   return {

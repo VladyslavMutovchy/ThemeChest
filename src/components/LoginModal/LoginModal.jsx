@@ -28,8 +28,6 @@ const LoginModal = ({ login, onClose }) => {
       await login(values, () => {
         navigate('/');
         onClose();
-      }, (error) => {
-        toast.error(error || 'Error');
       });
     },
     

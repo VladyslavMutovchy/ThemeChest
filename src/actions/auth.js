@@ -20,7 +20,6 @@ export const setFormError = (formName, error) => ({
   payload: { formName, error },
 });
 
-// Регистрация
 export const registration = (registrationData, callback, errorCallback) => actionWrapper(async (dispatch) => {
   const authData = await authAPI.registration(registrationData);
   callback?.();

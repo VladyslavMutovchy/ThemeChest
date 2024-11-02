@@ -20,33 +20,35 @@ export const actionWrapper = (action, errorCallback) => async (dispatch, getStat
     }
   } catch (error) {
     dispatch(isFetching(false));
-    const response = _.get(error, 'request.response');
+    const response = _.get(error, 'response.data');
 
     if (!response) {
       toast.error('Server error', {
         position: 'bottom-right',
         autoClose: 3000,
       });
+    } else {
+      const errorMessage = response.message || 'Server error';
+      toast.error(errorMessage, {
+        position: 'bottom-right',
+        autoClose: 3000,
+      });
     }
 
     try {
-      const responseData = JSON.parse(response);
-
-      if (responseData.error === 'jwt expired') {
+      if (response && response.error === 'jwt expired') {
         return dispatch(logout());
       }
 
       if (errorCallback) {
-        errorCallback(responseData.error, dispatch);
+        errorCallback(response.error, dispatch);
       } else {
-        const errorMessage = responseData.error || error.message || 'Server error';
-        toast.error(errorMessage, {
+        toast.error(response.message || error.message || 'Server error', {
           position: 'bottom-right',
-          // autoClose: 3000,
+          autoClose: 3000,
         });
       }
     } catch (parseError) {
-
       toast.error(error.message || 'Server error', {
         position: 'bottom-right',
         autoClose: 3000,
