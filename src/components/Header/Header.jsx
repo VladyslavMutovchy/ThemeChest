@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import logo from '../../assets/images/logo.png';
 import { logout } from '../../actions/auth';
@@ -9,6 +9,7 @@ import SignupModal from '../SignupModal/SignupModal';
 
 const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate(); 
   const userData = useSelector((state) => state.auth.userData);
 
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -17,6 +18,7 @@ const Header = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+    navigate('/');
   };
 
   const openLoginModal = () => setIsLoginOpen(true);
@@ -27,6 +29,9 @@ const Header = () => {
   const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
 
   function greetingsNameFromEmail(email) {
+    if (!email) {
+      return;
+    }
     const atIndex = email.indexOf('@');
     return atIndex !== -1 ? email.slice(0, atIndex) : email;
   }
@@ -69,9 +74,10 @@ const Header = () => {
                   My Courses
                 </Link>
                 <Link
-                  to="/"
+                  to="#"
                   className={styles.dropdownItem}
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault(); 
                     toggleDropdown();
                     handleLogout();
                   }}

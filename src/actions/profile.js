@@ -7,55 +7,34 @@ export const SET_FORM_ERROR = 'SET_FORM_ERROR';
 export const SAVE_DATA = 'SAVE_DATA';  
 export const GET_DATA = 'GET_DATA'; 
 
-export const setFormError = (formName, error) => ({
-  type: SET_FORM_ERROR,
-  payload: { formName, error },
+export const SET_ERROR = 'SET_ERROR';
+
+export const setError = (hasError) => ({
+  type: SET_ERROR,
+  payload: hasError,
 });
 
+
 export const updateUserProfile = (userData, callback, errorCallback) => actionWrapper(async (dispatch) => {
-  dispatch(isFetching(true)); 
+  dispatch(isFetching(true));
   try {
     const newUserData = await profileAPI.updateProfile(userData);
-    callback?.();
-    dispatch(setUserData(newUserData)); 
+    dispatch(setUserData(newUserData)); // Обновляем стор
+    callback?.(newUserData); // Передаём обновлённые данные в callback
   } catch (error) {
     errorCallback?.(error);
   } finally {
-    dispatch(isFetching(false)); 
+    dispatch(isFetching(false));
   }
 });
 
-// export const saveValue = (userData) => {
-//   return async (dispatch) => {
-//     try {
-//       const formData = new FormData();
-//       formData.forEach(userData, (value, field) => {
-//         if (field === 'awards' && value) {
-//           value.forEach((awardData, index) => {
-//             formData.append(`award[${index}].name`, awardData.name);
-//             formData.append(`award[${index}].logo`, awardData.logo);
-//           });
-//           return;
-//         }
-//         formData.append(field, value);
-//       });
 
-//       const newUserData = await editProfileAPI.update(formData);
-      
-//       console.log('===newUserData', newUserData);
-//       dispatch(getData());
-//     } catch (e) {
-//       console.log('Error saving data', e);
-//     }
-//   };
-// };
 
-export const changePasswordAction = (newPassword, callback, errorCallback) => actionWrapper(async (dispatch) => {
+export const changePasswordAction = (id, values, callback, errorCallback) => actionWrapper(async (dispatch) => {
   dispatch(isFetching(true)); 
   try {
-    const newUserData = await profileAPI.updatePassword(newPassword);
+    await profileAPI.updatePassword(id, values);
     callback?.();
-    dispatch(setUserData(newUserData)); 
   } catch (error) {
     errorCallback?.(error);
   } finally {
@@ -63,10 +42,10 @@ export const changePasswordAction = (newPassword, callback, errorCallback) => ac
   }
 });
 
-export const getUserData = (callback, errorCallback) => actionWrapper(async (dispatch) => {
+export const getUserData = (id, callback, errorCallback) => actionWrapper(async (dispatch) => {
   dispatch(isFetching(true));  
   try {
-    const userData = await profileAPI.fetchProfile();
+    const userData = await profileAPI.fetchProfile(id);
     callback?.();
     dispatch(setUserData(userData)); 
   } catch (error) {
@@ -77,37 +56,6 @@ export const getUserData = (callback, errorCallback) => actionWrapper(async (dis
 });
 
 
-export const saveData = (userProfile) => {
-  return async (dispatch) => {
-    dispatch(isFetching(true));  
-    try {
-      const newUserProfile = await profileAPI.add(userProfile); 
-      dispatch({ type: SAVE_DATA, payload: newUserProfile });
-    } catch (error) {
-      console.log('Ошибка при сохранении данных', error);
-    } finally {
-      dispatch(isFetching(false));  
-    }
-  };
-};
-
-
-// export const getData = () => {
-//   return async (dispatch) => {
-//     dispatch(isFetching(true));  
-//     try {
-//       const userProfiles = await profileAPI.getAll(); 
-//       dispatch({
-//         type: GET_DATA,
-//         payload: [...userProfiles],
-//       });
-//     } catch (error) {
-//       console.log('Ошибка при получении данных', error);
-//     } finally {
-//       dispatch(isFetching(false)); 
-//     }
-//   };
-// };
 
 export const setUserData = (profile) => {
   return {

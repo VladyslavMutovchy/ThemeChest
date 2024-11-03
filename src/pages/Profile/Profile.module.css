@@ -8,7 +8,7 @@
 }
 
 .title {
-  font-size: 21px;
+  font-size: 18px;
   font-weight: 500;
 }
 
@@ -37,9 +37,10 @@
 }
 
 .p {
+  display: flex;
+  flex-direction: column;
   margin: 10px 0;
   color: #333;
-
 }
 
 .profileInfo {

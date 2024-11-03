@@ -1,13 +1,13 @@
-import { post, put, get } from './api';
+import { postFile, get } from './api';
 
 export const profileAPI = {
   updateProfile(userData) {
-    return post('profile/postUserProfile', userData);
+    return postFile(`profile/postUserProfile`, userData);
   },
-  updatePassword(newPassword) {
-    return put('profile/changePassword', newPassword);
+  updatePassword(id, values) {
+    return postFile(`profile/changePassword/${id}`, values);
   },
   fetchProfile(id) {
-    return get('profile/getUserData', id);
+    return get(`profile/getUserData/${id}`);
   },
 };

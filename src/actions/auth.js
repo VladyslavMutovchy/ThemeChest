@@ -55,7 +55,7 @@ export const logout = () => (dispatch) => {
     type: SET_USER_DATA,
     payload: null,
   });
-  window.location.reload();
+  window.location.replace('/'); 
 };
 
 export const setPartUserData = (profile) => {

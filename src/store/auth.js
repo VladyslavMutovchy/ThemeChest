@@ -7,14 +7,13 @@ const initialState = {
 
 const auth = (state = initialState, action) => {
   switch (action.type) {
-
     case SET_USER_DATA:
       return {
         ...state,
         userData: action.payload,
       };
 
-    case SET_PART_USER_DATA:
+    case SET_PART_USER_DATA:  
       return {
         ...state,
         userData: {

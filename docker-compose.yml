@@ -1,16 +1,21 @@
 services:
   frontend:
     build:
-      context: . 
-      dockerfile: Dockerfile 
+      context: .
+      dockerfile: Dockerfile
     ports:
       - '3000:3000'
-    volumes:
-      - ./src:/usr/src # Синхронизация папки src
-      - ./package.json:/usr/package.json 
     stdin_open: true # Для корректной работы hot-reload
     tty: true
     command: npm start
     environment:
       - CHOKIDAR_USEPOLLING=true
-   
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /src
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: package.json
