@@ -73,6 +73,9 @@ const Header = () => {
                 <Link to="/my_courses" className={styles.dropdownItem} onClick={toggleDropdown}>
                   My Courses
                 </Link>
+                <Link to="/creator" className={styles.dropdownItem} onClick={toggleDropdown}>
+                  Creator
+                </Link>
                 <Link
                   to="#"
                   className={styles.dropdownItem}

@@ -95,18 +95,17 @@ const Profile = (props) => {
       values,
       () => {
         toast.success('Password updated successfully!');
-        resetForm(); // Сброс формы после успешного обновления
+        resetForm(); 
         setChangePassword(false);
         setTimeout(() => {
           logout();
           toast.success('Try a new password to log in!');
-        }, 3000); // Закрытие формы изменения пароля
+        }, 3000);
       },
       (error) => toast.error('Failed to update password:', error)
     );
   };
 
-  // Основная логика рендеринга
   let content;
 
   if (editProfile) {
