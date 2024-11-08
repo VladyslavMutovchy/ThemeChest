@@ -1,19 +1,20 @@
-import { post } from './api';
+import { postAuth } from './api';
 
 export const authAPI = {
   registration(registrationData) {
-    return post('auth/registration', registrationData);
+    return postAuth('auth/registration', registrationData);
   },
 
   login(loginData) {
-    return post('auth/login', loginData);
+    console.log('======>', loginData);
+    return postAuth('auth/login', loginData);
   },
 
   googleAuth(code) {
-    return post('auth/google', { code });
+    return postAuth('auth/google', { code });
   },
 
   facebookAuth(code) {
-    return post('auth/facebook', { code });
+    return postAuth('auth/facebook', { code });
   },
 };
