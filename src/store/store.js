@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 
 import auth from './auth';
 import preloader from './preloader';
+import creatorReducer from './creatorReducer';
 
 const USER_LOGOUT = 'USER_LOGOUT';
 
@@ -10,6 +11,7 @@ const USER_LOGOUT = 'USER_LOGOUT';
 const allReducers = combineReducers({
   auth,
   preloader,
+  creatorReducer,
 });
 
 const rootReducer = (state, action) => {

@@ -1,66 +1,54 @@
-import { profileAPI } from '../api/profile.js';
-import { actionWrapper } from './actionWrapper.js';
-import { isFetching } from './preloader.js';
+// actions/creator.js
 
-export const SET_USER_DATA = 'SET_USER_DATA';
-export const SET_FORM_ERROR = 'SET_FORM_ERROR';
-export const SAVE_DATA = 'SAVE_DATA';
-export const GET_DATA = 'GET_DATA';
+export const SET_GUIDES = 'SET_GUIDES';
+export const SET_PART_GUIDES = 'SET_PART_GUIDES';
+export const ADD_GUIDE = 'ADD_GUIDE';
 
-export const SET_ERROR = 'SET_ERROR';
+import { actionWrapper } from './actionWrapper';
+import { creatorAPI } from '../api/creator';
+import { isFetching } from './preloader';
 
-export const setError = (hasError) => ({
-  type: SET_ERROR,
-  payload: hasError,
+// Экшон для получения всех гайдов
+export const getGuidesData = () =>
+  actionWrapper(async (dispatch) => {
+    dispatch(isFetching(true));
+    try {
+      const guides = await creatorAPI.getGuidesData(); // Запрос к API для получения всех гайдов
+      dispatch(setGuides(guides));
+    } catch (error) {
+      console.error('Failed to get guides:', error);
+    } finally {
+      dispatch(isFetching(false));
+    }
+  });
+
+// Экшон для создания гайда
+export const createGuide = (guideData, callback) =>
+  actionWrapper(async (dispatch) => {
+    dispatch(isFetching(true));
+    try {console.log('======>', guideData);
+      const newGuide = await creatorAPI.createGuide(guideData); // Запрос к API для создания гайда
+      dispatch(addGuide(newGuide));
+      callback?.(newGuide); // Колбэк при успешном создании
+    } catch (error) {
+      console.error('Failed to create guide:', error);
+    } finally {
+      dispatch(isFetching(false));
+    }
+  });
+
+// Остальные экшоны для сеттинга данных
+export const setGuides = (guides) => ({
+  type: SET_GUIDES,
+  payload: guides,
 });
 
-export const updateUserProfile = (userData, callback, errorCallback) =>
-  actionWrapper(async (dispatch) => {
-    dispatch(isFetching(true));
-    try {
-      const newUserData = await profileAPI.updateProfile(userData);
-      dispatch(setUserData(newUserData)); 
-      callback?.(newUserData); 
-    } catch (error) {
-      errorCallback?.(error);
-    } finally {
-      dispatch(isFetching(false));
-    }
-  });
+export const addGuide = (guide) => ({
+  type: ADD_GUIDE,
+  payload: guide,
+});
 
-export const changePasswordAction = (id, values, callback, errorCallback) =>
-  actionWrapper(async (dispatch) => {
-    dispatch(isFetching(true));
-    try {
-      await profileAPI.updatePassword(id, values);
-      callback?.();
-    } catch (error) {
-      errorCallback?.(error);
-    } finally {
-      dispatch(isFetching(false));
-    }
-  });
-
-export const getUserData = (id, callback, errorCallback) =>
-  actionWrapper(async (dispatch) => {
-    dispatch(isFetching(true));
-    try {
-      const userData = await profileAPI.fetchProfile(id);
-      if (userData.photo && userData.mimeType) {
-        userData.photoUrl = `data:${userData.mimeType};base64,${userData.photo}`; 
-      }
-      dispatch(setUserData(userData));
-      callback?.();
-    } catch (error) {
-      errorCallback?.(error);
-    } finally {
-      dispatch(isFetching(false));
-    }
-  });
-
-export const setUserData = (profile) => {
-  return {
-    type: SET_USER_DATA,
-    payload: profile,
-  };
-};
+export const setPartGuides = (guide) => ({
+  type: SET_PART_GUIDES,
+  payload: guide,
+});

@@ -5,7 +5,6 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { login } from '../../actions/auth';
 import styles from './LoginModal.module.css';
-import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const LoginModal = ({ login, onClose }) => {

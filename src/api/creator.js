@@ -1,13 +1,15 @@
-import { postFile, get } from './api';
+import { postFile, get, post } from './api';
+
+const BASE_URL = 'creator/';
 
 export const creatorAPI = {
   updateProfile(userData) {
-    return postFile(`profile/postUserProfile`, userData);
+    return postFile(`${BASE_URL}postUserProfile`, userData);
   },
-  updatePassword(id, values) {
-    return postFile(`profile/changePassword/${id}`, values);
+  createGuide(guideData) {
+    return post(`${BASE_URL}createGuide`, guideData);
   },
-  fetchProfile(id) {
-    return get(`profile/getUserData/${id}`);
+  getGuidesData(id) {
+    return get(`${BASE_URL}getGuidesData/${id}`);
   },
 };

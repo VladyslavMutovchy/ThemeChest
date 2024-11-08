@@ -1,39 +1,76 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field, FieldArray, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import styles from './Creator.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { changePasswordAction, updateUserProfile, getUserData } from '../../actions/profile';
+import { createGuide, getGuidesData } from '../../actions/creator';
 import { connect } from 'react-redux';
 
 const Creator = (props) => {
-  const { userData, guides } = props;
+  const { userData, guides, getGuidesData, createGuide } = props;
   const [targetGuide, setTargetGuide] = useState(null);
   const [isCreatingNewGuide, setIsCreatingNewGuide] = useState(false);
+  const [isAddingChapters, setIsAddingChapters] = useState(false);
 
-  const initialValues = {
+  useEffect(() => {
+    getGuidesData(); // Получаем данные при загрузке компонента
+  }, [getGuidesData]);
+
+  const initialGuideValues = {
     user_id: userData.id,
     title: '',
-    themes: [''],
   };
 
-  const validationSchema = Yup.object().shape({
+  const guideValidationSchema = Yup.object().shape({
     title: Yup.string().required('Guide title is required'),
-    themes: Yup.array().of(Yup.string().required('Theme is required')), // массив тем для поиска
   });
 
-  const handleSubmit = (values) => {
-    // Здесь будет логика отправки данных на сервер
-    console.log('Submitted values:', values);
-    toast.success('Guide created successfully!');
-    setTargetGuide(values); // Симулируем сохранение гайда
-    setIsCreatingNewGuide(false);
+  const initialChaptersValues = {
+    themes: [''],
+    chapters: [
+      {
+        chapterTitle: '',
+        contents: [],
+      },
+    ],
+  };
+
+  const chaptersValidationSchema = Yup.object().shape({
+    themes: Yup.array().of(Yup.string().required('Theme is required')), // массив тем для поиска
+    chapters: Yup.array().of(
+      Yup.object().shape({
+        chapterTitle: Yup.string().required('Chapter title is required'),
+        contents: Yup.array().of(
+          Yup.object().shape({
+            type: Yup.string().required(), // тип контента: 'h2', 'paragraph', 'img', 'video'
+            value: Yup.mixed().required('Content value is required'),
+          })
+        ),
+      })
+    ),
+  });
+
+  const handleGuideSubmit = (values) => {
+    createGuide(values, (newGuide) => {
+      console.log('Guide created:', newGuide);
+      toast.success('Guide created successfully!');
+      setTargetGuide(newGuide);
+      setIsCreatingNewGuide(false);
+      setIsAddingChapters(true);
+    });
+  };
+
+  const handleChaptersSubmit = (values) => {
+    console.log('Chapters submitted:', values);
+    toast.success('Chapters updated successfully!');
+    setIsAddingChapters(false);
   };
 
   const handleAddChapters = (guide) => {
     setTargetGuide(guide);
+    setIsAddingChapters(true);
   };
 
   return (
@@ -41,7 +78,8 @@ const Creator = (props) => {
       <div className={styles.guides_container}>
         <h2>Your Guides</h2>
         <div className={styles.underline} />
-        <div className={styles.guide_plate}>example guide</div>
+        <div className={styles.guide_plate} />
+
         {guides?.map((guide, index) => (
           <div key={index} className={styles.guide_plate} onClick={() => handleAddChapters(guide)}>
             {guide.title}
@@ -53,6 +91,7 @@ const Creator = (props) => {
           onClick={() => {
             setTargetGuide(null);
             setIsCreatingNewGuide(true);
+            setIsAddingChapters(false);
           }}
         >
           Create New Guide
@@ -60,10 +99,10 @@ const Creator = (props) => {
       </div>
 
       <div className={styles.creator_container}>
-        {isCreatingNewGuide || !targetGuide ? (
+        {isCreatingNewGuide && (
           <div>
-            <h2>{isCreatingNewGuide ? 'Create a Guide' : 'Edit Guide Title'}</h2>
-            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+            <h2>Create a Guide</h2>
+            <Formik initialValues={initialGuideValues} validationSchema={guideValidationSchema} onSubmit={handleGuideSubmit}>
               {({ values }) => (
                 <Form className={styles.form}>
                   <label className={styles.label}>
@@ -71,7 +110,25 @@ const Creator = (props) => {
                     <Field className="input" type="text" name="title" />
                     <ErrorMessage name="title" component="div" className="error" />
                   </label>
+                  <button type="submit" className={styles.btn}>
+                    Create Guide
+                  </button>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        )}
 
+        {isAddingChapters && targetGuide && (
+          <div>
+            <h2>Add Chapters to: {targetGuide.title}</h2>
+            <Formik
+              initialValues={initialChaptersValues}
+              validationSchema={chaptersValidationSchema}
+              onSubmit={handleChaptersSubmit}
+            >
+              {({ values, setFieldValue }) => (
+                <Form className={styles.form}>
                   <FieldArray name="themes">
                     {({ push, remove }) => (
                       <div>
@@ -91,38 +148,6 @@ const Creator = (props) => {
                     )}
                   </FieldArray>
 
-                  <button type="submit" className={styles.btn}>
-                    {isCreatingNewGuide ? 'Create Guide' : 'Save Changes'}
-                  </button>
-                </Form>
-              )}
-            </Formik>
-          </div>
-        ) : (
-          <div>
-            <h2>Add Chapters to: {targetGuide.title}</h2>
-            <Formik
-              initialValues={{ chapters: targetGuide.chapters || [{ chapterTitle: '', contents: [] }] }}
-              validationSchema={Yup.object().shape({
-                chapters: Yup.array().of(
-                  Yup.object().shape({
-                    chapterTitle: Yup.string().required('Chapter title is required'),
-                    contents: Yup.array().of(
-                      Yup.object().shape({
-                        type: Yup.string().required(), // тип контента: 'h2', 'paragraph', 'img', 'video'
-                        value: Yup.mixed().required('Content value is required'),
-                      })
-                    ),
-                  })
-                ),
-              })}
-              onSubmit={(values) => {
-                console.log('Submitted chapters:', values);
-                toast.success('Chapters updated successfully!');
-              }}
-            >
-              {({ values, setFieldValue }) => (
-                <Form className={styles.form}>
                   <FieldArray name="chapters">
                     {({ push, remove }) => (
                       <div>
@@ -132,11 +157,7 @@ const Creator = (props) => {
                             <label>
                               Chapter Title:
                               <Field className="input" name={`chapters.${chapterIndex}.chapterTitle`} />
-                              <ErrorMessage
-                                name={`chapters.${chapterIndex}.chapterTitle`}
-                                component="div"
-                                className="error"
-                              />
+                              <ErrorMessage name={`chapters.${chapterIndex}.chapterTitle`} component="div" className="error" />
                             </label>
 
                             <FieldArray name={`chapters.${chapterIndex}.contents`}>
@@ -146,10 +167,7 @@ const Creator = (props) => {
                                   {chapter.contents.map((content, contentIndex) => (
                                     <div key={contentIndex} className={styles.contentItem}>
                                       <label>Content Type:</label>
-                                      <Field
-                                        as="select"
-                                        name={`chapters.${chapterIndex}.contents.${contentIndex}.type`}
-                                      >
+                                      <Field as="select" name={`chapters.${chapterIndex}.contents.${contentIndex}.type`}>
                                         <option value="h2">Header (H2)</option>
                                         <option value="paragraph">Paragraph</option>
                                         <option value="img">Image</option>
@@ -159,26 +177,12 @@ const Creator = (props) => {
                                       {values.chapters[chapterIndex].contents[contentIndex].type === 'paragraph' && (
                                         <ReactQuill
                                           value={values.chapters[chapterIndex].contents[contentIndex].value || ''}
-                                          onChange={(val) =>
-                                            setFieldValue(
-                                              `chapters.${chapterIndex}.contents.${contentIndex}.value`,
-                                              val
-                                            )
-                                          }
+                                          onChange={(val) => setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.value`, val)}
                                         />
                                       )}
 
                                       {values.chapters[chapterIndex].contents[contentIndex].type === 'img' && (
-                                        <input
-                                          type="file"
-                                          accept=".jpg, .png"
-                                          onChange={(e) =>
-                                            setFieldValue(
-                                              `chapters.${chapterIndex}.contents.${contentIndex}.value`,
-                                              e.target.files[0]
-                                            )
-                                          }
-                                        />
+                                        <input type="file" accept=".jpg, .png" onChange={(e) => setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.value`, e.target.files[0])} />
                                       )}
 
                                       <button type="button" onClick={() => remove(contentIndex)}>
@@ -227,14 +231,13 @@ const Creator = (props) => {
 };
 
 const mapDispatchToProps = {
-  updateUserProfile,
-  changePasswordAction,
-  getUserData,
+  getGuidesData,
+  createGuide,
 };
 
 const mapStateToProps = (state) => ({
   userData: state.auth.userData,
-  // guides: state.guides.guidesList, // Добавляем список гайдов из стейта
+  guides: state.creator?.guidesList || [], 
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Creator);
