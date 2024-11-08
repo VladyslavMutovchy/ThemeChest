@@ -1,4 +1,4 @@
-// actions/creator.js
+
 
 export const SET_GUIDES = 'SET_GUIDES';
 export const SET_PART_GUIDES = 'SET_PART_GUIDES';
@@ -8,12 +8,11 @@ import { actionWrapper } from './actionWrapper';
 import { creatorAPI } from '../api/creator';
 import { isFetching } from './preloader';
 
-// Экшон для получения всех гайдов
-export const getGuidesData = () =>
+export const getGuidesData = (userId) =>
   actionWrapper(async (dispatch) => {
     dispatch(isFetching(true));
     try {
-      const guides = await creatorAPI.getGuidesData(); // Запрос к API для получения всех гайдов
+      const guides = await creatorAPI.getGuidesData(userId);
       dispatch(setGuides(guides));
     } catch (error) {
       console.error('Failed to get guides:', error);
@@ -22,7 +21,6 @@ export const getGuidesData = () =>
     }
   });
 
-// Экшон для создания гайда
 export const createGuide = (guideData, callback) =>
   actionWrapper(async (dispatch) => {
     dispatch(isFetching(true));
@@ -37,7 +35,6 @@ export const createGuide = (guideData, callback) =>
     }
   });
 
-// Остальные экшоны для сеттинга данных
 export const setGuides = (guides) => ({
   type: SET_GUIDES,
   payload: guides,

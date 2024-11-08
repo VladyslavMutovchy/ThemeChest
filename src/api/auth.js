@@ -6,7 +6,6 @@ export const authAPI = {
   },
 
   login(loginData) {
-    console.log('======>', loginData);
     return postAuth('auth/login', loginData);
   },
 

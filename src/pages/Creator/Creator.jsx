@@ -7,15 +7,18 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { createGuide, getGuidesData } from '../../actions/creator';
 import { connect } from 'react-redux';
+import Select from 'react-select';
+import { KEYWORDS } from './keyWords';
+import { customStyles } from './styles.Select';
 
 const Creator = (props) => {
   const { userData, guides, getGuidesData, createGuide } = props;
   const [targetGuide, setTargetGuide] = useState(null);
   const [isCreatingNewGuide, setIsCreatingNewGuide] = useState(false);
-  const [isAddingChapters, setIsAddingChapters] = useState(false);
+  const [isEditingGuide, setIsEditingGuide] = useState(false);
 
   useEffect(() => {
-    getGuidesData(); // Получаем данные при загрузке компонента
+    getGuidesData(userData.id);
   }, [getGuidesData]);
 
   const initialGuideValues = {
@@ -27,8 +30,15 @@ const Creator = (props) => {
     title: Yup.string().required('Guide title is required'),
   });
 
+  const initialThemesValues = {
+    themes: [],
+  };
+
+  const themesValidationSchema = Yup.object().shape({
+    themes: Yup.array().max(6, 'You can add up to 6 themes').of(Yup.string().required('Theme is required')), // массив тем для поиска
+  });
+
   const initialChaptersValues = {
-    themes: [''],
     chapters: [
       {
         chapterTitle: '',
@@ -38,7 +48,6 @@ const Creator = (props) => {
   };
 
   const chaptersValidationSchema = Yup.object().shape({
-    themes: Yup.array().of(Yup.string().required('Theme is required')), // массив тем для поиска
     chapters: Yup.array().of(
       Yup.object().shape({
         chapterTitle: Yup.string().required('Chapter title is required'),
@@ -58,19 +67,23 @@ const Creator = (props) => {
       toast.success('Guide created successfully!');
       setTargetGuide(newGuide);
       setIsCreatingNewGuide(false);
-      setIsAddingChapters(true);
+      setIsEditingGuide(true);
     });
+  };
+
+  const handleThemesSubmit = (values) => {
+    setTargetGuide({ ...targetGuide, themes: values.themes });
+    toast.success('Themes added successfully!');
   };
 
   const handleChaptersSubmit = (values) => {
     console.log('Chapters submitted:', values);
     toast.success('Chapters updated successfully!');
-    setIsAddingChapters(false);
   };
 
-  const handleAddChapters = (guide) => {
+  const handleSelectGuide = (guide) => {
     setTargetGuide(guide);
-    setIsAddingChapters(true);
+    setIsEditingGuide(true);
   };
 
   return (
@@ -78,10 +91,9 @@ const Creator = (props) => {
       <div className={styles.guides_container}>
         <h2>Your Guides</h2>
         <div className={styles.underline} />
-        <div className={styles.guide_plate} />
 
         {guides?.map((guide, index) => (
-          <div key={index} className={styles.guide_plate} onClick={() => handleAddChapters(guide)}>
+          <div key={index} className={styles.guide_plate} onClick={() => handleSelectGuide(guide)}>
             {guide.title}
           </div>
         ))}
@@ -91,7 +103,7 @@ const Creator = (props) => {
           onClick={() => {
             setTargetGuide(null);
             setIsCreatingNewGuide(true);
-            setIsAddingChapters(false);
+            setIsEditingGuide(false);
           }}
         >
           Create New Guide
@@ -104,13 +116,12 @@ const Creator = (props) => {
             <h2>Create a Guide</h2>
             <Formik initialValues={initialGuideValues} validationSchema={guideValidationSchema} onSubmit={handleGuideSubmit}>
               {({ values }) => (
-                <Form className={styles.form}>
+                <Form className={styles.formInline}>
                   <label className={styles.label}>
-                    Guide Title:
-                    <Field className="input" type="text" name="title" />
-                    <ErrorMessage name="title" component="div" className="error" />
+                    <Field placeholder="Guide Title" className={`${styles.input} ${styles.inputInline}`} type="text" name="title" />
+                    <ErrorMessage className={styles.ErrorMessage} style={{ color: '#ff0000' }} name="title" component="div" />
                   </label>
-                  <button type="submit" className={styles.btn}>
+                  <button type="submit" className={`${styles.btn} ${styles.btnInline}`}>
                     Create Guide
                   </button>
                 </Form>
@@ -119,35 +130,55 @@ const Creator = (props) => {
           </div>
         )}
 
-        {isAddingChapters && targetGuide && (
+        {isEditingGuide && targetGuide && (
           <div>
-            <h2>Add Chapters to: {targetGuide.title}</h2>
-            <Formik
-              initialValues={initialChaptersValues}
-              validationSchema={chaptersValidationSchema}
-              onSubmit={handleChaptersSubmit}
-            >
+            <h2>Edit Guide: {targetGuide.title}</h2>
+            <Formik initialValues={initialThemesValues} validationSchema={themesValidationSchema} onSubmit={handleThemesSubmit}>
               {({ values, setFieldValue }) => (
                 <Form className={styles.form}>
-                  <FieldArray name="themes">
-                    {({ push, remove }) => (
-                      <div>
-                        <h3>Themes</h3>
-                        {values.themes.map((_, index) => (
-                          <div key={index} className={styles.themeItem}>
-                            <Field className="input" name={`themes.${index}`} />
-                            <button type="button" onClick={() => remove(index)}>
-                              Remove
-                            </button>
-                          </div>
-                        ))}
-                        <button type="button" onClick={() => push('')}>
-                          Add Theme
+                  <h3>Themes (up to 6)</h3>
+                  <Select
+                    classNamePrefix="custom-select"
+                    styles={customStyles}
+                    options={KEYWORDS.filter((keyword) => !values.themes.includes(keyword)).map((keyword) => ({
+                      value: keyword,
+                      label: keyword,
+                    }))}
+                    onChange={(selectedOption) => {
+                      if (selectedOption && values.themes.length < 6) {
+                        setFieldValue('themes', [...values.themes, selectedOption.value]);
+                      }
+                    }}
+                    placeholder="Search and select a theme"
+                    isClearable
+                  />
+                  <div className={styles.selectedThemes}>
+                    {values.themes.map((theme, index) => (
+                      <div key={index} className={styles.themeItem}>
+                        <span>{theme}</span>
+                        <button
+                          type="button"
+                          className={styles.dell_btn}
+                          onClick={() => {
+                            const newThemes = values.themes.filter((_, i) => i !== index);
+                            setFieldValue('themes', newThemes);
+                          }}
+                        >
+                          ✕
                         </button>
                       </div>
-                    )}
-                  </FieldArray>
+                    ))}
+                  </div>
+                  <button type="submit" className={styles.btn}>
+                    Save Themes
+                  </button>
+                </Form>
+              )}
+            </Formik>
 
+            <Formik initialValues={initialChaptersValues} validationSchema={chaptersValidationSchema} onSubmit={handleChaptersSubmit}>
+              {({ values, setFieldValue }) => (
+                <Form className={styles.form}>
                   <FieldArray name="chapters">
                     {({ push, remove }) => (
                       <div>
@@ -164,7 +195,7 @@ const Creator = (props) => {
                               {({ push, remove }) => (
                                 <div>
                                   <h4>Contents</h4>
-                                  {chapter.contents.map((content, contentIndex) => (
+                                  {values.chapters[chapterIndex].contents.map((content, contentIndex) => (
                                     <div key={contentIndex} className={styles.contentItem}>
                                       <label>Content Type:</label>
                                       <Field as="select" name={`chapters.${chapterIndex}.contents.${contentIndex}.type`}>
@@ -185,25 +216,26 @@ const Creator = (props) => {
                                         <input type="file" accept=".jpg, .png" onChange={(e) => setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.value`, e.target.files[0])} />
                                       )}
 
-                                      <button type="button" onClick={() => remove(contentIndex)}>
+                                      <button type="button" className={styles.btn} onClick={() => remove(contentIndex)}>
                                         Remove Content
                                       </button>
                                     </div>
                                   ))}
-                                  <button type="button" onClick={() => push({ type: 'paragraph', value: '' })}>
+                                  <button type="button" className={styles.btn} onClick={() => push({ type: 'paragraph', value: '' })}>
                                     Add Content
                                   </button>
                                 </div>
                               )}
                             </FieldArray>
 
-                            <button type="button" onClick={() => remove(chapterIndex)}>
+                            <button type="button" className={styles.btn} onClick={() => remove(chapterIndex)}>
                               Remove Chapter
                             </button>
                           </div>
                         ))}
                         <button
                           type="button"
+                          className={styles.btn}
                           onClick={() =>
                             push({
                               chapterTitle: '',
@@ -237,7 +269,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state) => ({
   userData: state.auth.userData,
-  guides: state.creator?.guidesList || [], 
+  guides: state.creatorReducer?.guidesList || [],
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Creator);

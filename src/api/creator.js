@@ -9,7 +9,7 @@ export const creatorAPI = {
   createGuide(guideData) {
     return post(`${BASE_URL}createGuide`, guideData);
   },
-  getGuidesData(id) {
-    return get(`${BASE_URL}getGuidesData/${id}`);
+  getGuidesData(userId) {
+    return get(`${BASE_URL}getGuidesData/${userId}`); // Используем userId в качестве параметра
   },
 };

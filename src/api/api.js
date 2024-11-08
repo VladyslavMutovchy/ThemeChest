@@ -21,9 +21,12 @@ const axiosAuthInstance = axios.create({
 });
 
 const post = async (url, data, callback, errorCallback) => {
-  const response = await axiosInstance.post(url, JSON.stringify(data)).then(callback).catch(errorCallback);
+  const response = await axiosInstance.post(url, data) 
+    .then(callback)
+    .catch(errorCallback);
   return response.data;
 };
+
 
 const postAuth = async (url, data, callback, errorCallback) => {
   try {
@@ -61,6 +64,7 @@ const get = async (url, ...args) => {
   let index = typeof args[0] === 'function' ? -1 : 0;
   const callback = args[index++];
   const errorCallback = args[index];
+  // console.log('======>', url, ...args);
   const response = await axiosInstance.get(url).then(callback).catch(errorCallback);
   return response.data;
 };

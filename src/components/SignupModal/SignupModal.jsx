@@ -4,7 +4,6 @@ import * as Yup from 'yup';
 import styles from './SignupModal.module.css';
 import { connect } from 'react-redux';
 import { registration } from '../../actions/auth';
-import { toast } from 'react-toastify';
 
 const SignupModal = ({ registration, onClose }) => {
 

@@ -1,8 +1,7 @@
 .wrapper {
   margin: 50px auto 0;
   display: flex;
-  width:
-    1200px;
+  width: 1200px;
   gap: 20px;
   font-size: 16px;
   text-align: center;
@@ -26,24 +25,15 @@
   background-color: #dbdbdb;
   border-radius: 20px;
   cursor: pointer;
-  &:hover{
-    background-color: #d3d3d3;
-  }
 }
-.underline{
+
+.underline {
   background-color: #000;
   height: 1px;
-
 }
+
 .title {
-  font-size: 18px;
-  font-weight: 500;
-}
-
-.errorCode {
-  margin: 0 0 20px;
-  line-height: 0.8;
-  font-size: 200px;
+  font-size: 22px;
   font-weight: 500;
 }
 
@@ -52,76 +42,63 @@
   flex-direction: column;
 }
 
-.btn {
-  margin: 8px;
-  font-size: 18px;
-  font-weight: 500;
-  background-color: var(--bg2);
-  padding: 10px 30px;
-  border-radius: 10px;
-  border: 1px solid rgb(67, 49, 28);
-  color: black;
-  cursor: pointer;
-}
-
-.p {
-  display: flex;
-  flex-direction: column;
-  margin: 10px 0;
-  color: #333;
-}
-
-.profileInfo {
-  display: flex;
-  gap: 50px;
-}
-
-.profilePhoto img:hover {
-  transform: scale(1.05);
-}
-
-.profileDetails {
-  flex: 1;
-  margin-right: 20px;
-  display: flex;
-  flex-direction: column;
-
-}
-
-.profilePhoto {
-  width: 150px;
-  height: 150px;
-  overflow: hidden;
-  border-radius: 50%;
-  background-color: #f0e2c8;
+.formInline {
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
 }
 
-.profilePhoto img {
-  width: 100%;
-  height: auto;
-  border-radius: 50%;
-  transition: transform 0.3s;
+.label {
+  position: relative;
 }
 
-.profileInfo {
+.ErrorMessage {
+  position: absolute;
+  color: red;
+  font-size: 12px;
+}
+
+.inputInline {
+  flex: 1;
+}
+
+.btn,
+.dell_btn {
+  margin: 4px;
+  max-width: 150px;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: var(--bg2);
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgb(67, 49, 28);
+  color: #000000;
+  cursor: pointer;
+}
+
+.btnInline {
+  margin-left: 10px;
+}
+
+.dell_btn {
+  font-weight: 900;
+  font-size: 16px;
+  padding: 2px 6px;
+  background-color: rgba(199, 20, 20, 0.856);
+}
+
+.themeItem {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 40px 20px;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  margin-right: 10px;
 }
 
 .input {
   padding: 10px 20px;
   min-width: 322px;
   border-radius: 10px;
-  border: 1px solid rgba(120, 120, 120, 0.8);
+  border: 1px solid #787878cc;
   background-color: #dbdbdb;
   margin: 10px 0;
   font-size: 20px;
