@@ -5,14 +5,14 @@ import { toast } from 'react-toastify';
 import styles from './Creator.module.css';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { createGuide, getGuidesData } from '../../actions/creator';
+import { createGuide, getGuidesData, updateGuideThemes, getGuideThemes } from '../../actions/creator';
 import { connect } from 'react-redux';
 import Select from 'react-select';
 import { KEYWORDS } from './keyWords';
 import { customStyles } from './styles.Select';
 
 const Creator = (props) => {
-  const { userData, guides, getGuidesData, createGuide } = props;
+  const { userData, guides, getGuidesData, createGuide, updateGuideThemes, getGuideThemes } = props;
   const [targetGuide, setTargetGuide] = useState(null);
   const [isCreatingNewGuide, setIsCreatingNewGuide] = useState(false);
   const [isEditingGuide, setIsEditingGuide] = useState(false);
@@ -30,9 +30,7 @@ const Creator = (props) => {
     title: Yup.string().required('Guide title is required'),
   });
 
-  const initialThemesValues = {
-    themes: [],
-  };
+  
 
   const themesValidationSchema = Yup.object().shape({
     themes: Yup.array().max(6, 'You can add up to 6 themes').of(Yup.string().required('Theme is required')), // массив тем для поиска
@@ -71,19 +69,33 @@ const Creator = (props) => {
     });
   };
 
-  const handleThemesSubmit = (values) => {
-    setTargetGuide({ ...targetGuide, themes: values.themes });
-    toast.success('Themes added successfully!');
+  const handleThemesSubmit = async (values) => {
+    try {
+      await updateGuideThemes(targetGuide.id, { themes: values.themes });
+      toast.success('Themes updated successfully!');
+      handleSelectGuide(targetGuide);
+    } catch (error) {
+      console.error('Ошибка при обновлении тем:', error);
+      toast.error('Failed to update themes.');
+    }
   };
+  
 
   const handleChaptersSubmit = (values) => {
     console.log('Chapters submitted:', values);
     toast.success('Chapters updated successfully!');
   };
 
-  const handleSelectGuide = (guide) => {
-    setTargetGuide(guide);
-    setIsEditingGuide(true);
+  const handleSelectGuide = async (guide) => {
+    try {
+      setTargetGuide(guide);
+      setIsEditingGuide(false);
+
+      await getGuideThemes(guide.id); // Загружаем темы, обновляется хранилище Redux
+      setIsEditingGuide(true);
+    } catch (error) {
+      console.error('Ошибка при загрузке тем:', error);
+    }
   };
 
   return (
@@ -133,41 +145,55 @@ const Creator = (props) => {
         {isEditingGuide && targetGuide && (
           <div>
             <h2>Edit Guide: {targetGuide.title}</h2>
-            <Formik initialValues={initialThemesValues} validationSchema={themesValidationSchema} onSubmit={handleThemesSubmit}>
+
+            <Formik
+              initialValues={{
+                themes: props.themesByGuide[targetGuide.id] || [],
+              }}
+              enableReinitialize={true}
+              validationSchema={themesValidationSchema}
+              onSubmit={handleThemesSubmit}
+            >
               {({ values, setFieldValue }) => (
                 <Form className={styles.form}>
-                  <h3>Themes (up to 6)</h3>
-                  <Select
-                    classNamePrefix="custom-select"
-                    styles={customStyles}
-                    options={KEYWORDS.filter((keyword) => !values.themes.includes(keyword)).map((keyword) => ({
-                      value: keyword,
-                      label: keyword,
-                    }))}
-                    onChange={(selectedOption) => {
-                      if (selectedOption && values.themes.length < 6) {
-                        setFieldValue('themes', [...values.themes, selectedOption.value]);
-                      }
-                    }}
-                    placeholder="Search and select a theme"
-                    isClearable
-                  />
-                  <div className={styles.selectedThemes}>
-                    {values.themes.map((theme, index) => (
-                      <div key={index} className={styles.themeItem}>
-                        <span>{theme}</span>
-                        <button
-                          type="button"
-                          className={styles.dell_btn}
-                          onClick={() => {
-                            const newThemes = values.themes.filter((_, i) => i !== index);
-                            setFieldValue('themes', newThemes);
-                          }}
-                        >
-                          ✕
-                        </button>
-                      </div>
-                    ))}
+                  <h3>Edit Themes (up to 6)</h3>
+                  <div className={styles.wrapper_themes}>
+                    <div className={styles.container_themes}>
+                      {values.themes.map((theme, index) => (
+                        <div key={index} className={styles.themeItem}>
+                          <span>{theme}</span>
+                          <button
+                            type="button"
+                            className={styles.dell_btn}
+                            onClick={() => {
+                              const newThemes = values.themes.filter((_, i) => i !== index);
+                              setFieldValue('themes', newThemes);
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                    <Select
+                      classNamePrefix="custom-select"
+                      styles={customStyles}
+                      options={KEYWORDS.filter((keyword) => !values.themes.includes(keyword)).map((keyword) => ({
+                        value: keyword,
+                        label: keyword,
+                      }))}
+                      onChange={(selectedOption) => {
+                        if (selectedOption && values.themes.length < 6) {
+                          setFieldValue('themes', [...values.themes, selectedOption.value]);
+                        }
+                        setFieldValue('selectedTheme', null);
+                      }}
+                      value={null}
+                      placeholder="Search and select a theme"
+                      isClearable
+                    />
+
+                    <div className={styles.selectedThemes}></div>
                   </div>
                   <button type="submit" className={styles.btn}>
                     Save Themes
@@ -265,11 +291,14 @@ const Creator = (props) => {
 const mapDispatchToProps = {
   getGuidesData,
   createGuide,
+  updateGuideThemes,
+  getGuideThemes,
 };
 
 const mapStateToProps = (state) => ({
   userData: state.auth.userData,
   guides: state.creatorReducer?.guidesList || [],
+  themesByGuide: state.creatorReducer?.themesByGuide || {},
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Creator);

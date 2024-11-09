@@ -13,13 +13,19 @@
   border-radius: 20px;
   padding: 10px;
   width: 100%;
+
 }
 
 .guides_container {
   width: 200px;
+
+  :hover {
+    background-color: #b6b6b6;
+  }
 }
 
-.guide_plate {
+.guide_plate,
+.previous_themes {
   margin: 8px 0;
   padding: 6px 8px;
   background-color: #dbdbdb;
@@ -37,9 +43,37 @@
   font-weight: 500;
 }
 
-.form {
+.wrapper_themes {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.container_themes {
+
+  display: flex;
+}
+
+.selectedThemes {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.previous_themes_wrapper {
+  display: flex;
+}
+
+.previous_themes {
+  margin: 0 8px;
 }
 
 .formInline {
@@ -63,8 +97,7 @@
   flex: 1;
 }
 
-.btn,
-.dell_btn {
+.btn {
   margin: 4px;
   max-width: 150px;
   font-size: 14px;
@@ -84,8 +117,14 @@
 .dell_btn {
   font-weight: 900;
   font-size: 16px;
+  background-color: #00000000;
   padding: 2px 6px;
-  background-color: rgba(199, 20, 20, 0.856);
+  cursor: pointer;
+  color: #ff0000;
+
+  :hover {
+    font-size: 18px;
+  }
 }
 
 .themeItem {
