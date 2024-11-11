@@ -78,6 +78,7 @@
 
 .formInline {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 10px;
@@ -113,7 +114,9 @@
 .btnInline {
   margin-left: 10px;
 }
-
+.grey_text {
+  color: #757575;
+}
 .dell_btn {
   font-weight: 900;
   font-size: 16px;
