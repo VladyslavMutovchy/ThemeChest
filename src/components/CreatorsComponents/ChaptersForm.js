@@ -1,54 +1,110 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, FieldArray, Field, ErrorMessage } from 'formik';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styles from '../../pages/Creator/Creator.module.css';
+import classNames from 'classnames';
 
-const ChaptersForm = ({ initialValues, validationSchema, onSubmit }) => (
+const ChaptersForm = ({ guideTarget, initialValues, validationSchema, onSubmit }) => (
   <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
     {({ values, setFieldValue }) => (
       <Form className={styles.form}>
         <FieldArray name="chapters">
           {({ push, remove }) => (
-            <div>
+            <div className="width">
               <h3>Chapters</h3>
               {values.chapters.map((chapter, chapterIndex) => (
-                <div key={chapterIndex} className={styles.chapterItem}>
-                  <label>
-                    Chapter Title:
+                <div key={chapterIndex} className={classNames('width')}>
+                  <label className={classNames('width', styles.chapterItem)}>
+                    Chapter Title
                     <Field className="input" name={`chapters.${chapterIndex}.chapterTitle`} />
-                    <ErrorMessage name={`chapters.${chapterIndex}.chapterTitle`} component="div" className="error" />
+                    <ErrorMessage style={{ color: '#ff0000' }} name={`chapters.${chapterIndex}.chapterTitle`} component="div" className="error" />
                   </label>
 
                   <FieldArray name={`chapters.${chapterIndex}.contents`}>
                     {({ push, remove }) => (
-                      <div>
-                        <h4>Contents</h4>
+                      <div className="width">
                         {values.chapters[chapterIndex].contents.map((content, contentIndex) => (
-                          <div key={contentIndex} className={styles.contentItem}>
-                            <label>Content Type:</label>
-                            <Field as="select" name={`chapters.${chapterIndex}.contents.${contentIndex}.type`}>
-                              <option value="h2">Header (H2)</option>
-                              <option value="paragraph">Paragraph</option>
-                              <option value="img">Image</option>
-                              <option value="video">Video</option>
-                            </Field>
-
+                          <div className="width" key={contentIndex}>
                             {values.chapters[chapterIndex].contents[contentIndex].type === 'paragraph' && (
-                              <ReactQuill
-                                value={values.chapters[chapterIndex].contents[contentIndex].value || ''}
-                                onChange={(val) => setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.value`, val)}
-                              />
+                              <div className={classNames('width', styles.chapterItem)}>
+                                <p>Paragraph</p>
+                                <ReactQuill
+                                  className={styles.react_quill}
+                                  value={values.chapters[chapterIndex].contents[contentIndex].value || ''}
+                                  onChange={(val) => setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.value`, val)}
+                                />
+                                <button type="button" className={classNames(styles.btn, styles.red)} onClick={() => remove(contentIndex)}>
+                                  Remove
+                                </button>
+                              </div>
                             )}
 
-                            <button type="button" className={styles.btn} onClick={() => remove(contentIndex)}>
-                              Remove Content
-                            </button>
+                            {values.chapters[chapterIndex].contents[contentIndex].type === 'img' && (
+                              <div  className={classNames('width', styles.chapterItem)}>
+                                <p>Image</p>
+                                {values.chapters[chapterIndex].contents[contentIndex].previewUrl && (
+                                  <img
+                                    src={values.chapters[chapterIndex].contents[contentIndex].previewUrl}
+                                    alt="preview"
+                                    className={styles.imagePreview}
+                                  />
+                                )}
+
+                                <input
+                                  type="file"
+                                  accept=".jpg, .png, .jpeg"
+                                  style={{ display: 'none' }}
+                                  id={`fileInput-${chapterIndex}-${contentIndex}`}
+                                  onChange={(e) => {
+                                    const file = e.target.files[0];
+                                    if (file) {
+                                      setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.value`, file);
+                                      setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.previewUrl`, URL.createObjectURL(file));
+                                    } 
+                                  }}
+                                />
+                                <button
+                                  type="button"
+                                  className={classNames(styles.btn)}
+                                  onClick={() => document.getElementById(`fileInput-${chapterIndex}-${contentIndex}`).click()}
+                                >
+                                  Add Photo
+                                </button>
+
+                                <button type="button" className={classNames(styles.btn, styles.red)} onClick={() => remove(contentIndex)}>
+                                  Remove
+                                </button>
+                              </div>
+                            )}
+                            {values.chapters[chapterIndex].contents[contentIndex].type === 'video' && (
+                              <div className={classNames('width', styles.chapterItem)}>
+                                <p>Video link</p>
+                                <input
+                                  className="input"
+                                  type="text"
+                                  placeholder="Enter video URL"
+                                  value={values.chapters[chapterIndex].contents[contentIndex].value || ''}
+                                  onChange={(e) => setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.value`, e.target.value)}
+                                />
+                                <button type="button" className={classNames(styles.btn, styles.red)} onClick={() => remove(contentIndex)}>
+                                  Remove
+                                </button>
+                              </div>
+                            )}
                           </div>
                         ))}
-                        <button type="button" className={styles.btn} onClick={() => push({ type: 'paragraph', value: '' })}>
-                          Add Content
-                        </button>
+                        <div className={styles.wrapper_btn}>
+                          <button type="button" className={styles.btn} onClick={() => push({ type: 'paragraph', value: '' })}>
+                            Add Paragraph
+                          </button>
+                          <button type="button" className={styles.btn} onClick={() => push({ type: 'img', value: '', previewUrl: '' })}>
+                            Add Image
+                          </button>
+                          <button type="button" className={styles.btn} onClick={() => push({ type: 'video', value: '' })}>
+                            Add Video
+                          </button>
+                        </div>
                       </div>
                     )}
                   </FieldArray>
@@ -58,8 +114,18 @@ const ChaptersForm = ({ initialValues, validationSchema, onSubmit }) => (
                   </button>
                 </div>
               ))}
-              <button type="button" className={styles.btn} onClick={() => push({ chapterTitle: '', contents: [] })}>
-                Add Chapter
+              <button
+                type="button"
+                className={styles.btn}
+                onClick={() =>
+                  push({
+                    guide_id: guideTarget.id,
+                    chapterTitle: '',
+                    contents: [],
+                  })
+                }
+              >
+                Create Chapter
               </button>
             </div>
           )}
@@ -72,5 +138,4 @@ const ChaptersForm = ({ initialValues, validationSchema, onSubmit }) => (
   </Formik>
 );
 
-// Экспорт компонента
 export default ChaptersForm;

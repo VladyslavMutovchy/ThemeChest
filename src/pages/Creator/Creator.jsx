@@ -7,6 +7,7 @@ import CreateGuideForm from '../../components/CreatorsComponents/CreateGuideFrom
 import EditThemesForm from '../../components/CreatorsComponents/EditThemesForm';
 import ChaptersForm from '../../components/CreatorsComponents/ChaptersForm';
 import * as Yup from 'yup';
+import classNames from 'classnames';
 
 const guideValidationSchema = Yup.object().shape({
   title: Yup.string().required('Guide title is required'),
@@ -99,14 +100,35 @@ const Creator = (props) => {
         </button>
       </div>
 
-      <div className={styles.creator_container}>
-        {isCreatingNewGuide && !isEditingGuide && <CreateGuideForm initialValues={{ user_id: userData.id, title: '' }} validationSchema={guideValidationSchema} onSubmit={handleGuideSubmit} />}
+      <div className={styles.creator}>
+        {isCreatingNewGuide && !isEditingGuide && (
+          <div className={styles.creator_container}>
+            <CreateGuideForm
+              initialValues={{ user_id: userData.id, title: '' }}
+              validationSchema={guideValidationSchema}
+              onSubmit={handleGuideSubmit}
+            />
+          </div>
+        )}
 
         {isEditingGuide && targetGuide && (
           <>
-            <EditThemesForm themes={themesByGuide[targetGuide.id] || []} guideTarget={targetGuide}  validationSchema={themesValidationSchema} onSubmit={handleThemesSubmit} />
-
-            <ChaptersForm initialValues={{ chapters: [] }} validationSchema={chaptersValidationSchema} onSubmit={handleChaptersSubmit} />
+            <div className={styles.creator_container}>
+              <EditThemesForm
+                themes={themesByGuide[targetGuide.id] || []}
+                guideTarget={targetGuide}
+                validationSchema={themesValidationSchema}
+                onSubmit={handleThemesSubmit}
+              />
+            </div>
+            <div className={styles.creator_container}>
+              <ChaptersForm
+                initialValues={{ chapters: [] }}
+                guideTarget={targetGuide}
+                validationSchema={chaptersValidationSchema}
+                onSubmit={handleChaptersSubmit}
+              />
+            </div>
           </>
         )}
       </div>

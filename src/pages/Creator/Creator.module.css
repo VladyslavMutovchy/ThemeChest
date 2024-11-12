@@ -7,6 +7,13 @@
   text-align: center;
 }
 
+.creator {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .creator_container,
 .guides_container {
   background-color: #ffffff77;
@@ -61,6 +68,16 @@
   display: flex;
   flex-wrap: wrap;
 }
+.chapterItem{
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
+  padding: 20px 0;
+  width: 100%;
+  border-bottom: 1px solid black;
+}  
 
 .form {
   display: flex;
@@ -106,17 +123,24 @@
   background-color: var(--bg2);
   padding: 8px 10px;
   border-radius: 10px;
-  border: 1px solid rgb(67, 49, 28);
+  border: 1px solid rgb(167, 167, 167);
   color: #000000;
   cursor: pointer;
+}
+
+.wrapper_btn {
+  display: flex;
+ justify-content: center;
 }
 
 .btnInline {
   margin-left: 10px;
 }
+
 .grey_text {
   color: #757575;
 }
+
 .dell_btn {
   font-weight: 900;
   font-size: 16px;
@@ -129,7 +153,9 @@
     font-size: 18px;
   }
 }
-
+.red{
+  background-color: #e41304;
+}
 .themeItem {
   display: flex;
   align-items: center;
@@ -144,4 +170,11 @@
   background-color: #dbdbdb;
   margin: 10px 0;
   font-size: 20px;
+}
+.imagePreview {
+  max-width: 800px;
+  max-height: 600px;
+}
+.react_quill {
+  width: 100%;
 }

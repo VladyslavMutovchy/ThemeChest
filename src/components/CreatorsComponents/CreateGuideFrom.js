@@ -10,7 +10,7 @@ const CreateGuideForm = ({ initialValues, validationSchema, onSubmit }) => {
           <label className={styles.label}>
             
             <Field placeholder="Guide Title" className={`${styles.input} ${styles.inputInline}`} type="text" name="title" />
-            <ErrorMessage className={styles.ErrorMessage} style={{ color: '#ff0000' }} name="title" component="div" />
+            <ErrorMessage style={{ color: '#ff0000' }} className={styles.ErrorMessage} style={{ color: '#ff0000' }} name="title" component="div" />
           </label>
           <button type="submit" className={`${styles.btn} ${styles.btnInline}`}>
             Create Guide

@@ -40,6 +40,7 @@ button {
 .hidden {
   display: none;
 }
+
 .dropdown_menu_strings div {
   margin: 3px;
   width: 26px;
@@ -47,6 +48,7 @@ button {
   background-color: #43300cbf;
   border-radius: 2px;
 }
+
 .input {
   padding: 10px 20px;
   min-width: 280px;
@@ -55,4 +57,106 @@ button {
   background-color: lightgray;
   margin: 10px 0;
   font-size: 20px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--black);
+}
+
+p {
+  color: var(--black-2);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: var(--content-width);
+  padding: var(--content-padding);
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--content-padding-mobile);
+  }
+}
+
+.header {
+  height: var(--header-height);
+  background-color: var(--bg2);
+}
+
+@media (max-width: 768px) {
+  .header {
+    height: var(--header-height-mobile);
+  }
+}
+
+.mt-1 {
+  margin-top: 10px;
+}
+
+.mb-1 {
+  margin-bottom: 10px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button {
+  background-color: var(--brown);
+  color: var(--white);
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button:hover {
+  background-color: var(--black-2);
+}
+
+a {
+  text-decoration: none;
+  color: var(--brown);
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--black);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.form-group {
+  margin-bottom: var(--gap-regular);
+}
+
+.label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+} 
+
+.width {
+  width: 100%;
 }
