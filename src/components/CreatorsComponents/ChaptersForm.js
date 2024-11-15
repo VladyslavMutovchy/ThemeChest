@@ -1,12 +1,34 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Formik, Form, FieldArray, Field, ErrorMessage } from 'formik';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import styles from '../../pages/Creator/Creator.module.css';
 import classNames from 'classnames';
 
-const ChaptersForm = ({ guideTarget, initialValues, validationSchema, onSubmit }) => (
-  <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
+const ChaptersForm = ({ initialValues, guideTarget, validationSchema, onSubmit }) => (
+  <Formik
+    initialValues={initialValues}
+    validationSchema={validationSchema}
+    onSubmit={(values, { setSubmitting }) => {
+      const formData = new FormData();
+
+      formData.append('guide_id', guideTarget.id);
+      values.chapters.forEach((chapter, chapterIndex) => {
+        formData.append(`chapters[${chapterIndex}][chapterTitle]`, chapter.chapterTitle);
+        chapter.contents.forEach((content, contentIndex) => {
+          formData.append(`chapters[${chapterIndex}][contents][${contentIndex}][type]`, content.type);
+          if (content.type === 'img' && content.value instanceof File) {
+            formData.append(`chapters[${chapterIndex}][contents][${contentIndex}][file]`, content.value);
+          } else {
+            formData.append(`chapters[${chapterIndex}][contents][${contentIndex}][value]`, JSON.stringify(content.value));
+          }
+        });
+      });
+
+      onSubmit(formData);
+      setSubmitting(false);
+    }}
+  >
     {({ values, setFieldValue }) => (
       <Form className={styles.form}>
         <FieldArray name="chapters">
@@ -18,7 +40,12 @@ const ChaptersForm = ({ guideTarget, initialValues, validationSchema, onSubmit }
                   <label className={classNames('width', styles.chapterItem)}>
                     Chapter Title
                     <Field className="input" name={`chapters.${chapterIndex}.chapterTitle`} />
-                    <ErrorMessage style={{ color: '#ff0000' }} name={`chapters.${chapterIndex}.chapterTitle`} component="div" className="error" />
+                    <ErrorMessage
+                      style={{ color: '#ff0000' }}
+                      name={`chapters.${chapterIndex}.chapterTitle`}
+                      component="div"
+                      className="error"
+                    />
                   </label>
 
                   <FieldArray name={`chapters.${chapterIndex}.contents`}>
@@ -26,26 +53,36 @@ const ChaptersForm = ({ guideTarget, initialValues, validationSchema, onSubmit }
                       <div className="width">
                         {values.chapters[chapterIndex].contents.map((content, contentIndex) => (
                           <div className="width" key={contentIndex}>
-                            {values.chapters[chapterIndex].contents[contentIndex].type === 'paragraph' && (
+                            {content.type === 'paragraph' && (
                               <div className={classNames('width', styles.chapterItem)}>
                                 <p>Paragraph</p>
                                 <ReactQuill
                                   className={styles.react_quill}
-                                  value={values.chapters[chapterIndex].contents[contentIndex].value || ''}
-                                  onChange={(val) => setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.value`, val)}
+                                  value={content.value || ''}
+                                  onChange={(val) =>
+                                    setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.value`, val)
+                                  }
                                 />
-                                <button type="button" className={classNames(styles.btn, styles.red)} onClick={() => remove(contentIndex)}>
+                                <button
+                                  type="button"
+                                  className={classNames(styles.btn, styles.red)}
+                                  onClick={() => remove(contentIndex)}
+                                >
                                   Remove
                                 </button>
                               </div>
                             )}
 
-                            {values.chapters[chapterIndex].contents[contentIndex].type === 'img' && (
-                              <div  className={classNames('width', styles.chapterItem)}>
+                            {content.type === 'img' && (
+                              <div className={classNames('width', styles.chapterItem)}>
                                 <p>Image</p>
-                                {values.chapters[chapterIndex].contents[contentIndex].previewUrl && (
+                                {content.value && (
                                   <img
-                                    src={values.chapters[chapterIndex].contents[contentIndex].previewUrl}
+                                    src={
+                                      content.value.base64
+                                        ? `data:${content.value.mimeType};base64,${content.value.base64}`
+                                        : content.previewUrl
+                                    }
                                     alt="preview"
                                     className={styles.imagePreview}
                                   />
@@ -60,8 +97,11 @@ const ChaptersForm = ({ guideTarget, initialValues, validationSchema, onSubmit }
                                     const file = e.target.files[0];
                                     if (file) {
                                       setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.value`, file);
-                                      setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.previewUrl`, URL.createObjectURL(file));
-                                    } 
+                                      setFieldValue(
+                                        `chapters.${chapterIndex}.contents.${contentIndex}.previewUrl`,
+                                        URL.createObjectURL(file)
+                                      );
+                                    }
                                   }}
                                 />
                                 <button
@@ -72,22 +112,33 @@ const ChaptersForm = ({ guideTarget, initialValues, validationSchema, onSubmit }
                                   Add Photo
                                 </button>
 
-                                <button type="button" className={classNames(styles.btn, styles.red)} onClick={() => remove(contentIndex)}>
+                                <button
+                                  type="button"
+                                  className={classNames(styles.btn, styles.red)}
+                                  onClick={() => remove(contentIndex)}
+                                >
                                   Remove
                                 </button>
                               </div>
                             )}
-                            {values.chapters[chapterIndex].contents[contentIndex].type === 'video' && (
+
+                            {content.type === 'video' && (
                               <div className={classNames('width', styles.chapterItem)}>
                                 <p>Video link</p>
                                 <input
                                   className="input"
                                   type="text"
                                   placeholder="Enter video URL"
-                                  value={values.chapters[chapterIndex].contents[contentIndex].value || ''}
-                                  onChange={(e) => setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.value`, e.target.value)}
+                                  value={content.value || ''}
+                                  onChange={(e) =>
+                                    setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.value`, e.target.value)
+                                  }
                                 />
-                                <button type="button" className={classNames(styles.btn, styles.red)} onClick={() => remove(contentIndex)}>
+                                <button
+                                  type="button"
+                                  className={classNames(styles.btn, styles.red)}
+                                  onClick={() => remove(contentIndex)}
+                                >
                                   Remove
                                 </button>
                               </div>
@@ -95,13 +146,25 @@ const ChaptersForm = ({ guideTarget, initialValues, validationSchema, onSubmit }
                           </div>
                         ))}
                         <div className={styles.wrapper_btn}>
-                          <button type="button" className={styles.btn} onClick={() => push({ type: 'paragraph', value: '' })}>
+                          <button
+                            type="button"
+                            className={styles.btn}
+                            onClick={() => push({ type: 'paragraph', value: '' })}
+                          >
                             Add Paragraph
                           </button>
-                          <button type="button" className={styles.btn} onClick={() => push({ type: 'img', value: '', previewUrl: '' })}>
+                          <button
+                            type="button"
+                            className={styles.btn}
+                            onClick={() => push({ type: 'img', value: '', previewUrl: '' })}
+                          >
                             Add Image
                           </button>
-                          <button type="button" className={styles.btn} onClick={() => push({ type: 'video', value: '' })}>
+                          <button
+                            type="button"
+                            className={styles.btn}
+                            onClick={() => push({ type: 'video', value: '' })}
+                          >
                             Add Video
                           </button>
                         </div>
@@ -119,7 +182,6 @@ const ChaptersForm = ({ guideTarget, initialValues, validationSchema, onSubmit }
                 className={styles.btn}
                 onClick={() =>
                   push({
-                    guide_id: guideTarget.id,
                     chapterTitle: '',
                     contents: [],
                   })

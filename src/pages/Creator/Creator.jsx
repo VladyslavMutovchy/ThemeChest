@@ -2,44 +2,47 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import styles from './Creator.module.css';
 import { connect } from 'react-redux';
-import { createGuide, getGuidesData, updateGuideThemes, getGuideThemes } from '../../actions/creator';
+import {
+  createGuide,
+  getGuidesData,
+  updateGuideThemes,
+  getGuideThemes,
+  updateGuideChapters,
+  getGuideChapters,
+} from '../../actions/creator';
 import CreateGuideForm from '../../components/CreatorsComponents/CreateGuideFrom';
 import EditThemesForm from '../../components/CreatorsComponents/EditThemesForm';
 import ChaptersForm from '../../components/CreatorsComponents/ChaptersForm';
 import * as Yup from 'yup';
-import classNames from 'classnames';
-
-const guideValidationSchema = Yup.object().shape({
-  title: Yup.string().required('Guide title is required'),
-});
-
-const themesValidationSchema = Yup.object().shape({
-  themes: Yup.array().max(6, 'You can add up to 6 themes').of(Yup.string().required('Theme is required')),
-});
-
-const chaptersValidationSchema = Yup.object().shape({
-  chapters: Yup.array().of(
-    Yup.object().shape({
-      chapterTitle: Yup.string().required('Chapter title is required'),
-      contents: Yup.array().of(
-        Yup.object().shape({
-          type: Yup.string().required(),
-          value: Yup.mixed().required('Content value is required'),
-        })
-      ),
-    })
-  ),
-});
 
 const Creator = (props) => {
-  const { userData, guides, getGuidesData, createGuide, updateGuideThemes, getGuideThemes, themesByGuide } = props;
+  const {
+    userData,
+    guides,
+    getGuidesData,
+    createGuide,
+    updateGuideThemes,
+    getGuideThemes,
+    themesByGuide,
+    updateGuideChapters,
+    getGuideChapters,
+    chaptersByGuide,
+  } = props;
+
   const [targetGuide, setTargetGuide] = useState(null);
   const [isCreatingNewGuide, setIsCreatingNewGuide] = useState(false);
   const [isEditingGuide, setIsEditingGuide] = useState(false);
+  const [initialChapters, setInitialChapters] = useState({ chapters: [] });
 
   useEffect(() => {
     getGuidesData(userData.id);
   }, [getGuidesData, userData.id]);
+
+  useEffect(() => {
+    if (targetGuide && chaptersByGuide[targetGuide.id]) {
+      setInitialChapters({ chapters: chaptersByGuide[targetGuide.id] });
+    }
+  }, [targetGuide, chaptersByGuide]);
 
   const handleGuideSubmit = (values) => {
     createGuide(values, (newGuide) => {
@@ -60,16 +63,23 @@ const Creator = (props) => {
     }
   };
 
-  const handleChaptersSubmit = (values) => {
-    toast.success('Chapters updated successfully!');
+  const handleChaptersSubmit = async (values) => {
+    console.log('Submit chapters values:', values);
+    try {
+      await updateGuideChapters(values);
+      toast.success('Chapters updated successfully!');
+      handleSelectGuide(targetGuide);
+    } catch (error) {
+      toast.error('Failed to update chapters.');
+    }
   };
 
   const handleSelectGuide = async (guide) => {
     try {
       setTargetGuide(guide);
       setIsEditingGuide(false);
-
       await getGuideThemes(guide.id);
+      await getGuideChapters(guide.id);
       setIsEditingGuide(true);
     } catch (error) {
       console.error('Ошибка при загрузке тем:', error);
@@ -105,7 +115,9 @@ const Creator = (props) => {
           <div className={styles.creator_container}>
             <CreateGuideForm
               initialValues={{ user_id: userData.id, title: '' }}
-              validationSchema={guideValidationSchema}
+              validationSchema={Yup.object().shape({
+                title: Yup.string().required('Guide title is required'),
+              })}
               onSubmit={handleGuideSubmit}
             />
           </div>
@@ -117,15 +129,29 @@ const Creator = (props) => {
               <EditThemesForm
                 themes={themesByGuide[targetGuide.id] || []}
                 guideTarget={targetGuide}
-                validationSchema={themesValidationSchema}
+                validationSchema={Yup.object().shape({
+                  themes: Yup.array().max(6, 'You can add up to 6 themes').of(Yup.string().required('Theme is required')),
+                })}
                 onSubmit={handleThemesSubmit}
               />
             </div>
             <div className={styles.creator_container}>
               <ChaptersForm
-                initialValues={{ chapters: [] }}
+                initialValues={initialChapters}
                 guideTarget={targetGuide}
-                validationSchema={chaptersValidationSchema}
+                validationSchema={Yup.object().shape({
+                  chapters: Yup.array().of(
+                    Yup.object().shape({
+                      chapterTitle: Yup.string().required('Chapter title is required'),
+                      contents: Yup.array().of(
+                        Yup.object().shape({
+                          type: Yup.string().required(),
+                          value: Yup.mixed().required('Content value is required'),
+                        })
+                      ),
+                    })
+                  ),
+                })}
                 onSubmit={handleChaptersSubmit}
               />
             </div>
@@ -141,12 +167,15 @@ const mapDispatchToProps = {
   createGuide,
   updateGuideThemes,
   getGuideThemes,
+  updateGuideChapters,
+  getGuideChapters,
 };
 
 const mapStateToProps = (state) => ({
   userData: state.auth.userData,
   guides: state.creatorReducer?.guidesList || [],
   themesByGuide: state.creatorReducer?.themesByGuide || {},
+  chaptersByGuide: state.creatorReducer?.chaptersByGuide || {},
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Creator);
