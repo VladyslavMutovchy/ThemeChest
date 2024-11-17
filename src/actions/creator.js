@@ -5,6 +5,7 @@ export const UPDATE_THEMES = 'UPDATE_THEMES';
 export const SET_THEMES_BY_GUIDE = 'SET_THEMES_BY_GUIDE';
 export const SET_CHAPTERS_BY_GUIDE = 'SET_CHAPTERS_BY_GUIDE';
 export const UPDATE_CHAPTERS = 'UPDATE_CHAPTERS';
+export const RESET_CHAPTERS = 'RESET_CHAPTERS';
 
 import { actionWrapper } from './actionWrapper';
 import { creatorAPI } from '../api/creator';
@@ -55,22 +56,25 @@ export const getGuideThemes = (guide_id) => async (dispatch) => {
   }
 };
 
-export const updateGuideChapters = ( chapterData, callback) => async (dispatch) => {
-  console.log('Dispatching updateGuideChapters:', chapterData); 
+export const updateGuideChapters = (chapterData, callback) => async (dispatch) => {
+  dispatch(resetChapters());
   try {
-    const response = await creatorAPI.updateGuideChapters(chapterData );
-    dispatch(updateChapters(response.chapters));
+    const response = await creatorAPI.updateGuideChapters(chapterData);
+    dispatch(updateChapters(response.guide_id, response.chapters));
     if (callback) callback(response);
   } catch (error) {
+    dispatch(resetChapters());
     console.error('Failed to update guide Chapters:', error);
   }
 };
 
 export const getGuideChapters = (guide_id) => async (dispatch) => {
+  dispatch(resetChapters());
+
   try {
     const response = await creatorAPI.getGuideChapters(guide_id);
     console.log('===Данные с сервера===>', response);
-    dispatch(updateChapters(guide_id, response.chapters));
+    dispatch(updateChapters(response.guide_id, response.chapters));
   } catch (error) {
     console.error('Failed to get guide Chapters:', error);
   }
@@ -100,13 +104,10 @@ export const setThemesByGuide = (guide_id, themes) => ({
   payload: { guide_id, themes },
 });
 
-export const setChaptersByGuide = (guide_id, chapters) => ({
-  type: SET_CHAPTERS_BY_GUIDE,
-  payload: { guide_id, chapters },
-});
-
 export const updateChapters = (guide_id, chapters) => ({
   type: UPDATE_CHAPTERS,
   payload: { guide_id, chapters },
 });
-
+export const resetChapters = () => ({
+  type: RESET_CHAPTERS,
+});

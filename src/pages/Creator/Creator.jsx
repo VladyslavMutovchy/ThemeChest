@@ -9,6 +9,7 @@ import {
   getGuideThemes,
   updateGuideChapters,
   getGuideChapters,
+  resetChapters,
 } from '../../actions/creator';
 import CreateGuideForm from '../../components/CreatorsComponents/CreateGuideFrom';
 import EditThemesForm from '../../components/CreatorsComponents/EditThemesForm';
@@ -27,6 +28,7 @@ const Creator = (props) => {
     updateGuideChapters,
     getGuideChapters,
     chaptersByGuide,
+    resetChapters,
   } = props;
 
   const [targetGuide, setTargetGuide] = useState(null);
@@ -78,6 +80,7 @@ const Creator = (props) => {
     try {
       setTargetGuide(guide);
       setIsEditingGuide(false);
+      resetChapters();
       await getGuideThemes(guide.id);
       await getGuideChapters(guide.id);
       setIsEditingGuide(true);
@@ -169,6 +172,7 @@ const mapDispatchToProps = {
   getGuideThemes,
   updateGuideChapters,
   getGuideChapters,
+  resetChapters,
 };
 
 const mapStateToProps = (state) => ({

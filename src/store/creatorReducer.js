@@ -1,4 +1,4 @@
-import { SET_GUIDES, ADD_GUIDE, UPDATE_THEMES, SET_THEMES_BY_GUIDE, SET_CHAPTERS_BY_GUIDE, UPDATE_CHAPTERS } from '../actions/creator';
+import { SET_GUIDES, ADD_GUIDE, UPDATE_THEMES, SET_THEMES_BY_GUIDE, UPDATE_CHAPTERS, RESET_CHAPTERS } from '../actions/creator';
 
 const initialState = {
   guidesList: [],
@@ -34,14 +34,7 @@ const creatorReducer = (state = initialState, action) => {
           [action.payload.guide_id]: action.payload.themes,
         },
       };
-    case SET_CHAPTERS_BY_GUIDE:
-      return {
-        ...state,
-        chaptersByGuide: {
-          ...state.chaptersByGuide,
-          [action.payload.guide_id]: action.payload.chapters,
-        },
-      };
+
     case UPDATE_CHAPTERS:
       return {
         ...state,
@@ -49,6 +42,12 @@ const creatorReducer = (state = initialState, action) => {
           ...state.chaptersByGuide,
           [action.payload.guide_id]: action.payload.chapters,
         },
+      };
+
+    case RESET_CHAPTERS:
+      return {
+        ...state,
+        chaptersByGuide: {},
       };
     default:
       return state;
