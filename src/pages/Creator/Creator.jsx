@@ -92,7 +92,7 @@ const Creator = (props) => {
   return (
     <div className={styles.wrapper}>
       <div className={styles.guides_container}>
-        <h2>Your Guides</h2>
+        <h2 onClick={() => setTargetGuide(null)}>Your Guides</h2>
         <div className={styles.underline} />
 
         {guides?.map((guide, index) => (
@@ -114,50 +114,70 @@ const Creator = (props) => {
       </div>
 
       <div className={styles.creator}>
-        {isCreatingNewGuide && !isEditingGuide && (
-          <div className={styles.creator_container}>
-            <CreateGuideForm
-              initialValues={{ user_id: userData.id, title: '' }}
-              validationSchema={Yup.object().shape({
-                title: Yup.string().required('Guide title is required'),
-              })}
-              onSubmit={handleGuideSubmit}
-            />
+        {targetGuide === null ? (
+          <div className={styles.creator_intro}>
+            <h2 className={styles.h2}>Welcome to ThemesCreator</h2>
+            <p>
+              ThemesCreator is your ultimate tool for crafting comprehensive guides on any topic. Whether you're sharing knowledge, teaching a skill,
+              or providing instructions, ThemesCreator empowers you to create guides that truly stand out.
+            </p>
+            <p>With ThemesCreator, you can add a variety of content to your guides:</p>
+            <ul>
+              <li>Text blocks for clear and concise information</li>
+              <li>Images to make your guides visually appealing</li>
+              <li>Links to videos or external resources for more depth</li>
+              <li>Custom themes to align your guide's style with its purpose</li>
+            </ul>
+            <p>Please select an existing guide to edit or click "Create New Guide" to start crafting your masterpiece!</p>
           </div>
-        )}
-
-        {isEditingGuide && targetGuide && (
+        ) : (
           <>
-            <div className={styles.creator_container}>
-              <EditThemesForm
-                themes={themesByGuide[targetGuide.id] || []}
-                guideTarget={targetGuide}
-                validationSchema={Yup.object().shape({
-                  themes: Yup.array().max(6, 'You can add up to 6 themes').of(Yup.string().required('Theme is required')),
-                })}
-                onSubmit={handleThemesSubmit}
-              />
-            </div>
-            <div className={styles.creator_container}>
-              <ChaptersForm
-                initialValues={initialChapters}
-                guideTarget={targetGuide}
-                validationSchema={Yup.object().shape({
-                  chapters: Yup.array().of(
-                    Yup.object().shape({
-                      chapterTitle: Yup.string().required('Chapter title is required'),
-                      contents: Yup.array().of(
+            {isCreatingNewGuide && !isEditingGuide && (
+              <div className={styles.creator_container}>
+                <CreateGuideForm
+                  initialValues={{ user_id: userData.id, title: '' }}
+                  validationSchema={Yup.object().shape({
+                    title: Yup.string().required('Guide title is required'),
+                  })}
+                  onSubmit={handleGuideSubmit}
+                />
+              </div>
+            )}
+
+            {isEditingGuide && targetGuide && (
+              <>
+                <div className={styles.creator_container}>
+                  <EditThemesForm
+                    themes={themesByGuide[targetGuide.id] || []}
+                    guideTarget={targetGuide}
+                    validationSchema={Yup.object().shape({
+                      themes: Yup.array().max(6, 'You can add up to 6 themes').of(Yup.string().required('Theme is required')),
+                    })}
+                    onSubmit={handleThemesSubmit}
+                  />
+                </div>
+                <div className={styles.creator_container}>
+                  <ChaptersForm
+                    initialValues={initialChapters}
+                    guideTarget={targetGuide}
+                    validationSchema={Yup.object().shape({
+                      chapters: Yup.array().of(
                         Yup.object().shape({
-                          type: Yup.string().required(),
-                          value: Yup.mixed().required('Content value is required'),
+                          chapterTitle: Yup.string().required('Chapter title is required'),
+                          contents: Yup.array().of(
+                            Yup.object().shape({
+                              type: Yup.string().required(),
+                              value: Yup.mixed().required('Content value is required'),
+                            })
+                          ),
                         })
                       ),
-                    })
-                  ),
-                })}
-                onSubmit={handleChaptersSubmit}
-              />
-            </div>
+                    })}
+                    onSubmit={handleChaptersSubmit}
+                  />
+                </div>
+              </>
+            )}
           </>
         )}
       </div>

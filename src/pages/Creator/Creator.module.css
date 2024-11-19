@@ -1,34 +1,61 @@
 .wrapper {
   margin: 50px auto 0;
   display: flex;
-  width: 1200px;
-  gap: 20px;
+  flex-direction: row;
+  align-items: flex-start; /* Элементы выравниваются по верхнему краю */
+  justify-content: flex-start;
+  max-width: 1200px;
+  width: 100%;
+  min-height: 100vh;
+  gap: 10px;
   font-size: 16px;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .creator {
   width: 100%;
+  max-width: 980px;
+  flex: 1; /* Создаёт гибкость для заполнения доступного пространства */
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin: 0 auto;
 }
 
+
 .creator_container,
-.guides_container {
-  background-color: #ffffff77;
+.guides_container,
+.creator_intro {
+  background-color: var(--container);
   border-radius: 20px;
   padding: 10px;
-  width: 100%;
+  height: auto;
 
+}
+
+.creator_intro {
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+  gap: 20px;
+  text-align: left;
+}
+
+.creator_container {
+  flex-direction: column;
+  width: 100%;
+  display: flex;
+}
+
+.h2 {
+  text-align: center;
 }
 
 .guides_container {
   width: 200px;
 
-  :hover {
-    background-color: #b6b6b6;
-  }
+  height: auto;
 }
 
 .guide_plate,
@@ -38,6 +65,10 @@
   background-color: #dbdbdb;
   border-radius: 20px;
   cursor: pointer;
+}
+
+.previous_themes:hover {
+  background-color: #b6b6b6;
 }
 
 .underline {
@@ -68,7 +99,8 @@
   display: flex;
   flex-wrap: wrap;
 }
-.chapterItem{
+
+.chapterItem {
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -77,7 +109,7 @@
   padding: 20px 0;
   width: 100%;
   border-bottom: 1px solid black;
-}  
+}
 
 .form {
   display: flex;
@@ -130,7 +162,7 @@
 
 .wrapper_btn {
   display: flex;
- justify-content: center;
+  justify-content: center;
 }
 
 .btnInline {
@@ -153,9 +185,11 @@
     font-size: 18px;
   }
 }
-.red{
+
+.red {
   background-color: #e41304;
 }
+
 .themeItem {
   display: flex;
   align-items: center;
@@ -171,10 +205,12 @@
   margin: 10px 0;
   font-size: 20px;
 }
+
 .imagePreview {
   max-width: 800px;
   max-height: 600px;
 }
+
 .react_quill {
   width: 100%;
 }

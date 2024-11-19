@@ -1,6 +1,7 @@
 .wrapper {
-  margin: 100px auto 0;
+  margin: 50px auto 0;
   max-width: 360px;
+  min-height: 400px;
   font-size: 16px;
   text-align: center;
 }

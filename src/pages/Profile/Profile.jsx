@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import standardImg from '../../assets/images/logo.png';
 import { changePasswordAction, updateUserProfile, getUserData } from '../../actions/profile';
 import { logout } from '../../actions/auth';
+import classNames from 'classnames';
 
 const Profile = (props) => {
   const { userData, updateUserProfile, changePasswordAction, getUserData } = props;
@@ -237,14 +238,14 @@ const Profile = (props) => {
           </p>
         </div>
         <div className={styles.profilePhoto}>
-          <img src={userData.photoUrl || standardImg} alt="Profile" />
+          <img src={userData.photoUrl || standardImg} alt="" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className={styles.wrapper}>
+    <div className={classNames(styles.wrapper, styles.container)}>
       <h2>Profile</h2>
       {content}
       <div className={styles.buttonGroup}>

@@ -1,11 +1,85 @@
-
 .wrapper {
-  margin-top: calc(var(--header-height) * -1);
-  background-color: var(--bg1);
+  margin: 50px auto 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  max-width: 1200px;
 }
 
+.container {
+  background-color: var(--container);
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  max-width: 1200px;
+  width: 100%;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: #333333;
+}
+
+.header p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #555555;
+}
+
+.startButton {
+  background-color: #0078d4;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.startButton:hover {
+  background-color: #005bb5;
+}
+
+.aboutSection,
+.popularGuides {
+  margin-top: 30px;
+}
+
+.aboutSection h2,
+.popularGuides h2 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #333333;
+}
+
+.aboutSection p {
+  font-size: 1rem;
+  color: #555555;
+}
+
+.guidesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.guideCard {
+  background-color: #f9f9f9;
+  border: 1px solid #dddddd;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  font-size: 0.9rem;
+  color: #333333;
+  text-align: center;
+}
+
+
 @media (max-width: 1100px) {
-  .wrapper {
-    margin-top: calc(var(--header-height-mobile) * -1);
-  }
+ 
 }

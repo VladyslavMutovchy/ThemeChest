@@ -1,6 +1,7 @@
 :root {
   --black: #202020;
   --black-2: #1c171e;
+  --container: #ffffffdf;
   --brown: #c38f2a;
   --gray: #8d8d8d;
   --gray-2: #dcdcdc;
@@ -19,12 +20,18 @@ body {
   margin: 0;
   font-size: 14px;
   font-family: 'Open Sans', sans-serif;
-  background-color: var(--bg1);
+  background-image: url('../assets/images/bg_main.webp');
+  background-attachment: fixed;
+  background-size: auto;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* background-color: var(--bg1); */
 }
 
 p,
 h1,
-h2 {
+h2,
+h3 {
   margin: 0;
 }
 
@@ -45,6 +52,7 @@ button {
   margin: 3px;
   width: 26px;
   height: 4px;
+  cursor: pointer;
   background-color: #43300cbf;
   border-radius: 2px;
 }
@@ -155,7 +163,7 @@ img {
   font-weight: bold;
   margin-bottom: 5px;
   display: block;
-} 
+}
 
 .width {
   width: 100%;

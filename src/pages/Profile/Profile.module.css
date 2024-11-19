@@ -7,6 +7,15 @@
   text-align: center;
 }
 
+.container {
+  background-color: var(--container);
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  max-width: 1200px;
+  text-align: center;
+}
+
 .title {
   font-size: 18px;
   font-weight: 500;
@@ -72,9 +81,9 @@
 }
 
 .profilePhoto img {
-  width: 100%;
-  height: auto;
-  border-radius: 50%;
+  height: 100%; 
+  object-fit: cover;
+  object-position: center; 
   transition: transform 0.3s;
 }
 
@@ -83,14 +92,13 @@
   justify-content: space-between;
   align-items: center;
   padding: 40px 20px;
-  background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
+
 .input {
   padding: 10px 20px;
-  min-width:322px;
+  min-width: 322px;
   border-radius: 10px;
   border: 1px solid rgba(120, 120, 120, 0.8);
   background-color: lightgray;

@@ -9,7 +9,7 @@ import SignupModal from '../SignupModal/SignupModal';
 
 const Header = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
 
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -46,8 +46,8 @@ const Header = () => {
         <Link to="/" className={styles.navItem}>
           Main
         </Link>
-        <Link to="/courses" className={styles.navItem}>
-          Courses
+        <Link to="/guides" className={styles.navItem}>
+          Guides
         </Link>
         <Link to="/about" className={styles.navItem}>
           About
@@ -70,8 +70,8 @@ const Header = () => {
                 <Link to="/profile" className={styles.dropdownItem} onClick={toggleDropdown}>
                   My Profile
                 </Link>
-                <Link to="/my_courses" className={styles.dropdownItem} onClick={toggleDropdown}>
-                  My Courses
+                <Link to="/my_guides" className={styles.dropdownItem} onClick={toggleDropdown}>
+                  My Guides
                 </Link>
                 <Link to="/creator" className={styles.dropdownItem} onClick={toggleDropdown}>
                   Creator
@@ -80,7 +80,7 @@ const Header = () => {
                   to="#"
                   className={styles.dropdownItem}
                   onClick={(e) => {
-                    e.preventDefault(); 
+                    e.preventDefault();
                     toggleDropdown();
                     handleLogout();
                   }}

@@ -28,18 +28,20 @@
   display: flex;
   gap: var(--gap-regular);
 
-  .navItem {
-    color: black;
-    font-size: 18px;
-    text-decoration: none;
-    background: none;
+}
 
-  }
+.navItem {
+  color: black;
+  font-size: 18px;
+  text-decoration: none;
+  background: none;
+  cursor: pointer;
+  transition: text-shadow 0.3s;
 }
 
 .navItem:hover {
-  text-shadow: 5px 5px 10px #00000062;
-  cursor: pointer;
+  text-shadow: 3px 3px 5px #00000098;
+
 }
 
 .navItemHello {
@@ -100,52 +102,53 @@
   transition: opacity 0.3s ease, transform 0.3s ease;
   pointer-events: none;
 }
-  .dropdown.open {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
+
+.dropdown.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.dropdownItem {
+  padding: 8px 16px;
+  display: block;
+  color: #333;
+  opacity: 1;
+  text-decoration: none;
+}
+
+.dropdownItem:hover {
+  background-color: #f1f1f1a2;
+}
+
+
+@media (max-width: 1100px) {
+  .header {
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+    padding: 18px var(--content-padding-mobile) 0;
+    height: var(--header-height-mobile);
   }
 
-  .dropdownItem {
-    padding: 8px 16px;
+  .mobileMenu {
     display: block;
-    color: #333;
-    opacity: 1;
-    text-decoration: none;
+    width: 20px;
+    min-height: 12px;
+    background: url(../../assets/images/mobile-menu.svg) no-repeat;
+    background-size: cover;
+    cursor: pointer;
   }
 
-  .dropdownItem:hover {
-    background-color: #f1f1f1a2;
+  .logo {
+    margin: 0 auto;
   }
 
-
-  @media (max-width: 1100px) {
-    .header {
-      flex-direction: column;
-      align-items: start;
-      justify-content: space-between;
-      padding: 18px var(--content-padding-mobile) 0;
-      height: var(--header-height-mobile);
-    }
-
-    .mobileMenu {
-      display: block;
-      width: 20px;
-      min-height: 12px;
-      background: url(../../assets/images/mobile-menu.svg) no-repeat;
-      background-size: cover;
-      cursor: pointer;
-    }
-
-    .logo {
-      margin: 0 auto;
-    }
-
-    .menuWrapper {
-      display: none;
-    }
-
-    .getStarted {
-      display: none;
-    }
+  .menuWrapper {
+    display: none;
   }
+
+  .getStarted {
+    display: none;
+  }
+}
