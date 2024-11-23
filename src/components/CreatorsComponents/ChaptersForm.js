@@ -6,6 +6,20 @@ import styles from '../../pages/Creator/Creator.module.css';
 import classNames from 'classnames';
 import { base64ToFile } from '../../utils/functions';
 
+const modules = {
+  toolbar: [
+    [{ header: [3, false] }], 
+    [{ font: [] }], 
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    ['bold', 'italic', 'underline', 'strike'], 
+    [{ color: [] }, { background: [] }],
+    ['link'],
+    ['clean'],
+  ],
+};
+
+const formats = ['header', 'font', 'list', 'bullet', 'bold', 'italic', 'underline', 'strike', 'color', 'background', 'link'];
+
 const ChaptersForm = ({ initialValues, guideTarget, validationSchema, onSubmit }) => (
   <Formik
     initialValues={initialValues}
@@ -22,7 +36,6 @@ const ChaptersForm = ({ initialValues, guideTarget, validationSchema, onSubmit }
 
           if (content.type === 'img') {
             if (content.value && content.value.base64) {
-              // Создаем имя файла для каждого изображения
               const fileName = `image-${chapterIndex}-${contentIndex}.jpg`;
               const file = base64ToFile(content.value.base64, content.value.mimeType, fileName);
               formData.append(`chapters[${chapterIndex}][contents][${contentIndex}][file]`, file);
@@ -48,7 +61,7 @@ const ChaptersForm = ({ initialValues, guideTarget, validationSchema, onSubmit }
             <div className="width">
               <h3>Chapters</h3>
               {values.chapters?.map((chapter, chapterIndex) => (
-                <div key={chapterIndex} className={classNames('width')}>
+                <div key={chapterIndex} className={classNames('width', styles.chapter)}>
                   <label className={classNames('width', styles.chapterItem)}>
                     Chapter Title
                     <Field className="input" name={`chapters.${chapterIndex}.chapterTitle`} />
@@ -64,12 +77,14 @@ const ChaptersForm = ({ initialValues, guideTarget, validationSchema, onSubmit }
                               <div className={classNames('width', styles.chapterItem)}>
                                 <p>Paragraph</p>
                                 <ReactQuill
+                                  modules={modules}
+                                  formats={formats}
                                   className={styles.react_quill}
                                   value={content.value || ''}
                                   onChange={(val) => setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.value`, val)}
                                 />
                                 <button type="button" className={classNames(styles.btn, styles.red)} onClick={() => remove(contentIndex)}>
-                                  Remove
+                                  Remove item
                                 </button>
                               </div>
                             )}
@@ -109,7 +124,7 @@ const ChaptersForm = ({ initialValues, guideTarget, validationSchema, onSubmit }
                                 </button>
 
                                 <button type="button" className={classNames(styles.btn, styles.red)} onClick={() => remove(contentIndex)}>
-                                  Remove
+                                  Remove item
                                 </button>
                               </div>
                             )}
@@ -125,7 +140,7 @@ const ChaptersForm = ({ initialValues, guideTarget, validationSchema, onSubmit }
                                   onChange={(e) => setFieldValue(`chapters.${chapterIndex}.contents.${contentIndex}.value`, e.target.value)}
                                 />
                                 <button type="button" className={classNames(styles.btn, styles.red)} onClick={() => remove(contentIndex)}>
-                                  Remove
+                                  Remove item
                                 </button>
                               </div>
                             )}
@@ -146,7 +161,7 @@ const ChaptersForm = ({ initialValues, guideTarget, validationSchema, onSubmit }
                     )}
                   </FieldArray>
 
-                  <button type="button" className={styles.btn} onClick={() => remove(chapterIndex)}>
+                  <button type="button" className={classNames(styles.btn, styles.red)} onClick={() => remove(chapterIndex)}>
                     Remove Chapter
                   </button>
                 </div>

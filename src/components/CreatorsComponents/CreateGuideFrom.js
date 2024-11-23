@@ -21,5 +21,4 @@ const CreateGuideForm = ({ initialValues, validationSchema, onSubmit }) => {
   );
 };
 
-// Экспорт компонента
 export default CreateGuideForm;

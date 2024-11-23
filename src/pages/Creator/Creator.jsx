@@ -15,6 +15,7 @@ import CreateGuideForm from '../../components/CreatorsComponents/CreateGuideFrom
 import EditThemesForm from '../../components/CreatorsComponents/EditThemesForm';
 import ChaptersForm from '../../components/CreatorsComponents/ChaptersForm';
 import * as Yup from 'yup';
+import PreviewGuide from '../../components/CreatorsComponents/PreviewGuide';
 
 const Creator = (props) => {
   const {
@@ -35,6 +36,11 @@ const Creator = (props) => {
   const [isCreatingNewGuide, setIsCreatingNewGuide] = useState(false);
   const [isEditingGuide, setIsEditingGuide] = useState(false);
   const [initialChapters, setInitialChapters] = useState({ chapters: [] });
+  const [isPreview, setIsPreview] = useState(false);
+
+  const togglePreview = () => {
+    setIsPreview(!isPreview);
+  };
 
   useEffect(() => {
     getGuidesData(userData.id);
@@ -114,7 +120,7 @@ const Creator = (props) => {
       </div>
 
       <div className={styles.creator}>
-        {targetGuide === null ? (
+        {targetGuide === null && isCreatingNewGuide === false ? (
           <div className={styles.creator_intro}>
             <h2 className={styles.h2}>Welcome to ThemesCreator</h2>
             <p>
@@ -157,24 +163,31 @@ const Creator = (props) => {
                   />
                 </div>
                 <div className={styles.creator_container}>
-                  <ChaptersForm
-                    initialValues={initialChapters}
-                    guideTarget={targetGuide}
-                    validationSchema={Yup.object().shape({
-                      chapters: Yup.array().of(
-                        Yup.object().shape({
-                          chapterTitle: Yup.string().required('Chapter title is required'),
-                          contents: Yup.array().of(
-                            Yup.object().shape({
-                              type: Yup.string().required(),
-                              value: Yup.mixed().required('Content value is required'),
-                            })
-                          ),
-                        })
-                      ),
-                    })}
-                    onSubmit={handleChaptersSubmit}
-                  />
+                  <button onClick={togglePreview} className={styles.btn}>
+                    {isPreview ? 'Edit' : 'Preview'}
+                  </button>
+                  {!isPreview ? (
+                    <ChaptersForm
+                      initialValues={initialChapters}
+                      guideTarget={targetGuide}
+                      validationSchema={Yup.object().shape({
+                        chapters: Yup.array().of(
+                          Yup.object().shape({
+                            chapterTitle: Yup.string().required('Chapter title is required'),
+                            contents: Yup.array().of(
+                              Yup.object().shape({
+                                type: Yup.string().required(),
+                                value: Yup.mixed().required('Content value is required'),
+                              })
+                            ),
+                          })
+                        ),
+                      })}
+                      onSubmit={handleChaptersSubmit}
+                    />
+                  ) : (
+                    <PreviewGuide  initialValues={initialChapters} isPreview={isPreview} guideTarget={targetGuide} />
+                  )}
                 </div>
               </>
             )}
