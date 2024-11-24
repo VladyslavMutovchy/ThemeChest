@@ -4,19 +4,19 @@ import thunk from 'redux-thunk';
 import auth from './auth';
 import preloader from './preloader';
 import creatorReducer from './creatorReducer';
+import guidesReducer from './guidesReducer';
 
 const USER_LOGOUT = 'USER_LOGOUT';
 
-// Убираем редюсер формы
 const allReducers = combineReducers({
   auth,
   preloader,
   creatorReducer,
+  guidesReducer,
 });
 
 const rootReducer = (state, action) => {
   if (action.type === USER_LOGOUT) {
-    // remove user from local storage to log user out
     localStorage.removeItem('user');
     state = undefined;
   }

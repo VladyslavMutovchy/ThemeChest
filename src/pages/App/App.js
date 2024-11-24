@@ -13,6 +13,7 @@ import PageNotFound from '../PageNotFound/PageNotFound';
 import Profile from '../Profile/Profile';
 import styles from './App.module.css';
 import Creator from '../Creator/Creator';
+import Guides from '../Guides/Guides';
 
 function App(props) {
   const { isFetching } = props;
@@ -28,7 +29,7 @@ function App(props) {
         {userData ? <Route path="/profile" element={<Profile />} /> : null}
         {userData ? <Route path="/creator" element={<Creator />} /> : null}
         <Route path="/" element={<Main />} />
-
+        <Route path="/guides" element={<Guides />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       <Footer />
