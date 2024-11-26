@@ -2,7 +2,8 @@ export const customStyles = {
   control: (provided) => ({
     ...provided,
     padding: '4px 6px',
-    width: '400px',
+    minWidth: '250px',
+    width: '100%',
     borderRadius: '10px',
     border: '1px solid #787878cc',
     backgroundColor: '#dbdbdb',
@@ -15,7 +16,8 @@ export const customStyles = {
   }),
   menu: (provided) => ({
     ...provided,
-    width: '400px',
+    minWidth: '250px',
+    width: '100%',
     borderRadius: '10px',
     backgroundColor: '#dbdbdb',
     zIndex: 9999,

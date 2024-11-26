@@ -22,8 +22,10 @@
 .guides {
   position: relative;
   width: 100%;
+  display: flex;
+  flex-direction: column;
   border-radius: 20px;
-  
+  padding-top: 10px;
   background-color: var(--container);
 }
 .guide_feed {
@@ -79,7 +81,7 @@
   width: 90%;
   border-radius: 10px;
   border: 1px solid #787878cc;
-  margin-bottom: 20px;
+  margin: 10px auto;
 }
 
 .intro_message {
