@@ -23,7 +23,9 @@
   margin: 0 auto;
 }
 
-
+.cropper {
+  margin: 10px auto;
+}
 .creator_container,
 .guides_container,
 .creator_intro {
@@ -117,7 +119,10 @@
   border-bottom: 1px solid #c7c7c7;
 }
 
-
+.wrapper_flex {
+  display: flex;
+  gap: 20px;
+}
 
 .form {
   display: flex;
@@ -204,7 +209,8 @@
   margin-right: 10px;
 }
 
-.input {
+.input,
+.field {
   padding: 10px 20px;
   min-width: 322px;
   border-radius: 10px;
@@ -212,6 +218,43 @@
   background-color: #dbdbdb;
   margin: 10px 0;
   font-size: 20px;
+}
+
+.field {
+  height: 80px;
+  resize: none;
+}
+
+
+.guide_plate_prev {
+  min-width: 220px;
+  max-width: 260px;
+  text-wrap: wrap;
+  height: 300px;
+  padding: 20px;
+  background-color: #dcdcdc86;
+
+}
+
+.guide_plate_img {
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  border-radius: 20px;
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
+}
+
+.guide_plate_p,
+.guide_plate_title {
+  text-align: left;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.guide_plate_p {
+  margin-top: 30px;
+  color: #343434;
 }
 
 .imagePreview {
@@ -222,9 +265,12 @@
 .react_quill {
   width: 100%;
 }
-.imageWrapper, .videoWrapper{
+
+.imageWrapper,
+.videoWrapper {
   margin: 0 auto;
 }
+
 .contentItem {
   display: flex;
   gap: 20px;

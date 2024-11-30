@@ -1,17 +1,8 @@
-import { get, post, postFile } from './api';
-
-const BASE_URL = 'guides/';
+import { get } from './api';
 
 export const guidesAPI = {
-  fetchGuidesPaginated(page) {
-    return get(`${BASE_URL}fetchGuidesPaginated?page=${page}`);
+  fetchGuidesPaginated(url) {
+    console.log('======>', url);
+    return get(url);
   },
-
-  // getGuideThemes(guide_id) {
-  //   return get(`${BASE_URL}getGuideThemes/${guide_id}`);
-  // },
-
-  // getGuideChapters(guide_id) {
-  //   return get(`${BASE_URL}getGuideChapters/${guide_id}`);
-  // },
 };

@@ -14,16 +14,17 @@ const GuideExplorer = (props) => {
   const [filteredGuides, setFilteredGuides] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedKeywords, setSelectedKeywords] = useState([]); // Новое состояние для ключевых слов
+  const [selectedKeywords, setSelectedKeywords] = useState([]);
+  const [keywordSearchQuery, setKeywordSearchQuery] = useState('');
 
   useEffect(() => {
     loadGuides(currentPage);
   }, [currentPage]);
 
-  const loadGuides = async (page, keywords = []) => {
+  const loadGuides = async (page, keywords = [], searchQuery = '') => {
     try {
       setIsLoading(true);
-      await fetchGuidesPaginated(page, keywords); // Обновленный вызов с ключевыми словами
+      await fetchGuidesPaginated(page, keywords, searchQuery);
       setIsLoading(false);
     } catch (error) {
       console.error('Ошибка при загрузке гайдов:', error);
@@ -40,14 +41,14 @@ const GuideExplorer = (props) => {
     }
   }, [searchQuery, guidesListPaginated]);
 
-  const handleSelectGuide = async (guide) => {
+  const handleSelectGuide = (guide) => {
     setTargetGuide(guide);
   };
 
   const handleKeywordSearch = () => {
-    // Поиск по ключевым словам
-    loadGuides(1, selectedKeywords.map(keyword => keyword.value)); // Используем выбранные ключевые слова для поиска на сервере
-    setCurrentPage(1); // Обнуляем страницу для нового запроса
+    const keywords = selectedKeywords.map((keyword) => keyword.value).slice(0, 3);
+    loadGuides(1, keywords, keywordSearchQuery);
+    setCurrentPage(1);
   };
 
   if (!Array.isArray(guidesListPaginated) || guidesListPaginated.length === 0) {
@@ -62,25 +63,34 @@ const GuideExplorer = (props) => {
     <div className={styles.wrapper}>
       <div className={styles.guides_container}>
         <h2>Your Guides</h2>
+
+        <input
+          type="text"
+          className={styles.search_input}
+          placeholder="Search guides by title..."
+          value={keywordSearchQuery}
+          onChange={(e) => setKeywordSearchQuery(e.target.value)}
+        />
+
         <Select
           classNamePrefix="custom-select"
           styles={customStyles}
           options={KEYWORDS.map((keyword) => ({ value: keyword, label: keyword }))}
           onChange={setSelectedKeywords}
           value={selectedKeywords}
-          placeholder="Search and select a theme"
+          placeholder="Select up to 3 themes"
           isMulti
           isClearable
         />
-        <button 
-          type="button" 
-          onClick={handleKeywordSearch} 
-          className={styles.search_btn}
-        >
-          Search by Keywords
+
+        <button type="button" onClick={handleKeywordSearch} className={styles.search_btn} disabled={isLoading}>
+          Search
         </button>
 
-        {/* Фильтр на клиентской стороне */}
+        <div className={styles.underline} />
+      </div>
+
+      <div className={styles.guides}>
         <input
           type="text"
           className={styles.search_input}
@@ -88,24 +98,16 @@ const GuideExplorer = (props) => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <div className={styles.underline} />
-      </div>
-      <div className={styles.guides}>
         <div className={styles.guide_feed}>
           {Array.isArray(filteredGuides) &&
-            filteredGuides.map((guide, index) => (
-              <div key={index} className={styles.guide_plate} onClick={() => handleSelectGuide(guide)}>
+            filteredGuides.map((guide) => (
+              <div key={guide.id} className={styles.guide_plate} onClick={() => handleSelectGuide(guide)}>
                 <h3>{guide.title}</h3>
               </div>
             ))}
           {isLoading && <div>Loading more guides...</div>}
         </div>
-        <button 
-          type="button" 
-          className={styles.load_more_btn} 
-          onClick={() => setCurrentPage((prevPage) => prevPage + 1)} 
-          disabled={isLoading}
-        >
+        <button type="button" className={styles.load_more_btn} onClick={() => setCurrentPage((prevPage) => prevPage + 1)} disabled={isLoading}>
           Load More Guides
         </button>
       </div>
@@ -113,10 +115,9 @@ const GuideExplorer = (props) => {
   );
 };
 
-// Обновляем mapDispatchToProps для передачи keywords
-const mapDispatchToProps = (dispatch) => ({
-  fetchGuidesPaginated: (page, keywords) => dispatch(fetchGuidesPaginated(page, keywords)),
-});
+const mapDispatchToProps = {
+  fetchGuidesPaginated,
+};
 
 const mapStateToProps = (state) => ({
   guidesListPaginated: state.guidesReducer?.guidesListPaginated?.data || [],

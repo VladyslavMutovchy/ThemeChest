@@ -13,7 +13,12 @@ export const creatorAPI = {
   },
 
 
-
+  updatePreviewGuide(targetGuide, guideData) {
+    return postFile(`${BASE_URL}updatePreviewGuide/${targetGuide.id}`, guideData);
+  },
+  getPreviewGuide (id) {
+    return get(`${BASE_URL}getPreviewGuide/${id}`); 
+  },
 
   createGuide(guideData) {
     return post(`${BASE_URL}createGuide`, guideData);

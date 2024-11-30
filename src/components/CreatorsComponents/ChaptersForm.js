@@ -41,9 +41,7 @@ const ChaptersForm = ({ initialValues, guideTarget, validationSchema, onSubmit }
               formData.append(`chapters[${chapterIndex}][contents][${contentIndex}][file]`, file);
             } else if (content.value instanceof File) {
               formData.append(`chapters[${chapterIndex}][contents][${contentIndex}][file]`, content.value);
-            } else {
-              console.warn(`Отсутствуют данные для обработки изображения с index: ${contentIndex}`);
-            }
+            } 
           } else {
             formData.append(`chapters[${chapterIndex}][contents][${contentIndex}][value]`, content.value);
           }

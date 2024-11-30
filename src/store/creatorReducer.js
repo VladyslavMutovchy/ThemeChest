@@ -1,9 +1,10 @@
-import { SET_GUIDES, ADD_GUIDE, UPDATE_THEMES, SET_THEMES_BY_GUIDE, UPDATE_CHAPTERS, RESET_CHAPTERS } from '../actions/creator';
+import { SET_GUIDES, SET_PREVIEW_GUIDE, ADD_GUIDE, UPDATE_THEMES, SET_THEMES_BY_GUIDE, UPDATE_CHAPTERS, RESET_CHAPTERS } from '../actions/creator';
 
 const initialState = {
   guidesList: [],
   themesByGuide: {},
   chaptersByGuide: {},
+  guidePreview: {},
 };
 
 const creatorReducer = (state = initialState, action) => {
@@ -49,6 +50,12 @@ const creatorReducer = (state = initialState, action) => {
         ...state,
         chaptersByGuide: {},
       };
+    case SET_PREVIEW_GUIDE:
+      return {
+        ...state,
+        guidePreview: action.payload.guidePreview,
+      };
+
     default:
       return state;
   }

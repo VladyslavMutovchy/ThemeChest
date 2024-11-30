@@ -4,11 +4,13 @@ import styles from './Creator.module.css';
 import { connect } from 'react-redux';
 import {
   createGuide,
+  getPreviewGuide,
   getGuidesData,
   updateGuideThemes,
   getGuideThemes,
   updateGuideChapters,
   getGuideChapters,
+  updatePreviewGuide,
   resetChapters,
 } from '../../actions/creator';
 import CreateGuideForm from '../../components/CreatorsComponents/CreateGuideFrom';
@@ -16,6 +18,7 @@ import EditThemesForm from '../../components/CreatorsComponents/EditThemesForm';
 import ChaptersForm from '../../components/CreatorsComponents/ChaptersForm';
 import * as Yup from 'yup';
 import PreviewGuide from '../../components/CreatorsComponents/PreviewGuide';
+import EditPreviewForm from '../../components/CreatorsComponents/EditPreviewForm';
 
 const Creator = (props) => {
   const {
@@ -26,10 +29,13 @@ const Creator = (props) => {
     updateGuideThemes,
     getGuideThemes,
     themesByGuide,
+    updatePreviewGuide,
     updateGuideChapters,
     getGuideChapters,
     chaptersByGuide,
+    getPreviewGuide,
     resetChapters,
+    guidePreview, 
   } = props;
 
   const [targetGuide, setTargetGuide] = useState(null);
@@ -81,14 +87,25 @@ const Creator = (props) => {
       toast.error('Failed to update chapters.');
     }
   };
+  const handlePreviewGuideSubmit = async (formData) => {
+    try {
+      await updatePreviewGuide(targetGuide, formData);
+      toast.success('Preview updated successfully!');
+      handleSelectGuide(targetGuide);
+    } catch (error) {
+      toast.error('Failed to update preview.');
+    }
+  };
 
   const handleSelectGuide = async (guide) => {
     try {
       setTargetGuide(guide);
       setIsEditingGuide(false);
       resetChapters();
+      await getPreviewGuide(guide.id);
       await getGuideThemes(guide.id);
       await getGuideChapters(guide.id);
+      console.log('Guide preview loaded:', guidePreview);
       setIsEditingGuide(true);
     } catch (error) {
       console.error('Ошибка при загрузке тем:', error);
@@ -153,6 +170,9 @@ const Creator = (props) => {
             {isEditingGuide && targetGuide && (
               <>
                 <div className={styles.creator_container}>
+                  <EditPreviewForm guidePreview={guidePreview} guideTarget={targetGuide} onSubmit={handlePreviewGuideSubmit} />
+                </div>
+                <div className={styles.creator_container}>
                   <EditThemesForm
                     themes={themesByGuide[targetGuide.id] || []}
                     guideTarget={targetGuide}
@@ -186,7 +206,7 @@ const Creator = (props) => {
                       onSubmit={handleChaptersSubmit}
                     />
                   ) : (
-                    <PreviewGuide  initialValues={initialChapters} isPreview={isPreview} guideTarget={targetGuide} />
+                    <PreviewGuide initialValues={initialChapters} isPreview={isPreview} guideTarget={targetGuide} />
                   )}
                 </div>
               </>
@@ -201,8 +221,10 @@ const Creator = (props) => {
 const mapDispatchToProps = {
   getGuidesData,
   createGuide,
+  updatePreviewGuide,
   updateGuideThemes,
   getGuideThemes,
+  getPreviewGuide,
   updateGuideChapters,
   getGuideChapters,
   resetChapters,
@@ -213,6 +235,7 @@ const mapStateToProps = (state) => ({
   guides: state.creatorReducer?.guidesList || [],
   themesByGuide: state.creatorReducer?.themesByGuide || {},
   chaptersByGuide: state.creatorReducer?.chaptersByGuide || {},
+  guidePreview: state.creatorReducer?.guidePreview || {},
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Creator);

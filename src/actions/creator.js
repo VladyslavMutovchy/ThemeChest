@@ -6,6 +6,7 @@ export const SET_THEMES_BY_GUIDE = 'SET_THEMES_BY_GUIDE';
 export const SET_CHAPTERS_BY_GUIDE = 'SET_CHAPTERS_BY_GUIDE';
 export const UPDATE_CHAPTERS = 'UPDATE_CHAPTERS';
 export const RESET_CHAPTERS = 'RESET_CHAPTERS';
+export const SET_PREVIEW_GUIDE = 'SET_PREVIEW_GUIDE';
 
 import { actionWrapper } from './actionWrapper';
 import { creatorAPI } from '../api/creator';
@@ -33,6 +34,32 @@ export const createGuide = (guideData, callback) =>
       callback?.(newGuide);
     } catch (error) {
       console.error('Failed to create guide:', error);
+    } finally {
+      dispatch(isFetching(false));
+    }
+  });
+
+export const updatePreviewGuide = (targetGuide, guideData) =>
+  actionWrapper(async (dispatch) => {
+    dispatch(isFetching(true));
+    try {
+      await creatorAPI.updatePreviewGuide(targetGuide, guideData);
+    } catch (error) {
+      console.error('Failed to create guide:', error);
+    } finally {
+      dispatch(isFetching(false));
+    }
+  });
+
+export const getPreviewGuide = (id) =>
+  actionWrapper(async (dispatch) => {
+    dispatch(isFetching(true));
+    try {
+      const guidePreview = await creatorAPI.getPreviewGuide(id);
+      console.log('======>', guidePreview);
+      dispatch(setPreviewGuide(guidePreview));
+    } catch (error) {
+      console.error('Failed to get guides:', error);
     } finally {
       dispatch(isFetching(false));
     }
@@ -79,6 +106,11 @@ export const getGuideChapters = (guide_id) => async (dispatch) => {
     console.error('Failed to get guide Chapters:', error);
   }
 };
+
+export const setPreviewGuide = (guidePreview) => ({
+  type: SET_PREVIEW_GUIDE,
+  payload: { guidePreview },
+});
 
 export const setGuides = (guides) => ({
   type: SET_GUIDES,
