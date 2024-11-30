@@ -1,9 +1,9 @@
-import { SET_ALL_GUIDES } from '../actions/guides';
+import { SET_ALL_GUIDES, CLEAR_GUIDES } from '../actions/guides';
 
 const initialState = {
   guidesListPaginated: {
     data: [],
-    total: 0, 
+    total: 0,
   },
 };
 
@@ -21,6 +21,15 @@ const guidesReducer = (state = initialState, action) => {
         },
       };
     }
+
+    case CLEAR_GUIDES:
+      return {
+        ...state,
+        guidesListPaginated: {
+          data: [],
+          total: 0,
+        },
+      };
 
     default:
       return state;

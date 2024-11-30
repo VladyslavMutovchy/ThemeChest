@@ -227,10 +227,9 @@
 
 
 .guide_plate_prev {
-  min-width: 220px;
-  max-width: 260px;
-  text-wrap: wrap;
+  width: 220px;
   height: 300px;
+  text-wrap: wrap;
   padding: 20px;
   background-color: #dcdcdc86;
 

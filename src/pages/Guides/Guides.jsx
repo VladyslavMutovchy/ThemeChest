@@ -21,10 +21,10 @@ const GuideExplorer = (props) => {
     loadGuides(currentPage);
   }, [currentPage]);
 
-  const loadGuides = async (page, keywords = [], searchQuery = '') => {
+  const loadGuides = async (page, keywords = [], searchQuery = '', clearStore = false) => {
     try {
       setIsLoading(true);
-      await fetchGuidesPaginated(page, keywords, searchQuery);
+      await fetchGuidesPaginated(page, keywords, searchQuery, clearStore);
       setIsLoading(false);
     } catch (error) {
       console.error('Ошибка при загрузке гайдов:', error);
@@ -47,10 +47,9 @@ const GuideExplorer = (props) => {
 
   const handleKeywordSearch = () => {
     const keywords = selectedKeywords.map((keyword) => keyword.value).slice(0, 3);
-    loadGuides(1, keywords, keywordSearchQuery);
+    loadGuides(1, keywords, keywordSearchQuery, true);
     setCurrentPage(1);
   };
-
   if (!Array.isArray(guidesListPaginated) || guidesListPaginated.length === 0) {
     return (
       <div className={styles.wrapper}>
@@ -101,12 +100,23 @@ const GuideExplorer = (props) => {
         <div className={styles.guide_feed}>
           {Array.isArray(filteredGuides) &&
             filteredGuides.map((guide) => (
-              <div key={guide.id} className={styles.guide_plate} onClick={() => handleSelectGuide(guide)}>
-                <h3>{guide.title}</h3>
+              <div
+                key={guide.id}
+                className={styles.guide_plate_img}
+                style={{
+                  backgroundImage: guide.prev_img ? `url(${guide.prev_img})` : 'none',
+                }}
+                onClick={() => handleSelectGuide(guide)}
+              >
+                <div className={styles.guide_plate_prev}>
+                  <h3 className={styles.guide_plate_title}>{guide.title}</h3>
+                  <p className={styles.guide_plate_p}>{guide.description}</p>
+                </div>
               </div>
             ))}
           {isLoading && <div>Loading more guides...</div>}
         </div>
+
         <button type="button" className={styles.load_more_btn} onClick={() => setCurrentPage((prevPage) => prevPage + 1)} disabled={isLoading}>
           Load More Guides
         </button>
