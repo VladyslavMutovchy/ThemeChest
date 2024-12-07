@@ -26,7 +26,6 @@ export const fetchGuidesPaginated = (page, keywords = [], searchQuery = '', clea
       }
 
       const guides = await guidesAPI.fetchGuidesPaginated(url);
-      console.log('action======>', guides);
       dispatch(setAllGuides(guides));
     } catch (error) {
       console.error('Failed to get guides:', error);

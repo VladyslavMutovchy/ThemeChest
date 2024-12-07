@@ -56,7 +56,6 @@ export const getPreviewGuide = (id) =>
     dispatch(isFetching(true));
     try {
       const guidePreview = await creatorAPI.getPreviewGuide(id);
-      console.log('======>', guidePreview);
       dispatch(setPreviewGuide(guidePreview));
     } catch (error) {
       console.error('Failed to get guides:', error);
@@ -97,10 +96,9 @@ export const updateGuideChapters = (chapterData, callback) => async (dispatch) =
 
 export const getGuideChapters = (guide_id) => async (dispatch) => {
   dispatch(resetChapters());
-
   try {
     const response = await creatorAPI.getGuideChapters(guide_id);
-    console.log('===Данные с сервера===>', response);
+    console.log('===ыва===>', response);
     dispatch(updateChapters(response.guide_id, response.chapters));
   } catch (error) {
     console.error('Failed to get guide Chapters:', error);

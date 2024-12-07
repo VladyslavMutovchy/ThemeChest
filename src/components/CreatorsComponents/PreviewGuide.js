@@ -20,7 +20,7 @@ const PreviewGuide = ({ initialValues }) => {
   return (
     <div>
       <div className={styles.previewWrapper}>
-        <h2>Guide Preview</h2>
+        
         {initialValues?.chapters?.map((chapter, chapterIndex) => (
           <div key={chapterIndex} className={classNames('width', styles.chapter)}>
             <h3>{chapter.chapterTitle}</h3>
