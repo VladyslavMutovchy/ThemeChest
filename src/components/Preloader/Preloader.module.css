@@ -8,12 +8,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(247, 246, 243, 0.8);
 }
 
 .preloader {
-  color: #59a42a;
-  font-size: 90px;
+  color: #595959;
+  font-size: 40px;
   text-indent: -9999em;
   overflow: hidden;
   width: 1em;

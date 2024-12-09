@@ -10,10 +10,13 @@ const axiosInstance = axios.create({
   baseURL: backURL,
   crossDomain: true,
 });
-axiosInstance.interceptors.request.use((config) => {
-  config.headers = { ...config.headers, ...authHeader() };
-  return config;
-}, (error) => Promise.reject(error));
+axiosInstance.interceptors.request.use(
+  (config) => {
+    config.headers = { ...config.headers, ...authHeader() };
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 const axiosAuthInstance = axios.create({
   baseURL: backURL,
@@ -21,30 +24,22 @@ const axiosAuthInstance = axios.create({
 });
 
 const post = async (url, data, callback, errorCallback) => {
-  const response = await axiosInstance.post(url, data) 
-    .then(callback)
-    .catch(errorCallback);
+  const response = await axiosInstance.post(url, data).then(callback).catch(errorCallback);
   return response.data;
 };
 
-
 const postAuth = async (url, data, callback, errorCallback) => {
-  try {
-    const response = await axiosAuthInstance.post(url, data, {
+  const response = await axiosAuthInstance
+    .post(url, data, {
       headers: {
         'Content-Type': 'application/json',
       },
-    }).then(callback).catch(errorCallback);
-    
-    console.log('Ответ от сервера:', response);
-    return response?.data || null;
-  } catch (error) {
-    console.error('Ошибка в postAuth:', error);
-    throw error;
-  }
+    })
+    .then(callback)
+    .catch(errorCallback);
+
+  return response?.data || null;
 };
-
-
 
 const put = async (url, data, callback, errorCallback) => {
   const response = await axiosInstance.put(url, JSON.stringify(data)).then(callback).catch(errorCallback);
@@ -77,12 +72,4 @@ const putFile = (url, data, callback, errorCallback) => {
   return axiosInstance.put(url, data).then(callback).catch(errorCallback);
 };
 
-export {
-  post,
-  put,
-  postAuth, 
-  get,
-  deleteById,
-  postFile,
-  putFile,
-};
+export { post, put, postAuth, get, deleteById, postFile, putFile };

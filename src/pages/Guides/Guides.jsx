@@ -2,15 +2,26 @@ import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import styles from './Guides.module.css';
 import { connect } from 'react-redux';
-import { fetchGuidesPaginated } from '../../actions/guides';
+import { fetchGuidesPaginated, getFavorites, favorites, addToFavorites, removeFromFavorites } from '../../actions/guides';
 import { customStyles } from '../../components/CreatorsComponents/styles.Select';
 import { KEYWORDS } from '../../components/CreatorsComponents/keyWords';
 import { getGuideChapters } from '../../actions/creator';
 import PreviewGuide from '../../components/CreatorsComponents/PreviewGuide';
 
 const GuideExplorer = (props) => {
-  const { guidesListPaginated = [], getGuideChapters, fetchGuidesPaginated, chaptersByGuide } = props;
+  const {
+    guidesListPaginated = [],
+    getGuideChapters,
+    getFavorites,
+    fetchGuidesPaginated,
+    chaptersByGuide,
+    addToFavorites,
+    favorites,
+    removeFromFavorites,
+    userData,
+  } = props;
 
+  const [targetGuideTitle, setTargetGuideTitle] = useState(null);
   const [targetGuide, setTargetGuide] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredGuides, setFilteredGuides] = useState([]);
@@ -22,13 +33,15 @@ const GuideExplorer = (props) => {
     loadGuides(currentPage);
   }, [currentPage]);
 
+  useEffect(() => {
+    getFavorites(userData.id);
+  }, [targetGuide]);
+
   const loadGuides = async (page, keywords = [], searchQuery = '', clearStore = false) => {
     try {
       await fetchGuidesPaginated(page, keywords, searchQuery, clearStore);
-     
     } catch (error) {
       console.error('Ошибка при загрузке гайдов:', error);
-      
     }
   };
 
@@ -41,17 +54,15 @@ const GuideExplorer = (props) => {
     }
   }, [searchQuery, guidesListPaginated]);
 
-  const handleSelectGuide = async (id) => {
+  const handleSelectGuide = async (id, title) => {
     try {
+      setTargetGuideTitle(title);
       await getGuideChapters(id);
       setTargetGuide(id);
     } catch (error) {
       console.error('Ошибка при получении глав гайда:', error);
-     
     }
   };
-
-
 
   const handleKeywordSearch = () => {
     setTargetGuide(null);
@@ -60,8 +71,11 @@ const GuideExplorer = (props) => {
     setCurrentPage(1);
   };
 
-  const handleAddToFavorites = () => {
-    console.log('Guide added to favorites:', targetGuide);
+  const handleAddToFavorites = async () => {
+    await addToFavorites(targetGuide, userData.id);
+  };
+  const handleRemoveFromFavorites = async () => {
+    await removeFromFavorites(targetGuide, userData.id);
   };
 
   return (
@@ -101,11 +115,20 @@ const GuideExplorer = (props) => {
             <button type="button" onClick={() => setTargetGuide(null)} className={styles.add_to_favorites_btn}>
               Back
             </button>
-            <button type="button" onClick={handleAddToFavorites} className={styles.add_to_favorites_btn}>
-              Add to Favorites
-            </button>
+            {userData ? (
+              favorites.includes(targetGuide) ? (
+                <button type="button" onClick={() => handleRemoveFromFavorites()} className={styles.add_to_favorites_btn}>
+                  Remove from Favorites
+                </button>
+              ) : (
+                <button type="button" onClick={() => handleAddToFavorites()} className={styles.add_to_favorites_btn}>
+                  Add to Favorites
+                </button>
+              )
+            ) : null}
           </div>
           <div className={styles.padding}>
+            <h3 className={styles.h2}>{targetGuideTitle}</h3>
             <PreviewGuide className={styles.preview_guide} initialValues={{ chapters: chaptersByGuide[targetGuide] }} />
           </div>
         </div>
@@ -120,17 +143,17 @@ const GuideExplorer = (props) => {
           />
           <div className={styles.guide_feed}>
             {Array.isArray(filteredGuides) &&
-              filteredGuides.map((guide) => (
+              filteredGuides.map((guide, i) => (
                 <div
                   key={guide.id}
                   className={styles.guide_plate_img}
                   style={{
                     backgroundImage: guide.prev_img ? `url(${guide.prev_img})` : 'none',
                   }}
-                  onClick={() => handleSelectGuide(guide.id)}
+                  onClick={() => handleSelectGuide(guide.id, guide.title, i)}
                 >
                   <div className={styles.guide_plate_prev}>
-                    <h3 className={styles.guide_plate_title}>{guide.title}</h3>
+                    <h2 className={styles.guide_plate_title}>{guide.title}</h2>
                     <p className={styles.guide_plate_p}>{guide.description}</p>
                   </div>
                 </div>
@@ -149,11 +172,16 @@ const GuideExplorer = (props) => {
 const mapDispatchToProps = {
   fetchGuidesPaginated,
   getGuideChapters,
+  addToFavorites,
+  getFavorites,
+  removeFromFavorites,
 };
 
 const mapStateToProps = (state) => ({
   chaptersByGuide: state.creatorReducer?.chaptersByGuide || {},
   guidesListPaginated: state.guidesReducer?.guidesListPaginated?.data || [],
+  favorites: state.guidesReducer?.favorites.favorites || [],
+  userData: state.auth.userData,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(GuideExplorer);

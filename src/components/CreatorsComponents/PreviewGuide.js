@@ -1,13 +1,14 @@
 import React from 'react';
 import styles from '../../pages/Creator/Creator.module.css';
 import classNames from 'classnames';
+import { toRoman } from '../../utils/functions';
 
 const getEmbedUrl = (url) => {
   if (url.includes('youtube.com/watch?v=')) {
     const videoId = url.split('v=')[1].split('&')[0];
     return `https://www.youtube.com/embed/${videoId}`;
   }
-  
+
   if (url.includes('youtu.be/')) {
     const videoId = url.split('youtu.be/')[1];
     return `https://www.youtube.com/embed/${videoId}`;
@@ -16,14 +17,16 @@ const getEmbedUrl = (url) => {
   return url;
 };
 
+
 const PreviewGuide = ({ initialValues }) => {
   return (
     <div>
       <div className={styles.previewWrapper}>
-        
         {initialValues?.chapters?.map((chapter, chapterIndex) => (
           <div key={chapterIndex} className={classNames('width', styles.chapter)}>
-            <h3>{chapter.chapterTitle}</h3>
+            <div>
+              Chapter {toRoman(chapterIndex)}: <h3 className={styles.h3}>{chapter.chapterTitle}</h3>
+            </div>
             {chapter.contents.map((content, contentIndex) => (
               <div key={contentIndex} className={styles.contentItem}>
                 {content.type === 'paragraph' && (

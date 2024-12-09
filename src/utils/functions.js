@@ -38,7 +38,6 @@ export const backendFileURL = (path) => {
 };
 
 export function base64ToFile(base64Value, mimeType, fileName) {
- 
   const byteString = atob(base64Value);
   const ab = new ArrayBuffer(byteString.length);
   const ia = new Uint8Array(ab);
@@ -50,4 +49,29 @@ export function base64ToFile(base64Value, mimeType, fileName) {
   return new File([ab], fileName, { type: mimeType });
 }
 
+export function toRoman(num) {
+  const romanNumerals = [
+    'I',
+    'II',
+    'III',
+    'IV',
+    'V',
+    'VI',
+    'VII',
+    'VIII',
+    'IX',
+    'X',
+    'XI',
+    'XII',
+    'XIII',
+    'XIV',
+    'XV',
+    'XVI',
+    'XVII',
+    'XVIII',
+    'XIX',
+    'XX',
+  ];
 
+  return romanNumerals[num];
+}

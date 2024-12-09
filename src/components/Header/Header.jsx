@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import logo from '../../assets/images/logo.png';
@@ -6,6 +6,9 @@ import { logout } from '../../actions/auth';
 import styles from './Header.module.css';
 import LoginModal from '../LoginModal/LoginModal';
 import SignupModal from '../SignupModal/SignupModal';
+import { getUserData } from '../../actions/profile';
+
+
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -15,6 +18,7 @@ const Header = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [dropdownTimeout, setDropdownTimeout] = useState(null);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -26,7 +30,37 @@ const Header = () => {
   const openSignupModal = () => setIsSignupOpen(true);
   const closeSignupModal = () => setIsSignupOpen(false);
 
-  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
+  const toggleDropdown = () => {
+    if (dropdownTimeout) {
+      clearTimeout(dropdownTimeout);
+      setDropdownTimeout(null);
+    }
+
+    setIsDropdownOpen((prev) => !prev);
+
+    if (!isDropdownOpen) {
+      const timeout = setTimeout(() => {
+        setIsDropdownOpen(false);
+      }, 4000);
+      setDropdownTimeout(timeout);
+    }
+  };
+
+  const closeDropdown = () => {
+    if (dropdownTimeout) {
+      clearTimeout(dropdownTimeout);
+      setDropdownTimeout(null);
+    }
+    setIsDropdownOpen(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (dropdownTimeout) {
+        clearTimeout(dropdownTimeout);
+      }
+    };
+  }, [dropdownTimeout]);
 
   function greetingsNameFromEmail(email) {
     if (!email) {
@@ -49,9 +83,7 @@ const Header = () => {
         <Link to="/guides" className={styles.navItem}>
           Guides
         </Link>
-        <Link to="/about" className={styles.navItem}>
-          About
-        </Link>
+
         <Link to="/contact" className={styles.navItem}>
           Contact
         </Link>
@@ -70,8 +102,8 @@ const Header = () => {
                 <Link to="/profile" className={styles.dropdownItem} onClick={toggleDropdown}>
                   My Profile
                 </Link>
-                <Link to="/my_guides" className={styles.dropdownItem} onClick={toggleDropdown}>
-                  My Guides
+                <Link to="/favorites" className={styles.dropdownItem} onClick={toggleDropdown}>
+                  Favorites
                 </Link>
                 <Link to="/creator" className={styles.dropdownItem} onClick={toggleDropdown}>
                   Creator

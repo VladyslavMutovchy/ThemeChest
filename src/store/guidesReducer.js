@@ -1,10 +1,11 @@
-import { SET_ALL_GUIDES, CLEAR_GUIDES } from '../actions/guides';
+import { SET_ALL_GUIDES, CLEAR_GUIDES, SET_FAVORITES } from '../actions/guides';
 
 const initialState = {
   guidesListPaginated: {
     data: [],
     total: 0,
   },
+  favorites: [],
 };
 
 const guidesReducer = (state = initialState, action) => {
@@ -29,6 +30,12 @@ const guidesReducer = (state = initialState, action) => {
           data: [],
           total: 0,
         },
+      };
+
+    case SET_FAVORITES:
+      return {
+        ...state,
+        favorites: action.payload || [], // Сохраняем переданные избранные элементы
       };
 
     default:

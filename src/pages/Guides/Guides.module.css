@@ -30,6 +30,11 @@
   background-color: var(--container);
 }
 
+.h2{
+  margin-bottom: 20px;
+  font-size: 32px;
+}
+
 .search_btn {
   padding: 10px;
   border-radius: 10px;

@@ -13,6 +13,10 @@
   box-sizing: border-box;
 }
 
+.h3 {
+  margin-top: 10px;
+}
+
 .creator {
   width: 100%;
   max-width: 980px;
@@ -26,6 +30,7 @@
 .cropper {
   margin: 10px auto;
 }
+
 .creator_container,
 .guides_container,
 .creator_intro {

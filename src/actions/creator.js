@@ -74,11 +74,15 @@ export const updateGuideThemes = (guide_id, themeData, callback) => async (dispa
   }
 };
 export const getGuideThemes = (guide_id) => async (dispatch) => {
+  
+  dispatch(isFetching(true));
   try {
     const response = await creatorAPI.getGuideThemes(guide_id);
     dispatch(setThemesByGuide(guide_id, response.themes));
   } catch (error) {
     console.error('Failed to get guide Themes:', error);
+  } finally {
+    dispatch(isFetching(false));
   }
 };
 
@@ -98,7 +102,6 @@ export const getGuideChapters = (guide_id) => async (dispatch) => {
   dispatch(resetChapters());
   try {
     const response = await creatorAPI.getGuideChapters(guide_id);
-    console.log('===ыва===>', response);
     dispatch(updateChapters(response.guide_id, response.chapters));
   } catch (error) {
     console.error('Failed to get guide Chapters:', error);
