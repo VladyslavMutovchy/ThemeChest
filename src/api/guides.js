@@ -6,6 +6,7 @@ export const guidesAPI = {
   fetchGuidesPaginated(url) {
     return get(url);
   },
+ 
   addToFavorites(guide_id, user_id) {
     return post(`${BASE_URL}addToFavorites`, { user_id, guide_id });
   },

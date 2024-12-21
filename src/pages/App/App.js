@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector } from 'react-redux';
 
+import { getRoleFromToken } from '../../utils/functions';
 import Header from '../../components/Header/Header';
 import Footer from '../../components/Footer/Footer';
 import Preloader from '../../components/Preloader/Preloader';
@@ -14,12 +15,13 @@ import Profile from '../Profile/Profile';
 import styles from './App.module.css';
 import Creator from '../Creator/Creator';
 import Guides from '../Guides/Guides';
+import AdminList from '../AdminList/AdminList';
 
 function App(props) {
   const { isFetching } = props;
-
   const userData = useSelector((state) => state.auth.userData);
 
+  const role = userData?.token ? getRoleFromToken(userData.token) : null;
   return (
     <div className={styles.wrapper}>
       {isFetching && <Preloader />}
@@ -28,6 +30,7 @@ function App(props) {
       <Routes>
         {userData ? <Route path="/profile" element={<Profile />} /> : null}
         {userData ? <Route path="/creator" element={<Creator />} /> : null}
+        {role === 1 ? <Route path="/admin_list" element={<AdminList />} /> : null}
         <Route path="/" element={<Main />} />
         <Route path="/guides" element={<Guides />} />
         <Route path="*" element={<PageNotFound />} />

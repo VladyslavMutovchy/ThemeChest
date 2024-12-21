@@ -5,6 +5,7 @@ import auth from './auth';
 import preloader from './preloader';
 import creatorReducer from './creatorReducer';
 import guidesReducer from './guidesReducer';
+import adminReducer from './adminReducer';
 
 const USER_LOGOUT = 'USER_LOGOUT';
 
@@ -13,6 +14,7 @@ const allReducers = combineReducers({
   preloader,
   creatorReducer,
   guidesReducer,
+  adminReducer,
 });
 
 const rootReducer = (state, action) => {

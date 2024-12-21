@@ -19,7 +19,10 @@
   padding: 20px;
   height: auto;
 }
-
+.show_favorites{
+  display: flex;
+  margin: 10px 0 ;
+}
 .guides {
   position: relative;
   width: 100%;

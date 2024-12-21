@@ -6,52 +6,45 @@ import { logout } from '../../actions/auth';
 import styles from './Header.module.css';
 import LoginModal from '../LoginModal/LoginModal';
 import SignupModal from '../SignupModal/SignupModal';
-import { getUserData } from '../../actions/profile';
-
-
+import { getRoleFromToken } from '../../utils/functions';
 
 const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const userData = useSelector((state) => state.auth.userData);
 
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [dropdownTimeout, setDropdownTimeout] = useState(null);
-
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate('/');
-  };
+  const [role, setRole] = useState(null);
 
   const openLoginModal = () => setIsLoginOpen(true);
   const closeLoginModal = () => setIsLoginOpen(false);
   const openSignupModal = () => setIsSignupOpen(true);
   const closeSignupModal = () => setIsSignupOpen(false);
 
+
+  useEffect(() => {
+    if (userData?.token) {
+      const roleId = getRoleFromToken(userData.token);
+      setRole(roleId);
+    }
+  }, [userData]);
+  
+
   const toggleDropdown = () => {
     if (dropdownTimeout) {
       clearTimeout(dropdownTimeout);
       setDropdownTimeout(null);
     }
-
     setIsDropdownOpen((prev) => !prev);
 
     if (!isDropdownOpen) {
-      const timeout = setTimeout(() => {
-        setIsDropdownOpen(false);
-      }, 4000);
+      const timeout = setTimeout(() => setIsDropdownOpen(false), 4000);
       setDropdownTimeout(timeout);
     }
-  };
-
-  const closeDropdown = () => {
-    if (dropdownTimeout) {
-      clearTimeout(dropdownTimeout);
-      setDropdownTimeout(null);
-    }
-    setIsDropdownOpen(false);
   };
 
   useEffect(() => {
@@ -62,13 +55,16 @@ const Header = () => {
     };
   }, [dropdownTimeout]);
 
-  function greetingsNameFromEmail(email) {
-    if (!email) {
-      return;
-    }
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/');
+  };
+
+  const greetingsNameFromEmail = (email) => {
+    if (!email) return '';
     const atIndex = email.indexOf('@');
     return atIndex !== -1 ? email.slice(0, atIndex) : email;
-  }
+  };
 
   return (
     <header className={styles.header}>
@@ -83,14 +79,14 @@ const Header = () => {
         <Link to="/guides" className={styles.navItem}>
           Guides
         </Link>
-
         <Link to="/contact" className={styles.navItem}>
           Contact
         </Link>
+
         {userData ? (
           <div className={styles.userMenu}>
             <span onClick={toggleDropdown} className={styles.navItemHello}>
-              Hello, {!userData.name ? greetingsNameFromEmail(userData.email) : userData.name}!
+              Hello, {userData.name || greetingsNameFromEmail(userData.email)}!
             </span>
             <div onClick={toggleDropdown} className="dropdown_menu_strings">
               <div></div>
@@ -102,12 +98,17 @@ const Header = () => {
                 <Link to="/profile" className={styles.dropdownItem} onClick={toggleDropdown}>
                   My Profile
                 </Link>
-                <Link to="/favorites" className={styles.dropdownItem} onClick={toggleDropdown}>
+                <Link to="/guides" className={styles.dropdownItem} onClick={toggleDropdown}>
                   Favorites
                 </Link>
                 <Link to="/creator" className={styles.dropdownItem} onClick={toggleDropdown}>
                   Creator
                 </Link>
+                {role === 1 && (
+                  <Link to="/admin_list" className={styles.dropdownItem} onClick={toggleDropdown}>
+                    Admin List
+                  </Link>
+                )}
                 <Link
                   to="#"
                   className={styles.dropdownItem}

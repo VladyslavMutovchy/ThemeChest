@@ -1,0 +1,114 @@
+.wrapper {
+  margin: 50px auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1240px;
+  width: 100%;
+  min-height: 100vh;
+  gap: 20px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.admin_panel {
+  width: 100%;
+  background-color: var(--container);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #787878cc;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.searchBtn {
+  padding: 10px 20px;
+  background-color: #ad8c30;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.searchBtn:hover {
+  background-color: #94792d;
+}
+
+.userList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.userCard {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.userCard:hover {
+  transform: scale(1.02);
+}
+
+.userCard p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.userCard strong {
+  font-weight: 600;
+}
+
+.banBtn {
+  padding: 8px 16px;
+  background-color: #ff4d4d;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.banBtn:hover {
+  background-color: #e84343;
+}
+
+.roleSelect {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  background-color: #fff;
+}
+
+.loading {
+  font-size: 18px;
+  color: #555;
+  text-align: center;
+  margin-top: 20px;
+}

@@ -19,7 +19,6 @@ export const setUserData = (userData) => {
   localStorage.setItem('user', JSON.stringify(userData));
 };
 
-
 export const updateUserData = (userData) => {
   const oldUserData = getUserData();
   const newUserData = {
@@ -75,3 +74,29 @@ export function toRoman(num) {
 
   return romanNumerals[num];
 }
+
+export const decodeJWT = (token) => {
+  try {
+    const payload = token.split('.')[1];
+    const decoded = JSON.parse(atob(payload));
+    return decoded;
+  } catch (error) {
+    console.error('Invalid token:', error);
+    return null;
+  }
+};
+
+export const isTokenExpired = (token) => {
+  const decoded = decodeJWT(token);
+  if (!decoded) return true;
+  const currentTime = Math.floor(Date.now() / 1000);
+  return decoded.exp < currentTime;
+};
+
+export const getRoleFromToken = (token) => {
+  const decoded = decodeJWT(token);
+  if (decoded?.roles && decoded.roles.length > 0) {
+    return decoded.roles[0].id; 
+  }
+  return null;
+};

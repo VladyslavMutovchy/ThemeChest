@@ -59,8 +59,8 @@ const get = async (url, ...args) => {
   let index = typeof args[0] === 'function' ? -1 : 0;
   const callback = args[index++];
   const errorCallback = args[index];
-  // console.log('======>', url, ...args);
   const response = await axiosInstance.get(url).then(callback).catch(errorCallback);
+  console.log('======>',  response.data);
   return response.data;
 };
 
