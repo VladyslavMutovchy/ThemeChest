@@ -60,7 +60,7 @@ const get = async (url, ...args) => {
   const callback = args[index++];
   const errorCallback = args[index];
   const response = await axiosInstance.get(url).then(callback).catch(errorCallback);
-  console.log('======>',  response.data);
+  console.log('get api>',  response.data);
   return response.data;
 };
 

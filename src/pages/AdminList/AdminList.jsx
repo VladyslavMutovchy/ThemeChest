@@ -46,13 +46,9 @@ const AdminList = ({ userData, users, total, fetchUsers, changeUserRole, banUser
   };
 
   const handleRoleChange = async (userId, newRole) => {
-    if (newRole === 'admin' && users.some((user) => user.role === 'admin')) {
-      alert('Только один пользователь может иметь роль admin.');
-      return;
-    }
     try {
       await changeUserRole(userId, newRole);
-      loadUsers(1, true, searchQuery);
+      loadUsers(page, true, searchQuery);
     } catch (error) {
       console.error('Ошибка изменения роли пользователя:', error);
     }
@@ -65,15 +61,11 @@ const AdminList = ({ userData, users, total, fetchUsers, changeUserRole, banUser
       } else {
         await banUser(userId);
       }
-      loadUsers(1, true, searchQuery);
+      loadUsers(page, true, searchQuery);
     } catch (error) {
       console.error('Ошибка смены статуса бана пользователя:', error);
     }
   };
-
-  if (!userData || role !== 1) {
-    return <p>У вас нет доступа к этой странице.</p>;
-  }
 
   return (
     <div className={styles.wrapper}>
@@ -91,12 +83,10 @@ const AdminList = ({ userData, users, total, fetchUsers, changeUserRole, banUser
             Search
           </button>
         </div>
-        {loading ? (
-          <p className={styles.loading}>Loading...</p>
-        ) : (
-          <div className={styles.userList}>
-            {users.map((user) => (
-              <div key={user.id} className={styles.userCard}>
+        <div className={styles.userList}>
+          {users.map((user) => (
+            <div key={user.id} className={styles.userCard}>
+              <div className={styles.left}>
                 <p>
                   <strong>ID:</strong> {user.id}
                 </p>
@@ -104,12 +94,23 @@ const AdminList = ({ userData, users, total, fetchUsers, changeUserRole, banUser
                   <strong>Email:</strong> {user.email}
                 </p>
                 <p>
-                  <strong>Role:</strong> {user.role}
+                  <strong>Role:</strong> {user.roles?.map((role) => role.value).join(', ') || 'No roles assigned'}
                 </p>
-                <button onClick={() => handleBanToggle(user.id, user.isBanned)} className={styles.banBtn}>
-                  {user.isBanned ? 'Unban' : 'Ban'}
+              </div>
+              <div className={styles.right}>
+                <button
+                  onClick={() => handleBanToggle(user.id, user.banned)}
+                  className={styles.banBtn}
+                  disabled={user.roles?.some((role) => role.value === 'admin') && userData?.email === user.email}
+                >
+                  {user.banned ? 'Unban' : 'Ban'}
                 </button>
-                <select value={user.role} onChange={(e) => handleRoleChange(user.id, e.target.value)} className={styles.roleSelect}>
+                <select
+                  value={user.roles[0]?.value || 'user'}
+                  onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                  className={styles.roleSelect}
+                  disabled={user.roles?.some((role) => role.value === 'admin') && userData?.email === user.email}
+                >
                   {roles.map((role) => (
                     <option key={role} value={role}>
                       {role}
@@ -117,9 +118,10 @@ const AdminList = ({ userData, users, total, fetchUsers, changeUserRole, banUser
                   ))}
                 </select>
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          ))}
+        </div>
+
         {!loading && users.length < total && (
           <button className={styles.load_more_btn} onClick={() => loadUsers(page + 1, false, searchQuery)}>
             Load More

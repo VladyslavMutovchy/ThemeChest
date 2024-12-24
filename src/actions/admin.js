@@ -31,7 +31,8 @@ export const fetchUsers = (page, limit = 10, searchQuery) =>
   actionWrapper(async (dispatch) => {
     dispatch(isFetching(true));
     try {
-      const { users, total } = await adminAPI.fetchUsers(page, limit, searchQuery); // Передаем searchQuery
+      const response = await adminAPI.fetchUsers(page, limit, searchQuery);
+      const { data: users, total } = response; 
       dispatch(setUsers({ users, total, page }));
     } catch (error) {
       console.error('Ошибка загрузки пользователей:', error);
@@ -39,6 +40,7 @@ export const fetchUsers = (page, limit = 10, searchQuery) =>
       dispatch(isFetching(false));
     }
   });
+
 
 export const changeUserRole = (userId, newRole) =>
   actionWrapper(async (dispatch) => {
