@@ -54,6 +54,8 @@ const AdminList = ({ userData, users, total, fetchUsers, changeUserRole, banUser
     }
   };
 
+  const isAdmin = userData.roles?.some((role) => role.value === 'admin');
+
   const handleBanToggle = async (userId, isBanned) => {
     try {
       if (isBanned) {
@@ -101,7 +103,11 @@ const AdminList = ({ userData, users, total, fetchUsers, changeUserRole, banUser
                 <button
                   onClick={() => handleBanToggle(user.id, user.banned)}
                   className={styles.banBtn}
-                  disabled={user.roles?.some((role) => role.value === 'admin') && userData?.email === user.email}
+                  disabled={isAdmin && userData?.email === user.email}
+                  style={{
+                    backgroundColor: isAdmin ? 'lightGrey' : undefined,
+                    cursor: isAdmin ? 'not-allowed' : undefined,
+                  }}
                 >
                   {user.banned ? 'Unban' : 'Ban'}
                 </button>
