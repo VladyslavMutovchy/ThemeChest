@@ -1,241 +1,105 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import styles from './AiCreator.module.css';
 import { connect } from 'react-redux';
-import {
-  createGuide,
-  getPreviewGuide,
-  getGuidesData,
-  updateGuideThemes,
-  getGuideThemes,
-  updateGuideChapters,
-  getGuideChapters,
-  updatePreviewGuide,
-  resetChapters,
-} from '../../actions/creator';
-import CreateGuideForm from '../../components/CreatorsComponents/CreateGuideFrom';
-import EditThemesForm from '../../components/CreatorsComponents/EditThemesForm';
-import ChaptersForm from '../../components/CreatorsComponents/ChaptersForm';
-import * as Yup from 'yup';
-import PreviewGuide from '../../components/CreatorsComponents/PreviewGuide';
-import EditPreviewForm from '../../components/CreatorsComponents/EditPreviewForm';
+import { aiCreateGuide } from './../../actions/aiCreator';
 
-const AiCreator = (props) => {
-  const {
-    userData,
-    guides,
-    getGuidesData,
-    createGuide,
-    updateGuideThemes,
-    getGuideThemes,
-    themesByGuide,
-    updatePreviewGuide,
-    updateGuideChapters,
-    getGuideChapters,
-    chaptersByGuide,
-    getPreviewGuide,
-    resetChapters,
-    guidePreview,
-  } = props;
+const AiCreator = ({ userData, aiCreateGuide }) => {
+  const [formValues, setFormValues] = useState({
+    theme: '',
+    difficulty: 1,
+    chapters: 3,
+    detailLevel: 3,
+    video: false,
+  });
 
-  const [targetGuide, setTargetGuide] = useState(null);
-  const [isCreatingNewGuide, setIsCreatingNewGuide] = useState(false);
-  const [isEditingGuide, setIsEditingGuide] = useState(false);
-  const [initialChapters, setInitialChapters] = useState({ chapters: [] });
-  const [isPreview, setIsPreview] = useState(false);
-
-  const togglePreview = () => {
-    setIsPreview(!isPreview);
+  const difficultyLevels = {
+    1: 'Beginner',
+    2: 'Intermediate',
+    3: 'Advanced',
+    4: 'Expert',
   };
 
-  useEffect(() => {
-    getGuidesData(userData.id);
-  }, [getGuidesData, userData.id]);
-
-  useEffect(() => {
-    if (targetGuide && chaptersByGuide[targetGuide.id]) {
-      setInitialChapters({ chapters: chaptersByGuide[targetGuide.id] });
-    }
-  }, [targetGuide, chaptersByGuide]);
-
-  const handleGuideSubmit = (values) => {
-    createGuide(values, (newGuide) => {
-      toast.success('Guide created successfully!');
-      setTargetGuide(newGuide);
-      setIsCreatingNewGuide(false);
-      setIsEditingGuide(true);
+  const handleFormChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: type === 'checkbox' ? checked : value,
     });
   };
 
-  const handleThemesSubmit = async (values) => {
+  const handleSubmit = async () => {
     try {
-      await updateGuideThemes(targetGuide.id, { themes: values.themes });
-      toast.success('Themes updated successfully!');
-      handleSelectGuide(targetGuide);
-    } catch (error) {
-      toast.error('Failed to update themes.');
-    }
-  };
+      if (!formValues.theme.trim()) {
+        toast.error('Theme is required.');
+        return;
+      }
 
-  const handleChaptersSubmit = async (values) => {
-    console.log('Submit chapters values:', values);
-    try {
-      await updateGuideChapters(values);
-      toast.success('Chapters updated successfully!');
-      handleSelectGuide(targetGuide);
-    } catch (error) {
-      toast.error('Failed to update chapters.');
-    }
-  };
-  const handlePreviewGuideSubmit = async (formData) => {
-    try {
-      await updatePreviewGuide(targetGuide, formData);
-      toast.success('Preview updated successfully!');
-      handleSelectGuide(targetGuide);
-    } catch (error) {
-      toast.error('Failed to update preview.');
-    }
-  };
+      const guideData = {
+        theme: formValues.theme,
+        difficulty: formValues.difficulty,
+        chapters: formValues.chapters,
+        detailLevel: formValues.detailLevel,
+        video: formValues.video,
+        userId: userData.id,
+      };
 
-  const handleSelectGuide = async (guide) => {
-    try {
-      setTargetGuide(guide);
-      setIsEditingGuide(false);
-      resetChapters();
-      await getPreviewGuide(guide.id);
-      await getGuideThemes(guide.id);
-      await getGuideChapters(guide.id);
-      console.log('Guide preview loaded:', guidePreview);
-      setIsEditingGuide(true);
+      await aiCreateGuide(guideData);
+      toast.success('Guide created successfully!');
     } catch (error) {
-      console.error('Ошибка при загрузке тем:', error);
+      console.error('Error creating guide:', error);
+      toast.error('Failed to create guide.');
     }
   };
 
   return (
     <div className={styles.wrapper}>
-      <div className={styles.guides_container}>
-        <h2 onClick={() => setTargetGuide(null)}>Your Guides</h2>
-        <div className={styles.underline} />
+      <h2 className={styles.title}>AI Guide Creator</h2>
+      <p className={styles.description}>
+        Didn't find the guide you were looking for in the list? Create the perfect one in just a few clicks! Customize your guide by selecting the
+        topic, difficulty level, number of chapters, and level of detail. This tool helps you generate practical guides tailored to your needs.
+      </p>
 
-        {guides?.map((guide, index) => (
-          <div key={index} className={styles.guide_plate} onClick={() => handleSelectGuide(guide)}>
-            {guide.title}
-          </div>
-        ))}
-        <button
-          type="button"
-          className={styles.btn}
-          onClick={() => {
-            setTargetGuide(null);
-            setIsCreatingNewGuide(true);
-            setIsEditingGuide(false);
-          }}
-        >
-          Create New Guide
+      <div className={styles.form}>
+        <label className={styles.label}>Theme (up to 300 characters)</label>
+        <input
+          type="text"
+          name="theme"
+          value={formValues.theme}
+          onChange={handleFormChange}
+          maxLength={300}
+          className={styles.input}
+          placeholder="Enter the guide's theme"
+        />
+
+        <label className={styles.label}>Difficulty ({difficultyLevels[Number(formValues.difficulty)]})</label>
+        <input type="range" name="difficulty" min="1" max="4" value={formValues.difficulty} onChange={handleFormChange} className={styles.slider} />
+
+        <label className={styles.label}>Chapters ({formValues.chapters === '0' ? 'Auto' : formValues.chapters})</label>
+        <input type="range" name="chapters" min="0" max="6" value={formValues.chapters} onChange={handleFormChange} className={styles.slider} />
+
+        <label className={styles.label}>Detail Level ({formValues.detailLevel})</label>
+        <input type="range" name="detailLevel" min="1" max="6" value={formValues.detailLevel} onChange={handleFormChange} className={styles.slider} />
+
+        <label className={styles.checkbox_label}>
+          <input type="checkbox" name="video" checked={formValues.video} onChange={handleFormChange} className={styles.checkbox} />
+          Allow YouTube video links
+        </label>
+
+        <button type="button" onClick={handleSubmit} className={styles.submit_button}>
+          Create Guide
         </button>
-      </div>
-
-      <div className={styles.creator}>
-        {targetGuide === null && isCreatingNewGuide === false ? (
-          <div className={styles.creator_intro}>
-            <h2 className={styles.h2}>Welcome to AI Guide Creator</h2>
-            <p>
-              AI Guide Creator is your ultimate assistant for building detailed and engaging guides on any topic. Whether you're sharing expertise,
-              teaching a new skill, or creating step-by-step instructions, AI Guide Creator makes the process effortless and efficient.
-            </p>
-            <p>With AI Guide Creator, you can enhance your guides using advanced AI tools:</p>
-            <ul>
-              <li>Generate text content for clear and informative explanations</li>
-              <li>Add relevant images to make your guides visually impactful</li>
-              <li>Embed links to videos or external resources for additional insights</li>
-              <li>Customize themes to match the style and purpose of your guide</li>
-            </ul>
-            <p>Choose an existing guide to edit or click "Create New Guide" to start designing your next masterpiece with AI assistance!</p>
-          </div>
-        ) : (
-          <>
-            {isCreatingNewGuide && !isEditingGuide && (
-              <div className={styles.creator_container}>
-                <CreateGuideForm
-                  initialValues={{ user_id: userData.id, title: '' }}
-                  validationSchema={Yup.object().shape({
-                    title: Yup.string().required('Guide title is required'),
-                  })}
-                  onSubmit={handleGuideSubmit}
-                />
-              </div>
-            )}
-
-            {isEditingGuide && targetGuide && (
-              <>
-                <div className={styles.creator_container}>
-                  <EditPreviewForm guidePreview={guidePreview} guideTarget={targetGuide} onSubmit={handlePreviewGuideSubmit} />
-                </div>
-                <div className={styles.creator_container}>
-                  <EditThemesForm
-                    themes={themesByGuide[targetGuide.id] || []}
-                    guideTarget={targetGuide}
-                    validationSchema={Yup.object().shape({
-                      themes: Yup.array().max(6, 'You can add up to 6 themes').of(Yup.string().required('Theme is required')),
-                    })}
-                    onSubmit={handleThemesSubmit}
-                  />
-                </div>
-                <div className={styles.creator_container}>
-                  <button onClick={togglePreview} className={styles.btn}>
-                    {isPreview ? 'Edit' : 'Preview'}
-                  </button>
-                  {!isPreview ? (
-                    <ChaptersForm
-                      initialValues={initialChapters}
-                      guideTarget={targetGuide}
-                      validationSchema={Yup.object().shape({
-                        chapters: Yup.array().of(
-                          Yup.object().shape({
-                            chapterTitle: Yup.string().required('Chapter title is required'),
-                            contents: Yup.array().of(
-                              Yup.object().shape({
-                                type: Yup.string().required(),
-                                value: Yup.mixed().required('Content value is required'),
-                              })
-                            ),
-                          })
-                        ),
-                      })}
-                      onSubmit={handleChaptersSubmit}
-                    />
-                  ) : (
-                    <PreviewGuide initialValues={initialChapters} isPreview={isPreview} guideTarget={targetGuide} />
-                  )}
-                </div>
-              </>
-            )}
-          </>
-        )}
       </div>
     </div>
   );
 };
 
 const mapDispatchToProps = {
-  getGuidesData,
-  createGuide,
-  updatePreviewGuide,
-  updateGuideThemes,
-  getGuideThemes,
-  getPreviewGuide,
-  updateGuideChapters,
-  getGuideChapters,
-  resetChapters,
+  aiCreateGuide,
 };
 
 const mapStateToProps = (state) => ({
   userData: state.auth.userData,
-  guides: state.creatorReducer?.guidesList || [],
-  themesByGuide: state.creatorReducer?.themesByGuide || {},
-  chaptersByGuide: state.creatorReducer?.chaptersByGuide || {},
-  guidePreview: state.creatorReducer?.guidePreview || {},
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AiCreator);
