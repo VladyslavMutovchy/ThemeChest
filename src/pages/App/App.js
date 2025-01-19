@@ -16,6 +16,9 @@ import styles from './App.module.css';
 import Creator from '../Creator/Creator';
 import Guides from '../Guides/Guides';
 import AdminList from '../AdminList/AdminList';
+import AiCreator from '../AiCreator/AiCreator';
+import GuideDetails from '../Guides/GuideDetails';
+
 
 function App(props) {
   const { isFetching } = props;
@@ -31,8 +34,10 @@ function App(props) {
         {userData ? <Route path="/profile" element={<Profile />} /> : null}
         {userData ? <Route path="/creator" element={<Creator />} /> : null}
         {role === 1 ? <Route path="/admin_list" element={<AdminList />} /> : null}
+        {userData ? <Route path="/AiCreator" element={<AiCreator />} /> : null}
         <Route path="/" element={<Main />} />
         <Route path="/guides" element={<Guides />} />
+        <Route path="/guides/:id" element={<GuideDetails />} />
         <Route path="*" element={<PageNotFound />} />
       </Routes>
       <Footer />

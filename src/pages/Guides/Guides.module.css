@@ -19,10 +19,12 @@
   padding: 20px;
   height: auto;
 }
-.show_favorites{
+
+.show_favorites {
   display: flex;
-  margin: 10px 0 ;
+  margin: 10px 0;
 }
+
 .guides {
   position: relative;
   width: 100%;
@@ -33,7 +35,7 @@
   background-color: var(--container);
 }
 
-.h2{
+.h2 {
   margin-bottom: 20px;
   font-size: 32px;
 }
@@ -43,11 +45,17 @@
   border-radius: 10px;
   background-color: #dbdbdb;
   cursor: pointer;
-  margin: 8px auto;
+  margin: 8px 2px;
+  transition: background-color 0.2s ease;
+}
 
-  &:hover {
-    background-color: #d0d0d0;
-  }
+.search_btn:hover {
+  background-color: #d0d0d0;
+}
+
+.btn_container {
+  display: flex;
+  justify-content: space-between;
 }
 
 .add_to_favorites_btn {
@@ -58,21 +66,17 @@
   cursor: pointer;
 }
 
+.add_to_favorites_btn:hover {
+  background-color: #d0d0d0;
+}
+
 .guide_feed {
   display: grid;
-  box-sizing: border-box;
   grid-template-columns: repeat(auto-fit, minmax(240px, 280px));
   justify-content: space-around;
   gap: 10px 0;
   width: 100%;
-}
-
-.guide_plate_prev {
-  width: 240px;
-  height: 320px;
-  text-wrap: wrap;
-  padding: 20px;
-  background-color: #dcdcdc86;
+  box-sizing: border-box;
 }
 
 .guide_plate_img {
@@ -84,22 +88,31 @@
   cursor: pointer;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
   transition: transform 0.2s ease;
-
-  &:hover {
-    transform: scale(1.01);
-  }
 }
 
-.guide_plate_p,
-.guide_plate_title {
-  text-align: left;
-  word-wrap: break-word;
-  word-break: break-word;
+.guide_plate_img:hover {
+  transform: scale(1.01);
+}
+
+.guide_plate_prev {
+  width: 240px;
+  height: 320px;
+  padding: 20px;
+  background-color: #dcdcdc86;
 }
 
 .guide_plate_p {
   margin-top: 30px;
   color: #343434;
+  word-wrap: break-word;
+  word-break: break-word;
+  text-align: left;
+}
+
+.guide_plate_title {
+  word-wrap: break-word;
+  word-break: break-word;
+  text-align: left;
 }
 
 .padding {
@@ -118,12 +131,12 @@
   left: 50%;
   cursor: pointer;
   transform: translateX(-50%);
-
-  &:hover {
-    background-color: #94792d;
-  }
+  transition: background-color 0.2s ease;
 }
 
+.load_more_btn:hover {
+  background-color: #94792d;
+}
 
 .textarea {
   padding: 10px;
@@ -135,18 +148,11 @@
   font-size: 1rem;
   width: 100%;
 }
+
 .btn_wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
-}
-
-.guide_plate:hover {
-  background-color: #b6b6b6;
-}
-
-.preview_guide .chapter {
-  border: none;
 }
 
 .underline {
@@ -161,12 +167,6 @@
   border-radius: 10px;
   border: 1px solid #787878cc;
   margin: 10px auto;
-}
-
-.intro_message {
-  text-align: left;
-  padding: 40px;
-  color: #333;
 }
 
 .previewWrapper {

@@ -1,0 +1,56 @@
+.wrapper {
+  margin: 50px auto 0;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  max-width: 1240px;
+  width: 100%;
+  min-height: 100vh;
+  gap: 20px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+.guides {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  padding: 10px 0;
+  background-color: var(--container);
+}
+
+.btn_wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add_to_favorites_btn {
+  margin: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #dbdbdb;
+  cursor: pointer;
+}
+
+.add_to_favorites_btn:hover {
+  background-color: #d0d0d0;
+}
+
+.padding {
+  padding: 20px;
+  text-align: center;
+}
+
+.loading_text {
+  font-size: 16px;
+  color: #666;
+  text-align: center;
+}
+
+.preview_guide .chapter {
+  border: none;
+}
