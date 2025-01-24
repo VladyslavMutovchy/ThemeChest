@@ -3,22 +3,31 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PreviewGuide from '../../components/CreatorsComponents/PreviewGuide';
 import styles from './GuideDetails.module.css';
-import { getGuideChapters } from '../../actions/creator';
+import { getGuideChapters, getPreviewGuide } from '../../actions/creator';
 import { addToFavorites, removeFromFavorites } from '../../actions/guides';
 
-const GuideDetails = ({ chaptersByGuide, getGuideChapters, addToFavorites, removeFromFavorites, favorites, userData }) => {
+const GuideDetails = ({
+  chaptersByGuide,
+  guidePreview,
+  getGuideChapters,
+  getPreviewGuide,
+  addToFavorites,
+  removeFromFavorites,
+  favorites,
+  userData,
+}) => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (id) {
-      getGuideChapters(id);
+      getPreviewGuide(id);
+      getGuideChapters(id); 
     }
-  }, [id, getGuideChapters]);
+  }, [id, getPreviewGuide, getGuideChapters]);
 
   const chapters = chaptersByGuide[id] || [];
-  const isFavorite = favorites.includes(Number(id)); // Проверка, добавлен ли гайд в избранное
-
+  const isFavorite = favorites.includes(Number(id)); 
   const handleAddToFavorites = async () => {
     if (userData) {
       await addToFavorites(id, userData.id);
@@ -50,10 +59,12 @@ const GuideDetails = ({ chaptersByGuide, getGuideChapters, addToFavorites, remov
             ))}
         </div>
         <div className={styles.padding}>
+          <h1 className={styles.h1}>{guidePreview.title || 'Loading...'}</h1>
+          <p className={styles.p}>{guidePreview.description || 'Loading...'}</p>
           {chapters.length > 0 ? (
             <PreviewGuide className={styles.preview_guide} initialValues={{ chapters }} />
           ) : (
-            <p className={styles.loading_text}>Loading guide...</p>
+            <p className={styles.loading_text}>Loading chapters...</p>
           )}
         </div>
       </div>
@@ -65,10 +76,12 @@ const mapStateToProps = (state) => ({
   chaptersByGuide: state.creatorReducer?.chaptersByGuide || {},
   favorites: state.guidesReducer?.favorites?.favorites || [],
   userData: state.auth?.userData,
+  guidePreview: state.creatorReducer.guidePreview || {}, // Данные гайда из Redux
 });
 
 const mapDispatchToProps = {
   getGuideChapters,
+  getPreviewGuide, // Добавлено действие для загрузки гайда
   addToFavorites,
   removeFromFavorites,
 };

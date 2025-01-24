@@ -74,7 +74,6 @@ export const updateGuideThemes = (guide_id, themeData, callback) => async (dispa
   }
 };
 export const getGuideThemes = (guide_id) => async (dispatch) => {
-  
   dispatch(isFetching(true));
   try {
     const response = await creatorAPI.getGuideThemes(guide_id);
