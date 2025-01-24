@@ -27,7 +27,9 @@ export const creatorAPI = {
     return get(`${BASE_URL}getGuidesData/${userId}`); 
   },
 
-
+  deleteGuide(guideId, userId) {
+    return post(`${BASE_URL}deleteGuide`, { guideId, userId });
+  },
 
   
   updateGuideChapters(chapterData) {

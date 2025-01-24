@@ -12,6 +12,7 @@ import {
   getGuideChapters,
   updatePreviewGuide,
   resetChapters,
+  deleteGuide,
 } from '../../actions/creator';
 import CreateGuideForm from '../../components/CreatorsComponents/CreateGuideFrom';
 import EditThemesForm from '../../components/CreatorsComponents/EditThemesForm';
@@ -19,10 +20,12 @@ import ChaptersForm from '../../components/CreatorsComponents/ChaptersForm';
 import * as Yup from 'yup';
 import PreviewGuide from '../../components/CreatorsComponents/PreviewGuide';
 import EditPreviewForm from '../../components/CreatorsComponents/EditPreviewForm';
+import DeleteGuideModal from '../../components/DeleteGuideModal/DeleteGuideModal';
 
 const Creator = (props) => {
   const {
     userData,
+    deleteGuide,
     guides,
     getGuidesData,
     createGuide,
@@ -35,7 +38,7 @@ const Creator = (props) => {
     chaptersByGuide,
     getPreviewGuide,
     resetChapters,
-    guidePreview, 
+    guidePreview,
   } = props;
 
   const [targetGuide, setTargetGuide] = useState(null);
@@ -43,6 +46,8 @@ const Creator = (props) => {
   const [isEditingGuide, setIsEditingGuide] = useState(false);
   const [initialChapters, setInitialChapters] = useState({ chapters: [] });
   const [isPreview, setIsPreview] = useState(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [guideToDelete, setGuideToDelete] = useState(null);
 
   const togglePreview = () => {
     setIsPreview(!isPreview);
@@ -112,6 +117,33 @@ const Creator = (props) => {
     }
   };
 
+  const openDeleteModal = (guide) => {
+    setGuideToDelete(guide);
+    setDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setGuideToDelete(null);
+    setDeleteModalOpen(false);
+  };
+
+  const confirmDelete = async () => {
+    if (guideToDelete) {
+      try {
+        await deleteGuide(guideToDelete.id, userData.id);
+        toast.success('Guide deleted successfully!');
+        resetChapters();
+        setTargetGuide(null);
+        getGuidesData(userData.id);
+      } catch (error) {
+        toast.error('Failed to delete guide.');
+        console.error('Error deleting guide:', error);
+      } finally {
+        closeDeleteModal();
+      }
+    }
+  };
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.guides_container}>
@@ -171,6 +203,15 @@ const Creator = (props) => {
               <>
                 <div className={styles.creator_container}>
                   <EditPreviewForm guidePreview={guidePreview} guideTarget={targetGuide} onSubmit={handlePreviewGuideSubmit} />
+                  <DeleteGuideModal
+                    isOpen={isDeleteModalOpen}
+                    onClose={closeDeleteModal}
+                    onConfirm={confirmDelete}
+                    guideTitle={guideToDelete?.title || ''}
+                  />
+                  <button className={styles.del_guide} onClick={() => openDeleteModal(targetGuide)}>
+                    Delete Guide
+                  </button>
                 </div>
                 <div className={styles.creator_container}>
                   <EditThemesForm
@@ -228,6 +269,7 @@ const mapDispatchToProps = {
   updateGuideChapters,
   getGuideChapters,
   resetChapters,
+  deleteGuide,
 };
 
 const mapStateToProps = (state) => ({

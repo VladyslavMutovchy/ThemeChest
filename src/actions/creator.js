@@ -107,6 +107,13 @@ export const getGuideChapters = (guide_id) => async (dispatch) => {
     console.error('Failed to get guide Chapters:', error);
   }
 };
+export const deleteGuide = (guide_id, user_id) => async () => {
+  try {
+    await creatorAPI.deleteGuide(guide_id, user_id);
+  } catch (error) {
+    console.error('Failed to get guide Chapters:', error);
+  }
+};
 
 export const setPreviewGuide = (guidePreview) => ({
   type: SET_PREVIEW_GUIDE,
