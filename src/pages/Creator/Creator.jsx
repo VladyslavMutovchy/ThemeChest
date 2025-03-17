@@ -17,11 +17,10 @@ import {
 import CreateGuideForm from '../../components/CreatorsComponents/CreateGuideFrom';
 import EditThemesForm from '../../components/CreatorsComponents/EditThemesForm';
 import ChaptersForm from '../../components/CreatorsComponents/ChaptersForm';
-import * as Yup from 'yup';
 import PreviewGuide from '../../components/CreatorsComponents/PreviewGuide';
 import EditPreviewForm from '../../components/CreatorsComponents/EditPreviewForm';
 import DeleteGuideModal from '../../components/DeleteGuideModal/DeleteGuideModal';
-
+import * as Yup from 'yup';
 const Creator = (props) => {
   const {
     userData,
