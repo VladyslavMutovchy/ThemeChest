@@ -63,7 +63,7 @@ const EditPreviewForm = ({ guidePreview, guideTarget, onSubmit }) => {
                       ? `url(${URL.createObjectURL(values.prev_img.file)})`
                       : `url(${values.prev_img.base64})`
                     : 'none',
-                  backgroundColor: !values.prev_img ? 'var(--bg-light)' : 'transparent'
+                  backgroundColor: !values.prev_img ? 'var(--bg-light)' : 'transparent',
                 }}
               ></div>
               <div className={styles.guidePrevContent}>
