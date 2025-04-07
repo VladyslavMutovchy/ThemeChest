@@ -1,95 +1,344 @@
-.wrapper {
-  margin: 50px auto 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  max-width: 1240px;
+/* AI Creator Page Styles */
+.aiCreatorPage {
   width: 100%;
-  gap: 10px;
-  font-size: 16px;
-  text-align: center;
-  box-sizing: border-box;
-  background-color: var(--container);
-  border-radius: 20px;
-  padding: 10px;
 }
 
-.description {
-  font-size: 16px;
-  max-width: 600px;
-  color: #555;
+/* Header Section */
+.aiCreatorHeader {
+  background-color: var(--primary-color);
+  padding: 60px 0;
+  color: white;
   text-align: center;
-  margin: 10px 0 20px;
-  line-height: 1.6;
 }
 
-.creator {
+.container {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
   width: 100%;
-  max-width: 980px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+}
+
+.pageTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: white;
+}
+
+.pageDescription {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 700px;
   margin: 0 auto;
 }
 
-.title {
-  font-size: 22px;
+/* Content Section */
+.aiCreatorContent {
+  padding: 40px 0 60px;
+}
+
+.aiCreatorLayout {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 30px;
+}
+
+/* Main Content */
+.mainContent {
+  width: 100%;
+}
+
+.creatorCard {
+  padding: 30px;
+}
+
+.cardHeader {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.cardTitle {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-color);
+}
+
+.cardDescription {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.formContainer {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.formGroup {
+  margin-bottom: 24px;
+}
+
+.formLabel {
+  display: block;
+  font-size: 14px;
   font-weight: 500;
+  margin-bottom: 8px;
+  color: var(--text-color);
 }
 
-.form {
+/* Slider Styles */
+.sliderLabelContainer {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  flex-direction: column;
-  gap: 10px;
+  margin-bottom: 8px;
 }
 
-.label {
+.sliderValue {
   font-size: 14px;
-  margin-bottom: 5px;
+  font-weight: 600;
+  color: var(--primary-color);
+  background-color: rgba(var(--primary-color-rgb), 0.1);
+  padding: 2px 8px;
+  border-radius: 12px;
 }
-.checkbox_label {
+
+.sliderContainer {
+  padding: 0 4px;
+}
+
+.slider {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--border-color);
+  outline: none;
+  border-radius: 3px;
+  margin: 10px 0;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border: none;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  background: var(--primary-color-dark);
+}
+
+.slider::-moz-range-thumb:hover {
+  background: var(--primary-color-dark);
+}
+
+.sliderMarkers {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding: 0 2px;
+}
+
+.sliderMarkerEnd {
+  text-align: right;
+}
+
+/* Checkbox Styles */
+.checkboxLabel {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  margin-top: 10px;
+  cursor: pointer;
 }
 
 .checkbox {
-  width: 16px;
-  height: 16px;
+  margin-right: 10px;
+  width: 18px;
+  height: 18px;
   cursor: pointer;
 }
 
-.checkbox_label:hover {
-  color: #333;
+.formActions {
+  margin-top: 30px;
+  text-align: center;
 }
 
-.input {
-  padding: 10px 20px;
-  width: 100%;
-  max-width: 600px;
-  border-radius: 10px;
-  border: 1px solid #787878cc;
-  background-color: #dbdbdb;
-  font-size: 16px;
+/* Sidebar Styles */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.infoCard, .tipsCard {
+  padding: 24px;
+}
+
+.infoCardTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text-color);
+  text-align: center;
+}
+
+/* Steps List */
+.stepsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.step {
+  display: flex;
+  margin-bottom: 20px;
+  align-items: flex-start;
+}
+
+.step:last-child {
+  margin-bottom: 0;
+}
+
+.stepNumber {
+  width: 30px;
+  height: 30px;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.stepContent {
+  flex: 1;
+}
+
+.stepTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-color);
+}
+
+.stepDescription {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Tips List */
+.tipsList {
+  padding-left: 20px;
+  margin-bottom: 24px;
+}
+
+.tip {
   margin-bottom: 10px;
+  color: var(--text-color);
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
-.submit_button {
-  max-width: 150px;
-  font-size: 14px;
-  font-weight: 500;
-  background-color: var(--bg2);
-  padding: 8px 10px;
-  border-radius: 10px;
-  border: 1px solid rgb(167, 167, 167);
-  color: #000000;
-  cursor: pointer;
+.tipActions {
+  margin-top: 16px;
 }
 
-.submit_button:hover {
-  background-color: var(--bg2);
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .aiCreatorLayout {
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+  }
+
+  .pageTitle {
+    font-size: 2rem;
+  }
+
+  .pageDescription {
+    font-size: 1rem;
+  }
+
+  .aiCreatorHeader {
+    padding: 40px 0;
+  }
+
+  .cardTitle {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .aiCreatorLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    order: -1;
+  }
+
+  .infoCard, .tipsCard {
+    padding: 20px;
+  }
+
+  .aiCreatorHeader {
+    padding: 30px 0;
+  }
+
+  .creatorCard {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageTitle {
+    font-size: 1.75rem;
+  }
+
+  .aiCreatorHeader {
+    padding: 25px 0;
+  }
+
+  .cardTitle {
+    font-size: 1.25rem;
+  }
+
+  .step {
+    margin-bottom: 16px;
+  }
+
+  .stepNumber {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  .stepTitle {
+    font-size: 0.9rem;
+  }
+
+  .stepDescription {
+    font-size: 0.8rem;
+  }
 }

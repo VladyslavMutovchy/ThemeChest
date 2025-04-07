@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { changeUserRole, banUser, unbanUser, fetchUsers } from '../../actions/admin';
 import styles from './AdminList.module.css';
 import { getRoleFromToken } from '../../utils/functions';
+import { Button, Card, Input } from '../../components/UI';
 
 const AdminList = ({ userData, users, total, fetchUsers, changeUserRole, banUser, unbanUser }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -70,69 +71,105 @@ const AdminList = ({ userData, users, total, fetchUsers, changeUserRole, banUser
   };
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.admin_panel}>
-        <h2>Admin Panel</h2>
-        <div className={styles.search_container}>
-          <input
-            type="text"
-            className={styles.searchInput}
-            placeholder="Search by email or ID..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <button className={styles.searchBtn} onClick={handleSearch}>
-            Search
-          </button>
+    <div className={styles.adminPage}>
+      <div className={styles.adminHeader}>
+        <div className={styles.container}>
+          <h1 className={styles.pageTitle}>Admin Panel</h1>
+          <p className={styles.pageDescription}>
+            Manage users, roles, and permissions
+          </p>
         </div>
-        <div className={styles.userList}>
-          {users.map((user) => (
-            <div key={user.id} className={styles.userCard}>
-              <div className={styles.left}>
-                <p>
-                  <strong>ID:</strong> {user.id}
-                </p>
-                <p>
-                  <strong>Email:</strong> {user.email}
-                </p>
-                <p>
-                  <strong>Role:</strong> {user.roles?.map((role) => role.value).join(', ') || 'No roles assigned'}
-                </p>
-              </div>
-              <div className={styles.right}>
-                <button
-                  onClick={() => handleBanToggle(user.id, user.banned)}
-                  className={styles.banBtn}
-                  disabled={isAdmin && userData?.email === user.email}
-                  style={{
-                    backgroundColor: isAdmin ? 'lightGrey' : undefined,
-                    cursor: isAdmin ? 'not-allowed' : undefined,
-                  }}
+      </div>
+
+      <div className={styles.adminContent}>
+        <div className={styles.container}>
+          <Card className={styles.adminCard}>
+            <div className={styles.cardHeader}>
+              <h2 className={styles.cardTitle}>User Management</h2>
+              <div className={styles.searchContainer}>
+                <div className={styles.searchInputWrapper}>
+                  <Input
+                    type="text"
+                    placeholder="Search by email or ID..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className={styles.searchInput}
+                  />
+                </div>
+                <Button
+                  variant="primary"
+                  onClick={handleSearch}
+                  className={styles.searchButton}
                 >
-                  {user.banned ? 'Unban' : 'Ban'}
-                </button>
-                <select
-                  value={user.roles[0]?.value || 'user'}
-                  onChange={(e) => handleRoleChange(user.id, e.target.value)}
-                  className={styles.roleSelect}
-                  disabled={user.roles?.some((role) => role.value === 'admin') && userData?.email === user.email}
-                >
-                  {roles.map((role) => (
-                    <option key={role} value={role}>
-                      {role}
-                    </option>
-                  ))}
-                </select>
+                  Search
+                </Button>
               </div>
             </div>
-          ))}
-        </div>
 
-        {!loading && users.length < total && (
-          <button className={styles.load_more_btn} onClick={() => loadUsers(page + 1, false, searchQuery)}>
-            Load More
-          </button>
-        )}
+            {users.length === 0 ? (
+              <div className={styles.noResults}>
+                <p>No users found matching your search criteria.</p>
+              </div>
+            ) : (
+              <div className={styles.userList}>
+                {users.map((user) => (
+                  <div key={user.id} className={styles.userCard}>
+                    <div className={styles.userInfo}>
+                      <div className={styles.userIdEmail}>
+                        <span className={styles.userId}>ID: {user.id}</span>
+                        <span className={styles.userEmail}>{user.email}</span>
+                      </div>
+                      <div className={styles.userRoleStatus}>
+                        <span className={styles.userRole}>
+                          Role: {user.roles?.map((role) => role.value).join(', ') || 'No roles assigned'}
+                        </span> -
+                        <span className={`${styles.userStatus} ${user.banned ? styles.bannedStatus : styles.activeStatus}`}>
+                          {user.banned ? 'Banned' : 'Active'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className={styles.userActions}>
+                      <Button
+                        variant={user.banned ? "outline" : "secondary"}
+                        size="small"
+                        onClick={() => handleBanToggle(user.id, user.banned)}
+                        disabled={isAdmin && userData?.email === user.email}
+                        className={styles.actionButton}
+                      >
+                        {user.banned ? 'Unban' : 'Ban'}
+                      </Button>
+
+                      <select
+                        value={user.roles[0]?.value || 'user'}
+                        onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                        className={styles.roleSelect}
+                        disabled={user.roles?.some((role) => role.value === 'admin') && userData?.email === user.email}
+                      >
+                        {roles.map((role) => (
+                          <option key={role} value={role}>
+                            {role.charAt(0).toUpperCase() + role.slice(1)}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {!loading && users.length < total && (
+              <div className={styles.loadMoreContainer}>
+                <Button
+                  variant="outline"
+                  onClick={() => loadUsers(page + 1, false, searchQuery)}
+                >
+                  Load More Users
+                </Button>
+              </div>
+            )}
+          </Card>
+        </div>
       </div>
     </div>
   );

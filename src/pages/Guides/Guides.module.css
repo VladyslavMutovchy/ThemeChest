@@ -1,176 +1,277 @@
-.wrapper {
-  margin: 50px auto 0;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: flex-start;
-  max-width: 1240px;
+/* Guides Page Styles */
+.guidesPage {
   width: 100%;
-  min-height: 100vh;
-  gap: 20px;
-  font-size: 16px;
-  box-sizing: border-box;
 }
 
-.guides_container {
-  width: 300px;
-  background-color: var(--container);
-  border-radius: 20px;
-  padding: 20px;
-  height: auto;
-}
-
-.show_favorites {
-  display: flex;
-  margin: 10px 0;
-}
-
-.guides {
-  position: relative;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  border-radius: 20px;
-  padding: 10px 0;
-  background-color: var(--container);
-}
-
-.h2 {
-  margin-bottom: 20px;
-  font-size: 32px;
-}
-
-.search_btn {
-  padding: 10px;
-  border-radius: 10px;
-  background-color: #dbdbdb;
-  cursor: pointer;
-  margin: 8px 2px;
-  transition: background-color 0.2s ease;
-}
-
-.search_btn:hover {
-  background-color: #d0d0d0;
-}
-
-.btn_container {
-  display: flex;
-  justify-content: space-between;
-}
-
-.add_to_favorites_btn {
-  margin: 20px;
-  padding: 10px;
-  border-radius: 10px;
-  background-color: #dbdbdb;
-  cursor: pointer;
-}
-
-.add_to_favorites_btn:hover {
-  background-color: #d0d0d0;
-}
-
-.guide_feed {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 280px));
-  justify-content: space-around;
-  gap: 10px 0;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.guide_plate_img {
-  overflow: hidden;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  border-radius: 20px;
-  cursor: pointer;
-  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
-  transition: transform 0.2s ease;
-}
-
-.guide_plate_img:hover {
-  transform: scale(1.01);
-}
-
-.guide_plate_prev {
-  width: 240px;
-  height: 320px;
-  padding: 20px;
-  background-color: #dcdcdc86;
-}
-
-.guide_plate_p {
-  margin-top: 30px;
-  color: #343434;
-  word-wrap: break-word;
-  word-break: break-word;
-  text-align: left;
-}
-
-.guide_plate_title {
-  word-wrap: break-word;
-  word-break: break-word;
-  text-align: left;
-}
-
-.padding {
-  padding: 20px;
+/* Header Section */
+.guidesHeader {
+  background-color: var(--primary-color);
+  padding: 60px 0;
+  color: white;
   text-align: center;
 }
 
-.load_more_btn {
-  max-width: 150px;
-  height: 30px;
-  border-radius: 10px;
-  background-color: #ad8c30;
-  position: absolute;
-  bottom: -50px;
-  padding: 10px;
-  left: 50%;
-  cursor: pointer;
-  transform: translateX(-50%);
-  transition: background-color 0.2s ease;
-}
-
-.load_more_btn:hover {
-  background-color: #94792d;
-}
-
-.textarea {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  min-height: 100px;
-  resize: vertical;
-  font-family: inherit;
-  font-size: 1rem;
+.container {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
   width: 100%;
 }
 
-.btn_wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.pageTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: white;
 }
 
-.underline {
-  background-color: #000;
-  height: 2px;
+.pageDescription {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Content Section */
+.guidesContent {
+  padding: 40px 0;
+  min-height: 600px;
+}
+
+.guidesLayout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 30px;
+}
+
+/* Filters Sidebar */
+.filtersSidebar {
+  position: sticky;
+  top: calc(var(--header-height) + 20px);
+  height: fit-content;
+}
+
+.filtersCard {
+  padding: 24px;
+}
+
+.filtersTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text-color);
+}
+
+.filterGroup {
   margin-bottom: 20px;
 }
 
-.search_input {
-  padding: 10px;
-  width: 90%;
-  border-radius: 10px;
-  border: 1px solid #787878cc;
-  margin: 10px auto;
+.filterLabel {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: var(--text-color);
 }
 
-.previewWrapper {
-  background: #f5f5f5;
+.favoriteCheckbox {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.favoriteCheckbox input {
+  margin-right: 10px;
+}
+
+.favoriteCheckbox span {
+  font-size: 14px;
+}
+
+.filterActions {
+  margin-top: 24px;
+}
+
+.createGuideSection {
+  margin-top: 24px;
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 24px 0;
+}
+
+.createGuideText {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* Guides Grid */
+.guidesGridContainer {
+  width: 100%;
+}
+
+.guidesControls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.resultsTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.sortControls {
+  display: flex;
+  align-items: center;
+}
+
+.sortSelect {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--card-bg);
+  font-size: 14px;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.guidesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.guideCard {
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.guideCard:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.guideCardImage {
+  height: 180px;
+  background-size: cover;
+  background-position: center;
+  background-color: var(--primary-color-light);
+}
+
+.guideCardContent {
   padding: 20px;
-  border-radius: 10px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.guideCardTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text-color);
+  /* For long titles */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.guideCardDescription {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  /* For long descriptions */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.loadMoreContainer {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.noResults {
+  text-align: center;
+  padding: 60px 0;
+}
+
+.noResults p {
+  margin-bottom: 20px;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .guidesLayout {
+    grid-template-columns: 250px 1fr;
+    gap: 20px;
+  }
+
+  .pageTitle {
+    font-size: 2rem;
+  }
+
+  .pageDescription {
+    font-size: 1rem;
+  }
+
+  .guidesHeader {
+    padding: 40px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .guidesLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .filtersSidebar {
+    position: static;
+    margin-bottom: 30px;
+  }
+
+  .guidesGrid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+
+  .guidesControls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .guidesHeader {
+    padding: 30px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .guidesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .pageTitle {
+    font-size: 1.75rem;
+  }
+
+  .guidesHeader {
+    padding: 25px 0;
+  }
 }

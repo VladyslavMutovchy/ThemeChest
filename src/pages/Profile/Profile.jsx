@@ -8,6 +8,7 @@ import standardImg from '../../assets/images/logo.png';
 import { changePasswordAction, updateUserProfile, getUserData } from '../../actions/profile';
 import { logout } from '../../actions/auth';
 import classNames from 'classnames';
+import { Button, Card, Input } from '../../components/UI';
 
 const Profile = (props) => {
   const { userData, updateUserProfile, changePasswordAction, getUserData } = props;
@@ -96,7 +97,7 @@ const Profile = (props) => {
       values,
       () => {
         toast.success('Password updated successfully!');
-        resetForm(); 
+        resetForm();
         setChangePassword(false);
         setTimeout(() => {
           logout();
@@ -124,56 +125,93 @@ const Profile = (props) => {
         validationSchema={profileSchema}
         onSubmit={handleProfileSubmit}
       >
-        {({ setFieldValue }) => (
+        {({ setFieldValue, values, errors, touched }) => (
           <Form className={styles.form}>
-            <label className={styles.label}>
-              <p className={styles.title}>Name:</p>
-              <Field className="input" type="text" name="name" />
-              <ErrorMessage style={{ color: '#ff0000' }} name="name" component="div" className="error" />
-            </label>
+            <div className={styles.formGroup}>
+              <Input
+                label="Name"
+                type="text"
+                name="name"
+                value={values.name}
+                onChange={(e) => setFieldValue('name', e.target.value)}
+                error={touched.name && errors.name}
+                fullWidth
+              />
+            </div>
 
-            <label className={styles.label}>
-              <p className={styles.title}>Phone:</p>
-              <Field className="input" type="text" name="phone" />
-              <ErrorMessage style={{ color: '#ff0000' }} name="phone" component="div" className="error" />
-            </label>
+            <div className={styles.formGroup}>
+              <Input
+                label="Phone"
+                type="text"
+                name="phone"
+                value={values.phone}
+                onChange={(e) => setFieldValue('phone', e.target.value)}
+                error={touched.phone && errors.phone}
+                fullWidth
+              />
+            </div>
 
-            <label className={styles.title}>
-              <p className={styles.p}>Language:</p>
-              <Field as="select" className={styles.input} name="language">
-                <option className="input" value="0">
-                  Select a language
-                </option>
+            <div className={styles.formGroup}>
+              <label className={styles.selectLabel}>Language</label>
+              <Field as="select" className={styles.select} name="language">
+                <option value="">Select a language</option>
                 {languages.map((lang) => (
                   <option key={lang} value={lang}>
                     {lang}
                   </option>
                 ))}
               </Field>
-              <ErrorMessage style={{ color: '#ff0000' }} name="language" component="div" className="error" />
-            </label>
+              {touched.language && errors.language && (
+                <div className={styles.errorMessage}>{errors.language}</div>
+              )}
+            </div>
 
-            <label className={styles.title}>
-              <p className={styles.p}>Country:</p>
-              <Field className="input" type="text" name="country" />
-              <ErrorMessage style={{ color: '#ff0000' }} name="country" component="div" className="error" />
-            </label>
+            <div className={styles.formGroup}>
+              <Input
+                label="Country"
+                type="text"
+                name="country"
+                value={values.country}
+                onChange={(e) => setFieldValue('country', e.target.value)}
+                error={touched.country && errors.country}
+                fullWidth
+              />
+            </div>
 
-            <label className={styles.title}>
-              <p className={styles.p}>City:</p>
-              <Field className="input" type="text" name="city" />
-              <ErrorMessage style={{ color: '#ff0000' }} name="city" component="div" className="error" />
-            </label>
+            <div className={styles.formGroup}>
+              <Input
+                label="City"
+                type="text"
+                name="city"
+                value={values.city}
+                onChange={(e) => setFieldValue('city', e.target.value)}
+                error={touched.city && errors.city}
+                fullWidth
+              />
+            </div>
 
-            <label className={styles.title}>
-              <p className={styles.p}>Profile Photo:</p>
-              <input type="file" className="input" accept=".jpg, .png" onChange={(e) => setFieldValue('photo', e.target.files[0])} />
-              <ErrorMessage style={{ color: '#ff0000' }} name="photo" component="div" className="error" />
-            </label>
+            <div className={styles.formGroup}>
+              <label className={styles.fileInputLabel}>Profile Photo</label>
+              <div className={styles.fileInputContainer}>
+                <input
+                  type="file"
+                  className={styles.fileInput}
+                  accept=".jpg, .png"
+                  onChange={(e) => setFieldValue('photo', e.target.files[0])}
+                />
+                <div className={styles.fileInputText}>
+                  {values.photo ? values.photo.name : 'Choose a file...'}
+                </div>
+              </div>
+              {touched.photo && errors.photo && (
+                <div className={styles.errorMessage}>{errors.photo}</div>
+              )}
+              <div className={styles.fileInputHint}>Accepted formats: JPG, PNG. Max size: 5MB</div>
+            </div>
 
-            <button style={{ backgroundColor: '#669900' }} className={styles.btn} type="submit">
-              Save Changes
-            </button>
+            <div className={styles.formActions}>
+              <Button variant="primary" type="submit">Save Changes</Button>
+            </div>
           </Form>
         )}
       </Formik>
@@ -189,84 +227,177 @@ const Profile = (props) => {
         validationSchema={passwordSchema}
         onSubmit={handlePasswordSubmit}
       >
-        <Form className={styles.form}>
-          <label className={styles.label}>
-            <p>Current Password:</p>
-            <Field className="input" type="password" name="currentPassword" />
-            <ErrorMessage style={{ color: '#ff0000' }} name="currentPassword" component="div" className="error" />
-          </label>
+        {({ values, errors, touched, handleChange, handleBlur }) => (
+          <Form className={styles.form}>
+            <div className={styles.formGroup}>
+              <Input
+                label="Current Password"
+                type="password"
+                name="currentPassword"
+                value={values.currentPassword}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.currentPassword && errors.currentPassword}
+                fullWidth
+              />
+            </div>
 
-          <label className={styles.label}>
-            <p>New Password:</p>
-            <Field className="input" type="password" name="newPassword" />
-            <ErrorMessage style={{ color: '#ff0000' }} name="newPassword" component="div" className="error" />
-          </label>
+            <div className={styles.formGroup}>
+              <Input
+                label="New Password"
+                type="password"
+                name="newPassword"
+                value={values.newPassword}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.newPassword && errors.newPassword}
+                fullWidth
+              />
+            </div>
 
-          <label className={styles.label}>
-            <p>Confirm New Password:</p>
-            <Field className="input" type="password" name="confirmNewPassword" />
-            <ErrorMessage style={{ color: '#ff0000' }} name="confirmNewPassword" component="div" className="error" />
-          </label>
+            <div className={styles.formGroup}>
+              <Input
+                label="Confirm New Password"
+                type="password"
+                name="confirmNewPassword"
+                value={values.confirmNewPassword}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.confirmNewPassword && errors.confirmNewPassword}
+                fullWidth
+              />
+            </div>
 
-          <button style={{ backgroundColor: '#669900' }} className={styles.btn} type="submit">
-            Update Password
-          </button>
-        </Form>
+            <div className={styles.passwordNote}>
+              <p>After changing your password, you will be logged out and need to log in again.</p>
+            </div>
+
+            <div className={styles.formActions}>
+              <Button variant="primary" type="submit">Update Password</Button>
+            </div>
+          </Form>
+        )}
       </Formik>
     );
   } else {
     content = (
-      <div className={styles.profileInfo}>
-        <div className={styles.profileDetails}>
-          <p className={styles.p}>
-            Email: <strong>{userData.email}</strong>
-          </p>
-          <p className={styles.p}>
-            Name: <strong>{userData.name || 'Not specified'}</strong>
-          </p>
-          <p className={styles.p}>
-            Phone: <strong>{userData.phone || 'Not specified'}</strong>
-          </p>
-          <p className={styles.p}>
-            Language: <strong>{userData.language || 'Not specified'}</strong>
-          </p>
-          <p className={styles.p}>
-            Country: <strong>{userData.country || 'Not specified'}</strong>
-          </p>
-          <p className={styles.p}>
-            City: <strong>{userData.city || 'Not specified'}</strong>
-          </p>
+      <div className={styles.profileInfoGrid}>
+        <div className={styles.infoItem}>
+          <div className={styles.infoLabel}>Email</div>
+          <div className={styles.infoValue}>{userData.email}</div>
         </div>
-        <div className={styles.profilePhoto}>
-          <img src={userData.photoUrl || standardImg} alt="" />
+
+        <div className={styles.infoItem}>
+          <div className={styles.infoLabel}>Name</div>
+          <div className={styles.infoValue}>{userData.name || 'Not specified'}</div>
+        </div>
+
+        <div className={styles.infoItem}>
+          <div className={styles.infoLabel}>Phone</div>
+          <div className={styles.infoValue}>{userData.phone || 'Not specified'}</div>
+        </div>
+
+        <div className={styles.infoItem}>
+          <div className={styles.infoLabel}>Language</div>
+          <div className={styles.infoValue}>{userData.language || 'Not specified'}</div>
+        </div>
+
+        <div className={styles.infoItem}>
+          <div className={styles.infoLabel}>Country</div>
+          <div className={styles.infoValue}>{userData.country || 'Not specified'}</div>
+        </div>
+
+        <div className={styles.infoItem}>
+          <div className={styles.infoLabel}>City</div>
+          <div className={styles.infoValue}>{userData.city || 'Not specified'}</div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={classNames(styles.wrapper, styles.container)}>
-      <h2>Profile</h2>
-      {content}
-      <div className={styles.buttonGroup}>
-        <button
-          className={styles.btn}
-          onClick={() => {
-            setEditProfile(!editProfile);
-            setChangePassword(false);
-          }}
-        >
-          {editProfile ? 'Close Edit Profile' : 'Edit Profile'}
-        </button>
-        <button
-          className={styles.btn}
-          onClick={() => {
-            setChangePassword(!changePassword);
-            setEditProfile(false);
-          }}
-        >
-          {changePassword ? 'Close Change Password' : 'Change Password'}
-        </button>
+    <div className={styles.profilePage}>
+      <div className={styles.profileHeader}>
+        <div className={styles.container}>
+          <h1 className={styles.pageTitle}>Your Profile</h1>
+        </div>
+      </div>
+
+      <div className={styles.profileContent}>
+        <div className={styles.container}>
+          <div className={styles.profileLayout}>
+            {/* Profile Sidebar */}
+            <aside className={styles.profileSidebar}>
+              <Card className={styles.profileCard}>
+                <div className={styles.profilePhotoContainer}>
+                  <div className={styles.profilePhoto}>
+                    <img src={userData.photoUrl || standardImg} alt="Profile" />
+                  </div>
+                  {!editProfile && !changePassword && (
+                    <div className={styles.profileName}>
+                      <h3>{userData.name || userData.email.split('@')[0]}</h3>
+                      <p className={styles.profileEmail}>{userData.email}</p>
+                    </div>
+                  )}
+                </div>
+
+                <div className={styles.profileActions}>
+                  <Button
+                    variant={editProfile ? "secondary" : "primary"}
+                    fullWidth
+                    onClick={() => {
+                      setEditProfile(!editProfile);
+                      setChangePassword(false);
+                    }}
+                  >
+                    {editProfile ? 'Cancel Editing' : 'Edit Profile'}
+                  </Button>
+
+                  <Button
+                    variant={changePassword ? "secondary" : "outline"}
+                    fullWidth
+                    onClick={() => {
+                      setChangePassword(!changePassword);
+                      setEditProfile(false);
+                    }}
+                  >
+                    {changePassword ? 'Cancel' : 'Change Password'}
+                  </Button>
+                </div>
+              </Card>
+            </aside>
+
+            {/* Profile Main Content */}
+            <div className={styles.profileMainContent}>
+              <Card className={styles.contentCard}>
+                {editProfile && (
+                  <div className={styles.sectionHeader}>
+                    <h2 className={styles.sectionTitle}>Edit Your Profile</h2>
+                    <p className={styles.sectionDescription}>Update your personal information</p>
+                  </div>
+                )}
+
+                {changePassword && (
+                  <div className={styles.sectionHeader}>
+                    <h2 className={styles.sectionTitle}>Change Password</h2>
+                    <p className={styles.sectionDescription}>Update your password to keep your account secure</p>
+                  </div>
+                )}
+
+                {!editProfile && !changePassword && (
+                  <div className={styles.sectionHeader}>
+                    <h2 className={styles.sectionTitle}>Profile Information</h2>
+                    <p className={styles.sectionDescription}>Your personal details</p>
+                  </div>
+                )}
+
+                <div className={styles.profileContentBody}>
+                  {content}
+                </div>
+              </Card>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

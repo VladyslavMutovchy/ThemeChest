@@ -6,6 +6,7 @@ import { fetchGuidesPaginated, getFavorites } from '../../actions/guides';
 import { customStyles } from '../../components/CreatorsComponents/styles.Select';
 import { KEYWORDS } from '../../components/CreatorsComponents/keyWords';
 import { Link, useNavigate } from 'react-router-dom';
+import { Button, Card, Input } from '../../components/UI';
 
 const GuideExplorer = (props) => {
   const {
@@ -49,83 +50,146 @@ const GuideExplorer = (props) => {
   };
 
   const handleSelectGuide = (id) => {
-    navigate(`/guides/${id}`); 
+    navigate(`/guides/${id}`);
   };
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.guides_container}>
-        <h2>Your Guides</h2>
-        <input
-          type="text"
-          className={styles.search_input}
-          placeholder="Search guides by title..."
-          value={keywordSearchQuery}
-          onChange={(e) => setKeywordSearchQuery(e.target.value)}
-        />
-
-        <Select
-          classNamePrefix="custom-select"
-          styles={customStyles}
-          options={KEYWORDS.map((keyword) => ({ value: keyword, label: keyword }))}
-          onChange={setSelectedKeywords}
-          value={selectedKeywords}
-          placeholder="Select up to 3 themes"
-          isMulti
-          isClearable
-        />
-
-        {userData && (
-          <label className={styles.show_favorites}>
-            <input
-              type="checkbox"
-              checked={filterUserId === userData.id}
-              onChange={(e) => setFilterUserId(e.target.checked ? userData.id : 0)}
-            />
-            <p>Show Favorites Only</p>
-          </label>
-        )}
-        <div className={styles.btn_container}>
-          <button type="button" onClick={handleKeywordSearch} className={styles.search_btn}>
-            Search
-          </button>
-          {userData && (
-            <Link to="/AiCreator" className={styles.search_btn}>
-              AI Guide creator
-            </Link>
-          )}
+    <div className={styles.guidesPage}>
+      <div className={styles.guidesHeader}>
+        <div className={styles.container}>
+          <h1 className={styles.pageTitle}>Explore Guides</h1>
+          <p className={styles.pageDescription}>
+            Discover guides on various topics created by our community
+          </p>
         </div>
-
-        <div className={styles.underline} />
       </div>
 
-      <div className={styles.guides}>
-        <div className={styles.guide_feed}>
-          {Array.isArray(guidesListPaginated) &&
-            guidesListPaginated.map((guide) => (
-              <div
-                key={guide.id}
-                className={styles.guide_plate_img}
-                style={{ backgroundImage: guide.prev_img ? `url(${guide.prev_img})` : 'none' }}
-                onClick={() => handleSelectGuide(guide.id)} 
-              >
-                <div className={styles.guide_plate_prev}>
-                  <h2 className={styles.guide_plate_title}>{guide.title}</h2>
-                  <p className={styles.guide_plate_p}>{guide.description}</p>
+      <div className={styles.guidesContent}>
+        <div className={styles.container}>
+          <div className={styles.guidesLayout}>
+            {/* Filters Sidebar */}
+            <aside className={styles.filtersSidebar}>
+              <Card className={styles.filtersCard}>
+                <h2 className={styles.filtersTitle}>Search & Filter</h2>
+
+                <div className={styles.filterGroup}>
+                  <Input
+                    type="text"
+                    placeholder="Search guides by title..."
+                    value={keywordSearchQuery}
+                    onChange={(e) => setKeywordSearchQuery(e.target.value)}
+                    fullWidth
+                  />
+                </div>
+
+                <div className={styles.filterGroup}>
+                  <label className={styles.filterLabel}>Topics</label>
+                  <Select
+                    classNamePrefix="custom-select"
+                    styles={customStyles}
+                    options={KEYWORDS.map((keyword) => ({ value: keyword, label: keyword }))}
+                    onChange={setSelectedKeywords}
+                    value={selectedKeywords}
+                    placeholder="Select up to 3 themes"
+                    isMulti
+                    isClearable
+                  />
+                </div>
+
+                {userData && (
+                  <div className={styles.filterGroup}>
+                    <label className={styles.favoriteCheckbox}>
+                      <input
+                        type="checkbox"
+                        checked={filterUserId === userData.id}
+                        onChange={(e) => setFilterUserId(e.target.checked ? userData.id : 0)}
+                      />
+                      <span>Show Favorites Only</span>
+                    </label>
+                  </div>
+                )}
+
+                <div className={styles.filterActions}>
+                  <Button
+                    variant="primary"
+                    onClick={handleKeywordSearch}
+                    fullWidth
+                  >
+                    Apply Filters
+                  </Button>
+                </div>
+
+                {userData && (
+                  <div className={styles.createGuideSection}>
+                    <div className={styles.divider}></div>
+                    <p className={styles.createGuideText}>Want to share your knowledge?</p>
+                    <Link to="/AiCreator">
+                      <Button variant="secondary" fullWidth>
+                        Create with AI
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </Card>
+            </aside>
+
+            {/* Guides Grid */}
+            <div className={styles.guidesGridContainer}>
+              <div className={styles.guidesControls}>
+                <h2 className={styles.resultsTitle}>Results</h2>
+                <div className={styles.sortControls}>
+                  <select className={styles.sortSelect}>
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="popular">Most Popular</option>
+                  </select>
                 </div>
               </div>
-            ))}
-        </div>
 
-        {canLoadMore && (
-          <button
-            type="button"
-            className={styles.load_more_btn}
-            onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
-          >
-            Load More Guides
-          </button>
-        )}
+              {guidesListPaginated.length === 0 ? (
+                <div className={styles.noResults}>
+                  <p>No guides found matching your criteria.</p>
+                  <Button variant="outline" onClick={() => {
+                    setSelectedKeywords([]);
+                    setKeywordSearchQuery('');
+                    setFilterUserId(0);
+                    loadGuides(1, 0, [], '', true);
+                  }}>
+                    Clear Filters
+                  </Button>
+                </div>
+              ) : (
+                <div className={styles.guidesGrid}>
+                  {Array.isArray(guidesListPaginated) &&
+                    guidesListPaginated.map((guide) => (
+                      <Card key={guide.id} className={styles.guideCard} onClick={() => handleSelectGuide(guide.id)}>
+                        <div
+                          className={styles.guideCardImage}
+                          style={{ backgroundImage: guide.prev_img ? `url(${guide.prev_img})` : 'none' }}
+                        ></div>
+                        <div className={styles.guideCardContent}>
+                          <h3 className={styles.guideCardTitle}>{guide.title}</h3>
+                          <p className={styles.guideCardDescription}>{guide.description}</p>
+                        </div>
+                      </Card>
+                    ))
+                  }
+                </div>
+              )}
+
+              {canLoadMore && (
+                <div className={styles.loadMoreContainer}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+                  >
+                    Load More Guides
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

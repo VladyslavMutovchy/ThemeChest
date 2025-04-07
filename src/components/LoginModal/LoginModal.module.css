@@ -1,69 +1,39 @@
+.loginForm {
+  padding: 10px 0;
+}
 
-.modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+.forgotPassword {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  z-index: 1000;
+  justify-content: flex-end;
+  margin: 8px 0 20px;
 }
 
-.modalWrapper {
-  background: var(--bg1);
-  border-radius: 10px;
-  padding: 20px;
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-.modalContent {
-  background-color:var(--bg1) ;
-  padding: 30px;
-  border-radius: 10px;
-  width: 400px;
-  text-align: center;
-  position: relative;
-}
-.h2{
-  margin: 10px 0;
-  font-size: 30px;
-  font-weight: 500;
-}
-.error {
-  color: #ff0000;
+.forgotLink {
   font-size: 14px;
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
-.title {
-  margin: 6px 0;
-  font-size: 20px;
-  font-weight: 500;
-  text-align: left;
-  margin-left: 40px;
+.forgotLink:hover {
+  color: var(--primary-color-dark);
+  text-decoration: underline;
 }
 
-.input {
-  padding: 10px 20px;
-  min-width: 280px;
-  border-radius: 10px;
-  border: 1px solid rgba(120, 120, 120, 0.8);
-  background-color: lightgray;
-  margin: 10px 0;
-  font-size: 20px;
+.formActions {
+  margin-top: 24px;
 }
 
-.btn {
-  background-color: var(--bg2);
-  padding: 10px 30px;
-  border-radius: 10px;
-  border: 1px solid rgb(67, 49, 28);
-  color: black;
-  cursor: pointer;
+@media (max-width: 480px) {
+  .loginForm {
+    padding: 0;
+  }
+
+  .forgotPassword {
+    margin: 4px 0 16px;
+  }
+
+  .formActions {
+    margin-top: 16px;
+  }
 }

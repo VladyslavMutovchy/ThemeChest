@@ -17,50 +17,65 @@ const getEmbedUrl = (url) => {
   return url;
 };
 
-
-const PreviewGuide = ({ initialValues }) => {
+const PreviewGuide = ({ initialValues, guideTarget }) => {
   return (
-    <div>
-      <div className={styles.previewWrapper}>
-        {initialValues?.chapters?.map((chapter, chapterIndex) => (
-          <div key={chapterIndex} className={classNames('width', styles.chapter)}>
-            <div>
-              Chapter {toRoman(chapterIndex)}: <h3 className={styles.h3}>{chapter.chapterTitle}</h3>
-            </div>
-            {chapter.contents.map((content, contentIndex) => (
-              <div key={contentIndex} className={styles.contentItem}>
-                {content.type === 'paragraph' && (
-                  <div className={styles.paragraph}>
-                    <p dangerouslySetInnerHTML={{ __html: content.value }} />
-                  </div>
-                )}
-                {content.type === 'img' && content.value && (
-                  <div className={styles.imageWrapper}>
-                    <img
-                      src={content.value.base64 ? `data:${content.value.mimeType};base64,${content.value.base64}` : content.previewUrl}
-                      alt="preview"
-                      className={styles.imagePreview}
-                    />
-                  </div>
-                )}
-                {content.type === 'video' && content.value && (
-                  <div className={styles.videoWrapper}>
-                    <iframe
-                      width="560"
-                      height="315"
-                      src={getEmbedUrl(content.value)}
-                      title="Video preview"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        ))}
+    <div className={styles.previewWrapper}>
+      <div className={styles.previewHeader}>
+        <h1 className={styles.previewTitle}>{guideTarget?.title || 'Guide Preview'}</h1>
       </div>
+
+      {initialValues?.chapters?.length > 0 ? (
+        initialValues.chapters.map((chapter, chapterIndex) => (
+          <div key={chapterIndex} className={styles.chapter}>
+            <div className={styles.chapterHeader}>
+              <h2 className={styles.chapterTitle}>
+                Chapter {toRoman(chapterIndex + 1)}: {chapter.chapterTitle}
+              </h2>
+            </div>
+
+            <div className={styles.chapterContent}>
+              {chapter.contents.map((content, contentIndex) => (
+                <div key={contentIndex} className={styles.contentItem}>
+                  {content.type === 'paragraph' && (
+                    <div className={styles.paragraph}>
+                      <div dangerouslySetInnerHTML={{ __html: content.value }} />
+                    </div>
+                  )}
+
+                  {content.type === 'img' && content.value && (
+                    <div className={styles.imageWrapper}>
+                      <img
+                        src={content.value.base64 ? `data:${content.value.mimeType};base64,${content.value.base64}` : content.previewUrl}
+                        alt={`Image for ${chapter.chapterTitle}`}
+                        className={styles.imagePreview}
+                      />
+                    </div>
+                  )}
+
+                  {content.type === 'video' && content.value && (
+                    <div className={styles.videoWrapper}>
+                      <iframe
+                        width="560"
+                        height="315"
+                        src={getEmbedUrl(content.value)}
+                        title={`Video for ${chapter.chapterTitle}`}
+                        frameBorder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      ></iframe>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      ) : (
+        <div className={styles.emptyState}>
+          <p>No content has been added to this guide yet.</p>
+          <p>Click the "Edit Content" button to start adding chapters and content.</p>
+        </div>
+      )}
     </div>
   );
 };

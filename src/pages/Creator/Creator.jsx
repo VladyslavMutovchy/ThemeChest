@@ -21,6 +21,7 @@ import PreviewGuide from '../../components/CreatorsComponents/PreviewGuide';
 import EditPreviewForm from '../../components/CreatorsComponents/EditPreviewForm';
 import DeleteGuideModal from '../../components/DeleteGuideModal/DeleteGuideModal';
 import * as Yup from 'yup';
+import { Button, Card } from '../../components/UI';
 const Creator = (props) => {
   const {
     userData,
@@ -144,115 +145,173 @@ const Creator = (props) => {
   };
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.guides_container}>
-        <h2 onClick={() => setTargetGuide(null)}>Your Guides</h2>
-        <div className={styles.underline} />
-
-        {guides?.map((guide, index) => (
-          <div key={index} className={styles.guide_plate} onClick={() => handleSelectGuide(guide)}>
-            {guide.title}
-          </div>
-        ))}
-        <button
-          type="button"
-          className={styles.btn}
-          onClick={() => {
-            setTargetGuide(null);
-            setIsCreatingNewGuide(true);
-            setIsEditingGuide(false);
-          }}
-        >
-          Create New Guide
-        </button>
+    <div className={styles.creatorPage}>
+      {/* Header Section */}
+      <div className={styles.creatorHeader}>
+        <div className={styles.container}>
+          <h1 className={styles.pageTitle}>Guide Creator</h1>
+          <p className={styles.pageDescription}>
+            Create and manage your guides with our powerful editor
+          </p>
+        </div>
       </div>
 
-      <div className={styles.creator}>
-        {targetGuide === null && isCreatingNewGuide === false ? (
-          <div className={styles.creator_intro}>
-            <h2 className={styles.h2}>Welcome to ThemesCreator</h2>
-            <p>
-              ThemesCreator is your ultimate tool for crafting comprehensive guides on any topic. Whether you're sharing knowledge, teaching a skill,
-              or providing instructions, ThemesCreator empowers you to create guides that truly stand out.
-            </p>
-            <p>With ThemesCreator, you can add a variety of content to your guides:</p>
-            <ul>
-              <li>Text blocks for clear and concise information</li>
-              <li>Images to make your guides visually appealing</li>
-              <li>Links to videos or external resources for more depth</li>
-              <li>Custom themes to align your guide's style with its purpose</li>
-            </ul>
-            <p>Please select an existing guide to edit or click "Create New Guide" to start crafting your masterpiece!</p>
-          </div>
-        ) : (
-          <>
-            {isCreatingNewGuide && !isEditingGuide && (
-              <div className={styles.creator_container}>
-                <CreateGuideForm
-                  initialValues={{ user_id: userData.id, title: '' }}
-                  validationSchema={Yup.object().shape({
-                    title: Yup.string().required('Guide title is required'),
-                  })}
-                  onSubmit={handleGuideSubmit}
-                />
+      {/* Content Section */}
+      <div className={styles.creatorContent}>
+        <div className={styles.creatorLayout}>
+          {/* Sidebar */}
+          <div className={styles.sidebar}>
+            <Card className={styles.guidesContainer}>
+              <h3 className={styles.sidebarTitle}>Your Guides</h3>
+              <div className={styles.guidesList}>
+                {guides?.map((guide, index) => (
+                  <div
+                    key={index}
+                    className={`${styles.guidePlate} ${targetGuide?.id === guide.id ? styles.active : ''}`}
+                    onClick={() => handleSelectGuide(guide)}
+                  >
+                    <div className={styles.guideTitle}>{guide.title}</div>
+                  </div>
+                ))}
               </div>
-            )}
+              <div style={{ marginTop: '16px' }}>
+                <Button
+                  variant="primary"
+                  fullWidth
+                  onClick={() => {
+                    setTargetGuide(null);
+                    setIsCreatingNewGuide(true);
+                    setIsEditingGuide(false);
+                  }}
+                >
+                  Create New Guide
+                </Button>
+              </div>
+            </Card>
+          </div>
 
-            {isEditingGuide && targetGuide && (
+          {/* Main Content */}
+          <div className={styles.mainContent}>
+            {targetGuide === null && isCreatingNewGuide === false ? (
+              <Card className={styles.creatorCard}>
+                <div className={styles.cardHeader}>
+                  <h2 className={styles.cardTitle}>Welcome to Guide Creator</h2>
+                  <p className={styles.cardDescription}>
+                    Your ultimate tool for crafting comprehensive guides on any topic. Whether you're sharing knowledge, teaching a skill,
+                    or providing instructions, our platform empowers you to create guides that truly stand out.
+                  </p>
+                </div>
+                <div>
+                  <p>With Guide Creator, you can add a variety of content to your guides:</p>
+                  <ul>
+                    <li>Rich text blocks for clear and concise information</li>
+                    <li>Images to make your guides visually appealing</li>
+                    <li>YouTube videos for interactive learning</li>
+                    <li>Custom themes to categorize your guides</li>
+                  </ul>
+                  <p>Please select an existing guide to edit or click "Create New Guide" to start crafting your masterpiece!</p>
+                </div>
+              </Card>
+            ) : (
               <>
-                <div className={styles.creator_container}>
-                  <EditPreviewForm guidePreview={guidePreview} guideTarget={targetGuide} onSubmit={handlePreviewGuideSubmit} />
-                  <DeleteGuideModal
-                    isOpen={isDeleteModalOpen}
-                    onClose={closeDeleteModal}
-                    onConfirm={confirmDelete}
-                    guideTitle={guideToDelete?.title || ''}
-                  />
-                  <button className={styles.del_guide} onClick={() => openDeleteModal(targetGuide)}>
-                    Delete Guide
-                  </button>
-                </div>
-                <div className={styles.creator_container}>
-                  <EditThemesForm
-                    themes={themesByGuide[targetGuide.id] || []}
-                    guideTarget={targetGuide}
-                    validationSchema={Yup.object().shape({
-                      themes: Yup.array().max(6, 'You can add up to 6 themes').of(Yup.string().required('Theme is required')),
-                    })}
-                    onSubmit={handleThemesSubmit}
-                  />
-                </div>
-                <div className={styles.creator_container}>
-                  <button onClick={togglePreview} className={styles.btn}>
-                    {isPreview ? 'Edit' : 'Preview'}
-                  </button>
-                  {!isPreview ? (
-                    <ChaptersForm
-                      initialValues={initialChapters}
-                      guideTarget={targetGuide}
+                {isCreatingNewGuide && !isEditingGuide && (
+                  <Card className={styles.creatorCard}>
+                    <div className={styles.cardHeader}>
+                      <h2 className={styles.cardTitle}>Create New Guide</h2>
+                      <p className={styles.cardDescription}>
+                        Start by giving your guide a title. You can add content and themes after creation.
+                      </p>
+                    </div>
+                    <CreateGuideForm
+                      initialValues={{ user_id: userData.id, title: '' }}
                       validationSchema={Yup.object().shape({
-                        chapters: Yup.array().of(
-                          Yup.object().shape({
-                            chapterTitle: Yup.string().required('Chapter title is required'),
-                            contents: Yup.array().of(
+                        title: Yup.string().required('Guide title is required'),
+                      })}
+                      onSubmit={handleGuideSubmit}
+                    />
+                  </Card>
+                )}
+
+                {isEditingGuide && targetGuide && (
+                  <>
+                    <Card className={styles.creatorCard}>
+                      <div className={styles.cardHeader}>
+                        <h2 className={styles.cardTitle}>Guide Preview</h2>
+                        <p className={styles.cardDescription}>
+                          Customize how your guide appears in listings with a title, description, and preview image
+                        </p>
+                      </div>
+                      <EditPreviewForm guidePreview={guidePreview} guideTarget={targetGuide} onSubmit={handlePreviewGuideSubmit} />
+                      <div className={styles.formActions}>
+                        <Button variant="danger" onClick={() => openDeleteModal(targetGuide)}>Delete Guide</Button>
+                      </div>
+                      <DeleteGuideModal
+                        isOpen={isDeleteModalOpen}
+                        onClose={closeDeleteModal}
+                        onConfirm={confirmDelete}
+                        guideTitle={guideToDelete?.title || ''}
+                      />
+                    </Card>
+
+                    <Card className={styles.creatorCard}>
+                      <div className={styles.cardHeader}>
+                        <h2 className={styles.cardTitle}>Guide Themes</h2>
+                        <p className={styles.cardDescription}>
+                          Add up to 6 themes to categorize your guide and make it easier to discover
+                        </p>
+                      </div>
+                      <EditThemesForm
+                        themes={themesByGuide[targetGuide.id] || []}
+                        guideTarget={targetGuide}
+                        validationSchema={Yup.object().shape({
+                          themes: Yup.array().max(6, 'You can add up to 6 themes').of(Yup.string().required('Theme is required')),
+                        })}
+                        onSubmit={handleThemesSubmit}
+                      />
+                    </Card>
+
+                    <Card className={styles.creatorCard}>
+                      <div className={styles.cardHeader}>
+                        <h2 className={styles.cardTitle}>Guide Content</h2>
+                        <div className={styles.formActions} style={{ marginTop: '16px' }}>
+                          <Button
+                            variant={isPreview ? 'primary' : 'outline'}
+                            onClick={togglePreview}
+                          >
+                            {isPreview ? 'Edit Content' : 'Preview Guide'}
+                          </Button>
+                        </div>
+                      </div>
+
+                      {!isPreview ? (
+                        <ChaptersForm
+                          initialValues={initialChapters}
+                          guideTarget={targetGuide}
+                          validationSchema={Yup.object().shape({
+                            chapters: Yup.array().of(
                               Yup.object().shape({
-                                type: Yup.string().required(),
-                                value: Yup.mixed().required('Content value is required'),
+                                chapterTitle: Yup.string().required('Chapter title is required'),
+                                contents: Yup.array().of(
+                                  Yup.object().shape({
+                                    type: Yup.string().required(),
+                                    value: Yup.mixed().required('Content value is required'),
+                                  })
+                                ),
                               })
                             ),
-                          })
-                        ),
-                      })}
-                      onSubmit={handleChaptersSubmit}
-                    />
-                  ) : (
-                    <PreviewGuide initialValues={initialChapters} isPreview={isPreview} guideTarget={targetGuide} />
-                  )}
-                </div>
+                          })}
+                          onSubmit={handleChaptersSubmit}
+                        />
+                      ) : (
+                        <PreviewGuide initialValues={initialChapters} isPreview={isPreview} guideTarget={targetGuide} />
+                      )}
+                    </Card>
+                  </>
+                )}
               </>
             )}
-          </>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );

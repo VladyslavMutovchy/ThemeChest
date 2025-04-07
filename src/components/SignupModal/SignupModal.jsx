@@ -4,10 +4,9 @@ import * as Yup from 'yup';
 import styles from './SignupModal.module.css';
 import { connect } from 'react-redux';
 import { registration } from '../../actions/auth';
+import { Modal, Input, Button } from '../UI';
 
 const SignupModal = ({ registration, onClose }) => {
-
-  
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -16,14 +15,14 @@ const SignupModal = ({ registration, onClose }) => {
     },
     validationSchema: Yup.object({
       email: Yup.string()
-        .email('Incorrect email')
-        .required('Area cannot be empty'),
+        .email('Invalid email')
+        .required('Field cannot be empty'),
       password: Yup.string()
-        .min(6, 'Area cannot be lesser than 6')
-        .required('Area cannot be empty'),
+        .min(6, 'Password must be at least 6 characters')
+        .required('Field cannot be empty'),
       repeatPassword: Yup.string()
-        .oneOf([Yup.ref('password'), null], 'Passwords mismatch')
-        .required('Area cannot be empty'),
+        .oneOf([Yup.ref('password'), null], 'Passwords do not match')
+        .required('Field cannot be empty'),
     }),
     onSubmit: async (values) => {
       const formData = { email: values.email, password: values.password };
@@ -34,47 +33,64 @@ const SignupModal = ({ registration, onClose }) => {
   });
 
   return (
-    <div className={styles.modalOverlay} onClick={onClose}>
-      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <h2 className={styles.h2}>Signup</h2>
-        <form className={styles.form} onSubmit={formik.handleSubmit}>
-          <label>
-            <div className={styles.title}>Email</div>
-            {formik.touched.email && formik.errors.email && (
-              <div style={{ color: '#ff0000' }}>{formik.errors.email}</div>
-            )}
-            <input
-              className="input"
-              type="email"
-              {...formik.getFieldProps('email')}
-            />
-          </label>
-          <label>
-            <div className={styles.title}>Password</div>
-            {formik.touched.password && formik.errors.password && (
-              <div style={{ color: '#ff0000' }}>{formik.errors.password}</div>
-            )}
-            <input
-              className="input"
-              type="password"
-              {...formik.getFieldProps('password')}
-            />
-          </label>
-          <label>
-            <div className={styles.title}>Repeat Password</div>
-            {formik.touched.repeatPassword && formik.errors.repeatPassword && (
-              <div style={{ color: '#ff0000' }}>{formik.errors.repeatPassword}</div>
-            )}
-            <input
-              className="input"
-              type="password"
-              {...formik.getFieldProps('repeatPassword')}
-            />
-          </label>
-          <button className={styles.btn} type="submit">Register</button>
+    <Modal isOpen={true} onClose={onClose} title="Sign Up" size="small">
+      <div className={styles.signupForm}>
+        <form onSubmit={formik.handleSubmit}>
+          <Input
+            type="email"
+            label="Email"
+            name="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.email && formik.errors.email}
+            placeholder="Enter your email"
+            fullWidth
+          />
+
+          <Input
+            type="password"
+            label="Password"
+            name="password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.password && formik.errors.password}
+            placeholder="Enter password"
+            fullWidth
+          />
+
+          <Input
+            type="password"
+            label="Confirm Password"
+            name="repeatPassword"
+            value={formik.values.repeatPassword}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.repeatPassword && formik.errors.repeatPassword}
+            placeholder="Confirm password"
+            fullWidth
+          />
+
+          <div className={styles.termsAgreement}>
+            <p className={styles.termsText}>
+              By signing up, you agree to our <a href="#" className={styles.termsLink}>Terms of Service</a> and <a href="#" className={styles.termsLink}>Privacy Policy</a>
+            </p>
+          </div>
+
+          <div className={styles.formActions}>
+            <Button
+              type="submit"
+              variant="primary"
+              fullWidth
+              disabled={formik.isSubmitting}
+            >
+              Sign Up
+            </Button>
+          </div>
         </form>
       </div>
-    </div>
+    </Modal>
   );
 };
 

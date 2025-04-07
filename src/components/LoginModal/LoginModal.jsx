@@ -5,6 +5,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { login } from '../../actions/auth';
 import styles from './LoginModal.module.css';
+import { Modal, Input, Button } from '../UI';
 import 'react-toastify/dist/ReactToastify.css';
 
 const LoginModal = ({ login, onClose }) => {
@@ -17,11 +18,11 @@ const LoginModal = ({ login, onClose }) => {
     },
     validationSchema: Yup.object({
       email: Yup.string()
-        .email('Incorrect email')
-        .required('Area cannot be empty'),
+        .email('Invalid email')
+        .required('Field cannot be empty'),
       password: Yup.string()
-        .min(6, 'Area cannot be lesser than 6')
-        .required('Area cannot be empty'),
+        .min(6, 'Password must be at least 6 characters')
+        .required('Field cannot be empty'),
     }),
     onSubmit: async (values) => {
       await login(values, () => {
@@ -29,40 +30,53 @@ const LoginModal = ({ login, onClose }) => {
         onClose();
       });
     },
-    
   });
 
   return (
-    <div className={styles.modalOverlay} onClick={onClose}>
-      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-        <h2 className={styles.h2}>Login</h2>
-        <form className={styles.form} onSubmit={formik.handleSubmit}>
-          <label>
-            <div className={styles.title}>Email</div>
-            {formik.touched.email && formik.errors.email && (
-              <div className={styles.error}>{formik.errors.email}</div>
-            )}
-            <input
-              className="input"
-              type="email"
-              {...formik.getFieldProps('email')}
-            />
-          </label>
-          <label>
-            <div className={styles.title}>Password</div>
-            {formik.touched.password && formik.errors.password && (
-              <div className={styles.error}>{formik.errors.password}</div>
-            )}
-            <input
-              className="input"
-              type="password"
-              {...formik.getFieldProps('password')}
-            />
-          </label>
-          <button className={styles.btn} type="submit">Login</button>
+    <Modal isOpen={true} onClose={onClose} title="Login" size="small">
+      <div className={styles.loginForm}>
+        <form onSubmit={formik.handleSubmit}>
+          <Input
+            type="email"
+            label="Email"
+            name="email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.email && formik.errors.email}
+            placeholder="Enter your email"
+            fullWidth
+          />
+
+          <Input
+            type="password"
+            label="Password"
+            name="password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.password && formik.errors.password}
+            placeholder="Enter your password"
+            fullWidth
+          />
+
+          <div className={styles.forgotPassword}>
+            <a href="#" className={styles.forgotLink}>Forgot password?</a>
+          </div>
+
+          <div className={styles.formActions}>
+            <Button
+              type="submit"
+              variant="primary"
+              fullWidth
+              disabled={formik.isSubmitting}
+            >
+              Login
+            </Button>
+          </div>
         </form>
       </div>
-    </div>
+    </Modal>
   );
 };
 

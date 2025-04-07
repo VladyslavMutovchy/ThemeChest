@@ -1,122 +1,277 @@
-.wrapper {
-  margin: 50px auto 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  max-width: 1240px;
+/* Admin Page Styles */
+.adminPage {
   width: 100%;
-  min-height: 100vh;
-  gap: 20px;
-  font-size: 16px;
-  box-sizing: border-box;
 }
 
-.admin_panel {
-  width: 100%;
-  background-color: var(--container);
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+/* Header Section */
+.adminHeader {
+  background-color: var(--primary-color);
+  padding: 60px 0;
+  color: white;
+  text-align: center;
 }
 
-.search_container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
+.container {
+  max-width: var(--content-width);
+  margin: 0 auto;
+  padding: 0 var(--content-padding);
+  width: 100%;
+}
+
+.pageTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: white;
+}
+
+.pageDescription {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Content Section */
+.adminContent {
+  padding: 40px 0 60px;
+}
+
+.adminCard {
+  padding: 0;
+  overflow: hidden;
+}
+
+.cardHeader {
+  padding: 24px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
   margin-bottom: 20px;
+  color: var(--text-color);
+}
+
+.searchContainer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.searchInputWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 .searchInput {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #787878cc;
-  border-radius: 10px;
-  font-size: 16px;
-}
-
-.searchBtn {
-  padding: 10px 20px;
-  background-color: #ad8c30;
-  border-radius: 10px;
-  color: #fff;
-  font-size: 16px;
-  cursor: pointer;
-  border: none;
-  transition: background-color 0.3s ease;
-}
-
-.searchBtn:hover {
-  background-color: #94792d;
-}
-
-.userList {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
   width: 100%;
 }
 
-.userCard {
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
+.searchButton {
+  margin-top: -16px;
+  height: 44px;
   display: flex;
-
   align-items: center;
-
-  gap: 20px;
-
+  justify-content: center;
 }
 
-.userCard p {
-  margin: 0;
-  font-size: 14px;
-  color: #333;
+/* User List */
+.userList {
+  padding: 0 24px;
 }
 
-.userCard strong {
+.userCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.userCard:last-child {
+  border-bottom: none;
+}
+
+.userInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.userIdEmail {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.userId {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.userEmail {
+  font-size: 1rem;
+  color: var(--text-color);
   font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.banBtn {
-  padding: 8px 16px;
-  background-color: #ff4d4d;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.userRoleStatus {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-.banBtn:hover {
-  background-color: #e84343;
+.userRole {
+  font-size: 0.85rem;
+  color: var(--text-color);
+}
+
+.userStatus {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.bannedStatus {
+  color: var(--error-color);
+  background-color: rgba(var(--error-color-rgb), 0.1);
+}
+
+.activeStatus {
+  color: var(--success-color);
+  background-color: rgba(var(--success-color-rgb), 0.1);
+}
+
+.userActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 16px;
+}
+
+.actionButton {
+  min-width: 80px;
 }
 
 .roleSelect {
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
+  padding: 6px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
   font-size: 14px;
-  background-color: #fff;
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  min-width: 120px;
 }
 
-.userCard .right {
-  margin-left: auto;
-
-  display: flex;
-  gap: 10px;
+.roleSelect:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.2);
 }
 
+.roleSelect:disabled {
+  background-color: var(--disabled-bg);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
 
-.loading {
-  font-size: 18px;
-  color: #555;
+.noResults {
+  padding: 40px 24px;
   text-align: center;
-  margin-top: 20px;
+  color: var(--text-secondary);
+}
+
+.loadMoreContainer {
+  padding: 24px;
+  text-align: center;
+  border-top: 1px solid var(--border-color);
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+  .pageTitle {
+    font-size: 2rem;
+  }
+
+  .pageDescription {
+    font-size: 1rem;
+  }
+
+  .adminHeader {
+    padding: 40px 0;
+  }
+
+  .cardTitle {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .userCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px 0;
+  }
+
+  .userInfo {
+    width: 100%;
+  }
+
+  .userActions {
+    width: 100%;
+    margin-left: 0;
+    justify-content: space-between;
+  }
+
+  .adminHeader {
+    padding: 30px 0;
+  }
+
+  .searchContainer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchButton {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageTitle {
+    font-size: 1.75rem;
+  }
+
+  .adminHeader {
+    padding: 25px 0;
+  }
+
+  .cardHeader {
+    padding: 16px;
+  }
+
+  .userList {
+    padding: 0 16px;
+  }
+
+  .userCard {
+    padding: 16px 0;
+  }
+
+  .loadMoreContainer {
+    padding: 16px;
+  }
 }
